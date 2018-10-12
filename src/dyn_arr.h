@@ -2,15 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifndef DYNARR
-#define DYNARR
+#ifndef DYN_ARR
+#define DYN_ARR
 
 #define ALLOC_SIZE 4		// Bytes for sting allocation
 
 typedef char* string; 
 
-string string_init();
-void char_put(string arr, char c);
-unsigned int string_size();
+string stringInit();
+void charPut(string arr, char c);
 
-#endif	//DYNARR
+#endif	//DYN_ARR
