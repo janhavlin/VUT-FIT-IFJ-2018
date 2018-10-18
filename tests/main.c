@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tests.h"
-#include "scanner.h"
+#include "../src/scanner.h"
 
 void test_scanner(char *grp_name) {
     FILE *scanner_file = fopen("tests/test_scanner", "r");
