@@ -3,3 +3,4 @@ SRC_FILES = src/scanner.c src/scanner.h
 
 u-tests: $(TST_FILES) $(SRC_FILES) 
 	gcc $(TST_FILES) $(SRC_FILES) -o tst
+	./tst
