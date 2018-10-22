@@ -9,7 +9,7 @@
 
 typedef char* string; 
 
-string stringInit();
-void charPut(string arr, char c);
+string stringInit(unsigned int *err);
+void charPut(string arr, char c,unsigned int *err);
 
 #endif	//DYN_ARR
