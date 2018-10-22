@@ -10,7 +10,7 @@ string stringInit(unsigned int *err){
 	
 	if(arr == NULL){
 		fprintf(stderr,"dyn_Arr ERROR in stringInit: I can't initialise array.\n");
-		*err = TRANSLATOR_ERR;
+		*err = ERR_RUNTIME;
 		return NULL;
 	}
 
@@ -29,8 +29,8 @@ void charPut(string arr, char c, unsigned int *err){
 			string newArr = (string) malloc(sizeof(char) * strlen(arr) + 1 + ALLOC_SIZE);
 
 			if(newArr == NULL){
-				fprintf(stderr,"dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
-				*err = TRANSLATOR_ERR;
+				error("dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
+				*err = ERR_RUNTIME;
 				return;
 			}
 
@@ -44,8 +44,8 @@ void charPut(string arr, char c, unsigned int *err){
 			arr[strlen(arr)] = c; 
 	}
 	else{
-		fprintf(stderr,"dyn_ARR ERROR in char_put: Given string is NULL.\n");
-		*err = SEM_DEFINE_ERR;
+		error("dyn_ARR ERROR in char_put: Given string is NULL.\n");
+		*err = ERR_SEM_DEFINE;
 		return;
 	}
 }
