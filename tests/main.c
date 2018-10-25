@@ -33,6 +33,31 @@ void test_scanner(char *grp_name) {
     TEST_EQ_INT(getToken(scanner_file), TOK_ASSIGN, grp_name, "= test");
     TEST_EQ_INT(getToken(scanner_file), TOK_LEFT_BRACKET, grp_name, "( test");
     TEST_EQ_INT(getToken(scanner_file), TOK_RIGHT_BRACKET, grp_name, ") test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_EOL, grp_name, "\'\\n\' test");
+
+
+    //INT + FLOAT * ID != == = ID <= = STR > != / * ( - ) +
+    TEST_EQ_INT(getToken(scanner_file), TOK_INT, grp_name, "Int tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ADD, grp_name, "+ tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_FLOAT, grp_name, "Float tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_MUL, grp_name, "* tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ID, grp_name, "Identifier tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_NEQ, grp_name, "!= tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_EQ, grp_name, "== tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ASSIGN, grp_name, "= tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ID, grp_name, "Identifier tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_LESSEQ, grp_name, "<= tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ASSIGN, grp_name, "= tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_STRING, grp_name, "String tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_GREATER, grp_name, "> tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_NEQ, grp_name, "!= tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_DIV, grp_name, "/ tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_MUL, grp_name, "* tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_LEFT_BRACKET, grp_name, "( tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_SUB, grp_name, "- tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_RIGHT_BRACKET, grp_name, ") tight test");
+    TEST_EQ_INT(getToken(scanner_file), TOK_ADD, grp_name, "+ tight test");
+
 }
 
 void test_string(char *grp_name) {

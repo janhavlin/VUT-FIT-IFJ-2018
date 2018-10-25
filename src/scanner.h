@@ -41,7 +41,7 @@ typedef enum {
     S_STR_ESC,
     S_STR_XH,
     S_STR_XHH,
-    S_STR_COMMENT,
+    S_COMMENT,
     S_LESS,
     S_GREATER,
     S_NOT,
