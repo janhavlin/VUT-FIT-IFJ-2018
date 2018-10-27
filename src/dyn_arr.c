@@ -10,7 +10,7 @@ string stringInit(unsigned int *err){
 	
 	if(arr == NULL){
 		fprintf(stderr,"dyn_Arr ERROR in stringInit: I can't initialise array.\n");
-		*err = TRANSLATOR_ERR;
+		*err = ERR_RUNTIME;
 		return NULL;
 	}
 
@@ -32,7 +32,7 @@ void charPut(string arr, char c, unsigned int *err){
 
 			if(newArr == NULL){
 				fprintf(stderr,"dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
-				*err = TRANSLATOR_ERR;
+				*err = ERR_RUNTIME;
 				return;
 			}
 
@@ -47,7 +47,7 @@ void charPut(string arr, char c, unsigned int *err){
 	}
 	else{
 		fprintf(stderr,"dyn_ARR ERROR in char_put: Given string is NULL.\n");
-		*err = SEM_DEFINE_ERR;
+		*err = ERR_SEM_DEFINE;	// TODO: This doesn't seem correct...
 		return;
 	}
 }
@@ -69,4 +69,3 @@ bool strDelete( string arr ){
 	}
 
 }
-

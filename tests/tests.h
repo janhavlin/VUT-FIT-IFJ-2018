@@ -10,9 +10,10 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+#define COMPACT 1
 
-void cmp_group_names(char groupname[]);
-void TEST_EQ_INT(int a, int b, char groupname[], char testname[]);
+void TEST_SET_GROUP(char grp[]);
+void TEST_EQ_INT(int a, int b, char testname[], int mode);
 void TEST_PRINT_STATS();
 
 #endif //GLOBALPROJECT_TESTS_H
