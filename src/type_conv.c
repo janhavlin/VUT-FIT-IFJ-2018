@@ -1,14 +1,13 @@
 #include <stdbool.h>
 #include <math.h>
 #include "type_conv.h"
-#include "dyn_arr.h"
 
 
 /*
-* ConvStrToInt()
+* convStrToInt()
 * 	Converts string to integer.
 */
-int ConvStrToInt(char *str){		
+int convStrToInt(string str){		
 	int result = 0;
 	int dec = 1;
 
@@ -26,11 +25,12 @@ int ConvStrToInt(char *str){
 
 
 /*
-* ConvIntToStr()
+* convIntToStr()
 * 	Converts integer to string.
 */
-char *ConvIntToStr(int numb){		
-	char *res = stringInit();
+char *convIntToStr(int numb){
+	unsigned err;		
+	char *res = stringInit(&err);
 	char tmp;
 	bool sign = false;
 	
@@ -40,12 +40,12 @@ char *ConvIntToStr(int numb){
 	}
 	
 	while(numb > 0){
-		charPut(res, numb % 10 + '0');
+		charPut(res, numb % 10 + '0', &err);
 		numb /= 10;
 	}
 
 	if(sign)
-		charPut(res, '-');
+		charPut(res, '-', &err);
 	for(unsigned int i = 0; i < strlen(res)/2; i++){
 		tmp = res[i];
 		res[i] = res[strlen(res)-i-1];
@@ -58,10 +58,10 @@ char *ConvIntToStr(int numb){
 
 
 /*
-* ConvStrToFloat()
+* convStrToDouble()
 * 	Converts string to float/double.
 */
-double ConvStrToFloat(char *str){
+double convStrToDouble(string str){
 	int dot = strlen(str)-1;
 	int expon = 0;	
 	bool dotFound = false;
@@ -102,7 +102,3 @@ double ConvStrToFloat(char *str){
 
 	return res;
 }
-
-
-
-
