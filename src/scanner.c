@@ -6,7 +6,7 @@
 bool isOperator(char c)
 {
     if (
-        c == '+' ||
+        /*c == '+' ||
         c == '-' ||
         c == '*' ||
         c == '/' ||
@@ -15,7 +15,7 @@ bool isOperator(char c)
         c == '!' ||
         c == '=' ||
         c == '(' ||
-        c == ')'        
+        c == ')'*/1        
     )
         return true;
     else
@@ -32,7 +32,7 @@ token_type getToken(FILE *f)
 
     while((c = getc(f)) != EOF)
     {
-        printf("CHAR READ: %c\n", c);
+        //printf("CHAR READ: %c\n", c);
         switch(state)
         {
             case S_START:
@@ -391,15 +391,15 @@ token_type getToken(FILE *f)
                 break;
 
             case S_EOL:
-                if (c == '=')
+                /*if (c == '=')
                 {
                     //TODO: =begin comment case
                 }
                 else
-                {
+                {*/
                     ungetc(c, f);
                     return TOK_EOL;
-                }
+                /*}*/
                 break;            
         } //switch
     } //while
