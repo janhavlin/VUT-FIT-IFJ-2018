@@ -1,23 +1,81 @@
-#include <stdbool.h>
+	#include <stdbool.h>
 #include <math.h>
+#include <ctype.h>
 #include "type_conv.h"
+
 
 
 /*
 * convStrToInt()
 * 	Converts string to integer.
 */
-int convStrToInt(string str){		
+int convStrToInt(string str){			
 	int result = 0;
 	int dec = 1;
+	int shifter = 0;
+	int type = 0;	// 0- decimal
+			// 1- hexadecimal
+			// 2- octal
+	
+	// decimal
+	if(str[0] != '0' )
+		type = 0;
+
+	// hexadecimal
+	else if((str[0] == '0') && ((str[1] == 'x')) )
+		type = 1;
+
+	// binary
+	else if( (isdigit(str[0])) && (str[1] == 'b') )
+		type = 2;
+	
+
+	// octal
+	else if( (isdigit(str[0]) != 0) && (str[0] == '0'))	
+		type = 3;
+
+
 
 	for(int pos = strlen(str)-1; pos >= 0; pos--){
 		if((pos == 0) && (str[pos] == '-')){
 			result *= -1;
 			break;
 		}
-		result += (str[pos] - '0')* dec;
-		dec *= 10;
+
+		if(!type){
+			result += (str[pos] - '0')* dec;
+			dec *= 10;
+		}
+
+		else if(type == 1){
+			
+			if((pos == 0) || (pos == 1))
+				continue;
+			if(str[pos] >= 'a' && str[pos] <= 'f')
+				result += (str[pos]-87) << 4*shifter;	  // to get value from 10 to 15
+
+			else if(str[pos] >= 'A' && str[pos] <= 'F') 
+				result += (str[pos]-55) << 4*shifter;	  // to get value from 10 to 15
+
+			else
+				result += (str[pos] - '0') << 4*shifter;  // to get value from 0 to 9
+ 			
+			shifter++;	
+		}
+
+		else if(type == 2){
+			if((pos == 0) || (pos == 1))
+				continue;
+
+			result += (str[pos] - '0') << shifter;
+			shifter++;
+		}
+	
+		else if(type == 3){
+			result += (str[pos] - '0') << 3*shifter;
+			shifter++;
+		}
+		
 	}
 
 	return result;

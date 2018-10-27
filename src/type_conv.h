@@ -7,8 +7,9 @@
 #ifndef TYPE_CONV
 #define TYPE_CONV
 
-int convStrToInt(string str);		// convert string to integer
-string convIntToStr(int numb);		// convert integer to string
-double convStrToDouble(string str);	// convert string to double
+int convStrToInt(string str);			// convert string to integer
+string convIntToStr(int numb);			// convert integer to string
+double convStrToDouble(string str);		// convert string to double
+
 
 #endif //TYPE_CONV
