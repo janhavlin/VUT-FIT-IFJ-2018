@@ -1,0 +1,56 @@
+<type> 		-> Integer
+<type> 		-> Float
+<type> 		-> String
+<type> 		-> Boolean
+
+<prog> 		-> begin <body> end EOF
+
+<body>		-> <st-list> <body>
+<body>		-> <fun-def> <body>
+
+<st-list> 	-> <stat> EOL <st-list>
+<st-list>	-> eps.
+
+<stat>		-> <expr> 
+<stat>		-> if <expr> then EOL		//TODO: optional else, elsif-then
+				<st-list> else EOL
+				<st-list> 
+			   end EOL
+<stat>		-> while <expr> do EOL
+				<st-list>
+			   end EOL
+<stat>		-> <fun-call>
+		  
+<else>		-> else <st-list>
+<else>		-> eps.
+
+<fun-def>  	-> def Id <p-body> EOL
+				<st-list> end
+<p-list>	-> , <param> <p-list>
+<p-list>	-> eps.
+<param>		-> Id 
+<p-body>	-> ( <p-body> )
+<p-body>	-> <param> <p-list>
+<p-body>	-> eps.
+
+<fun-call>	-> Id <p-body> EOL
+
+<expr>		-> Id
+<expr>		-> Id = <expr>
+<expr>		-> ( <expr> )
+<expr>		-> <expr> <op> <expr>
+<expr>		-> <fun-call>
+
+<op>		-> +
+<op>		-> -
+<op>		-> *
+<op>		-> /
+<op>		-> >
+<op>		-> <
+<op>		-> >=
+<op>		-> <=
+<op>		-> ==
+<op>		-> !=
+
+
+
