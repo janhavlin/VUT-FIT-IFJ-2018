@@ -1,0 +1,35 @@
+First(begin) = {begin}
+First(end) = {end}
+First(EOF) = {EOF}
+First(EOL) = {EOL}
+First(if) = {if}
+First(then) = {then}
+First(elsif) = {elsif}
+First(else) = {else}
+First(while) = {while}
+First(do) = {do}
+First(def) = {def}
+First(Id) = {Id}
+First(Int) = {Int}
+First(Flt) = {Flt}
+First(Str) = {Str}
+First(nil) = {nil}
+First(LBR) = {LBR}
+First(RBR) = {RBR}
+First(=) = {=}
+First(,) = {,}
+--------------------------
+First(item) = {Id Int Flt Str nil}
+First(expr) = {Id Int Flt Str nil (}
+First(op) = {add sub mul div gt lt ge le eq ne}
+First(p-body) = {Id Int Flt Str nil ( eps.}
+First(p-list) = {, eps.}
+First(fun-call) = {Id Int Flt Str nil ( eps.}
+First(fun-def) = {def}
+First(assign) = {Id Int Flt Str nil ( eps. <PSA>}
+First(n-else) = {elsif else eps.}
+First(ass-or-fun) = {= Id Int Flt Str nil ( eps.}
+First(stat) = {Id if while eps.}
+First(st-list) = {Id if while eps. EOL}
+First(body) = {Id if while eps. def}
+First(prog) = {begin}

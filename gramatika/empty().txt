@@ -1,0 +1,14 @@
+Empty(item) = {0}
+Empty(expr) = {0}
+Empty(op) = {0}
+Empty(p-body) = {eps.}
+Empty(p-list) = {eps.}
+Empty(fun-call) = {eps.}
+Empty(fun-def) = {0}
+Empty(assign) = {0}
+Empty(n-else) = {eps.}
+Empty(ass-or-fun) = {0}
+Empty(stat) = {eps.}
+Empty(st-list) = {eps.}
+Empty(body) = {eps.}
+Empty(prog) = {0}
