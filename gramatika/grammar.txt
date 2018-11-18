@@ -1,65 +1,24 @@
-1<prog> 	-> begin <body> end
-------------------------------------
-2<body>		-> <st-list> <body>
-3<body>		-> <fun-def> <body>
-4<body>		-> eps.
-------------------------------------
-5<st-list> 	-> <stat> EOL 
-				<st-list>
-6<st-list>	-> eps. 
-------------------------------------
-7<stat>		-> Id <ass-or-fun>
-8<stat>		-> if <PSA> then EOL		
-				<st-list> <n-else>
-			   end
-9<stat>		-> while <PSA> do EOL
-				<st-list>
-			   end
-10<stat>	-> eps.
-------------------------------------
-11<ass-or-fun>-> = <assign>
-12<ass-or-fun>-> <fun-call>
-------------------------------------		  
-13<n-else>	-> elsif <PSA> then EOL
-			 <st-list> <n-else>
-14<n-else>	-> else EOL
-			 <st-list>
-15<n-else>	-> eps.
-------------------------------------
-16<assign>	-> <fun-call>
-17<assign>	-> <PSA>
-------------------------------------
-18<fun-def> -> def Id <p-body> EOL
-			 <st-list> 
-			end
-------------------------------------
-19<fun-call>-> <p-body>
-------------------------------------
-20<p-list>	-> , <item> <p-list>
-21<p-list>	-> eps.
-------------------------------------
-22<p-body>	-> <item> <p-list>
-23<p-body>	-> ( <p-body> )
-24<p-body>	-> eps.
-------------------------------------
-		<expr>		-> <item>
-		<expr>		-> ( <expr> )
-		<expr>		-> <expr> <op> <expr>
-		------------------------------------
-		<op>		-> add //+
-		<op>		-> sub //-
-		<op>		-> mul //*
- <PSA>	<op>		-> div ///
-		<op>		-> gt  //>
-		<op>		-> lt  //<
-		<op>		-> ge  //>=
-		<op>		-> le  //<=
-		<op>		-> eq  //==
-		<op>		-> ne  //!=
-------------------------------------
-25<item>	-> Id
-26<item>	-> Int
-27<item>	-> Flt
-28<item>	-> Str
-29<item>	-> nil
-NEZAPOMEN ZE MAS TOKENY ZE SCANNERU, NE DVOUZNAKOVE RETEZCE.
+S -> ST-LIST FUN-DEF eol S
+S -> eof
+ST-LIST -> STAT eol ST-LIST
+ST-LIST -> eps
+FUN-DEF -> def id ( P-LIST ) eol ST-LIST end 
+FUN-DEF -> eps
+P-LIST -> TERM P-LIST
+P-LIST -> , TERM P-LIST
+P-LIST -> eps
+STAT -> id ASS-OR-FUN
+STAT -> if expr then eol ST-LIST else eol ST-LIST end
+STAT -> while expr do eol ST-LIST end
+ASS-OR-FUN -> = ASSIGN
+ASS-OR-FUN -> P-BODY
+ ASSIGN -> id P-BODY			//function call
+ASSIGN -> expr
+P-BODY -> ( P-LIST )
+P-BODY -> P-LIST
+TERM -> id
+TERM -> const
+
+
+
+def, do, else, end, if, not, nil, then, while
