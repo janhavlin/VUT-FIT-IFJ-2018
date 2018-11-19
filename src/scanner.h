@@ -24,7 +24,22 @@ typedef enum {
     TOK_LEFT_BRACKET,    // (
     TOK_RIGHT_BRACKET,   // )
     TOK_EOL,             // '\n'
+	TOK_EOF
 } token_type;
+
+/*
+struct t_token
+
+contains type and data
+*/
+typedef struct {
+	token_type type;
+	union Data {
+		int i;
+		float f;
+		char *str; 
+	} data;
+} t_token;
 
 typedef enum {
     S_START,
