@@ -1,24 +1,22 @@
-S -> ST-LIST FUN-DEF eol S
+S -> STAT eol S
+S -> FUN-DEF eol S
 S -> eof
 ST-LIST -> STAT eol ST-LIST
 ST-LIST -> eps
-FUN-DEF -> def id ( P-LIST ) eol ST-LIST end 
-FUN-DEF -> eps
+FUN-DEF -> def id ( P-LIST ) eol ST-LIST end
 P-LIST -> TERM P-LIST
 P-LIST -> , TERM P-LIST
 P-LIST -> eps
 STAT -> id ASS-OR-FUN
 STAT -> if expr then eol ST-LIST else eol ST-LIST end
 STAT -> while expr do eol ST-LIST end
+STAT -> eps
 ASS-OR-FUN -> = ASSIGN
 ASS-OR-FUN -> P-BODY
- ASSIGN -> id P-BODY			//function call
+ASSIGN -> id P-BODY			//function call
 ASSIGN -> expr
 P-BODY -> ( P-LIST )
 P-BODY -> P-LIST
 TERM -> id
 TERM -> const
-
-
-
-def, do, else, end, if, not, nil, then, while
+TERM -> nil
