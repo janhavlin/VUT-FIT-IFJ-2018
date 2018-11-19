@@ -70,5 +70,5 @@ typedef enum {
 } state_type;
 
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
-token_type getToken(FILE *f);
+t_token getToken(FILE *f);
 #endif //IFJ18_SCANNER_H
