@@ -12,7 +12,7 @@ tStackPtr sInit( void ){
 	}
 	
 	else
-		fprintf(stderr,"stack ERROR in sInit: Given string is NULL.\n");
+		ifjErrorPrint("stack ERROR in sInit: Given string is NULL.\n");
 		
 	return stack;
 }
@@ -54,7 +54,6 @@ char sPop( tStackPtr stack ){
 
 void sPush( tStackPtr *stack, char item ){
 	if( !((*stack)->top % STACK_SIZE) && ((*stack)->top != 0) ){
-		printf("owerflow\n\n");
 		(*stack)->buff = (char *) realloc((*stack)->buff, strlen((*stack)->buff) + STACK_SIZE + 1);
 		
 		if((*stack)->buff == NULL){
@@ -71,9 +70,7 @@ void sPush( tStackPtr *stack, char item ){
 	}
 	
 	else{
-		(*stack)->buff[(*stack)->top] = item;
-		printf("\n\nprvek je stack->buff[0] %c\n\n", (*stack)->buff[0]);
-		(*stack)->top = (*stack)->top + 1;
+		(*stack)->buff[(*stack)->top++] = item;
 	}
 	
 }
