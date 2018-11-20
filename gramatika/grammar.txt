@@ -1,6 +1,6 @@
-S -> STAT eol S
-S -> FUN-DEF eol S
-S -> eof
+START -> STAT eol S
+START -> FUN-DEF eol S
+START -> eof
 ST-LIST -> STAT eol ST-LIST
 ST-LIST -> eps
 FUN-DEF -> def id ( P-LIST ) eol ST-LIST end

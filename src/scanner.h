@@ -11,6 +11,7 @@ typedef enum {
     TOK_INT,             // Integer
     TOK_FLOAT,           // Float
     TOK_STRING,          // String
+	TOK_NIL,
     TOK_ADD,             // +
     TOK_SUB,             // -
     TOK_MUL,             // *

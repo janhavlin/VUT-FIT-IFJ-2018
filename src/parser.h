@@ -15,3 +15,4 @@
 #include<string.h>
 #include "scanner.h"
 #include "ifj_error.h"
+#include "dyn_arr.h"
