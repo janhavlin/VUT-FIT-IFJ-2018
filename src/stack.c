@@ -33,6 +33,10 @@ bool sDelete( tStackPtr stack ){
 	
 }
 
+bool sEmpty( tStackPtr stack ){
+	return ((stack->top == 0) || (stack->buff[0] == '$'));
+}
+
 char sTop( tStackPtr stack ){
 	if((stack->top) > 0)
 		return stack->buff[stack->top-1];
@@ -74,3 +78,4 @@ void sPush( tStackPtr *stack, char item ){
 	}
 	
 }
+
