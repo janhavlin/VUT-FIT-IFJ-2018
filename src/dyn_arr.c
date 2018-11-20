@@ -6,11 +6,11 @@
 * 	Allocate memory for string and check if allocation is succesful.
 */
 string stringInit(unsigned int *err){				
-	string arr = (string) calloc( ALLOC_SIZE,  sizeof(string) );
-	
+	string arr = (string) calloc( ALLOC_SIZE + 1,  sizeof(char) );
+
 	if(arr == NULL){
-		fprintf(stderr,"dyn_Arr ERROR in stringInit: I can't initialise array.\n");
-		*err = ERR_RUNTIME;
+		ifjErrorPrint("dyn_Arr ERROR in stringInit: I can't initialise array.\n");
+		*err = TRANSLATOR_ERR;
 		return NULL;
 	}
 
@@ -24,30 +24,34 @@ string stringInit(unsigned int *err){
  * 	Check if given string is not NULL and if is not NULL, add char c into string.
  *	If string is full and user wants to add new char, than allocate new memory for him.
  */
-void charPut(string arr, char c, unsigned int *err){		
-	if(arr != NULL){
-		if( (strlen(arr) != 0) && (strlen(arr) % ALLOC_SIZE == 0) ){
-			
-			string newArr = (string) malloc(sizeof(char) * strlen(arr) + 1 + ALLOC_SIZE);
+void charPut(string *arr, char c, unsigned int *err){		
 
-			if(newArr == NULL){
-				fprintf(stderr,"dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
-				*err = ERR_RUNTIME;
+	if((*arr) != NULL){
+			
+		if( (strlen(*arr) != 0) && ((strlen(*arr) % (ALLOC_SIZE)) == 0) ){
+			(*arr) = (string) realloc((*arr), strlen(*arr) + ALLOC_SIZE+1);
+
+			if((*arr) == NULL){
+				ifjErrorPrint("dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
+				*err = TRANSLATOR_ERR;
+				free(*arr);
 				return;
 			}
-
-			memcpy(newArr, arr, strlen(arr)-1);
-			arr[strlen(arr)] = c;
-
-			free(newArr);
+			
+			for(int i = strlen(*arr); i < strlen(*arr)+ALLOC_SIZE+1; i++)
+				(*arr)[i] = '\0';
+				
+			(*arr)[strlen(*arr)] = c;
 		}
 		
-		else
-			arr[strlen(arr)] = c; 
+		else{
+			(*arr)[strlen(*arr)] = c; 
+		}
 	}
+	
 	else{
-		fprintf(stderr,"dyn_ARR ERROR in char_put: Given string is NULL.\n");
-		*err = ERR_SEM_DEFINE;	// TODO: This doesn't seem correct...
+		ifjErrorPrint("dyn_ARR ERROR in char_put: Given string is NULL.\n");
+		*err = SEM_DEFINE_ERR;
 		return;
 	}
 }
@@ -69,3 +73,4 @@ bool strDelete( string arr ){
 	}
 
 }
+
