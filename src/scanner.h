@@ -2,6 +2,7 @@
 #define IFJ18_SCANNER_H
 
 #include <stdio.h>
+#include "dyn_arr.h"
 
 typedef enum {
     TOK_ERR,             // Unidentified token type
@@ -14,17 +15,33 @@ typedef enum {
     TOK_SUB,             // -
     TOK_MUL,             // *
     TOK_DIV,             // /
-    TOK_LESS,            // <
-    TOK_GREATER,         // >
-    TOK_LESSEQ,          // <=
-    TOK_GREATEREQ,       // >=
+    TOK_LT,              // <
+    TOK_GT,              // >
+    TOK_LEQ,             // <=
+    TOK_GEQ,             // >=
     TOK_EQ,              // ==
     TOK_NEQ,             // !=
     TOK_ASSIGN,          // =
     TOK_LEFT_BRACKET,    // (
     TOK_RIGHT_BRACKET,   // )
+    TOK_COMMA,           // ,
     TOK_EOL,             // '\n'
-} token_type;
+	TOK_EOF
+} TTokenType;
+
+/*
+struct t_token
+
+contains type and data
+*/
+typedef struct {
+	TTokenType type;
+	union Data {
+		int i;
+		double f;
+		string s; 
+	} data;
+} TToken;
 
 typedef enum {
     S_START,
@@ -55,5 +72,5 @@ typedef enum {
 } state_type;
 
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
-token_type getToken(FILE *f);
+TToken getToken(FILE *f);
 #endif //IFJ18_SCANNER_H
