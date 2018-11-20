@@ -4,17 +4,19 @@
 #include "dyn_arr.h"
 #include "type_conv.h"
 
-token_type getToken(FILE *f)
+TToken getToken(FILE *f)
 {
     int c;
     int state = S_START;
     int conv_int;
+    int conv_esc;
     double conv_double;
     unsigned err;
+    TToken tok;
     string buff = stringInit(&err);
     //TODO: Return err value to main if err
 
-    while((c = getc(f)) != EOF){
+    while(c = getc(f)){
         /*DEBUG*///printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
@@ -52,22 +54,36 @@ token_type getToken(FILE *f)
                     state = S_EOL;
                 }
                 else if (c == '+'){
-                    return TOK_ADD;
+                    tok.type = TOK_ADD;
+                    return tok;
                 }
                 else if (c == '-'){
-                    return TOK_SUB;
+                    tok.type = TOK_SUB;
+                    return tok;
                 }
                 else if (c == '*'){
-                    return TOK_MUL;
+                    tok.type = TOK_MUL;
+                    return tok;
                 }
                 else if (c == '/'){
-                    return TOK_DIV;
+                    tok.type = TOK_DIV;
+                    return tok;
                 }
                 else if (c == '('){
-                    return TOK_LEFT_BRACKET;
+                    tok.type = TOK_LEFT_BRACKET;
+                    return tok;
                 }
                 else if (c == ')'){
-                    return TOK_RIGHT_BRACKET;
+                    tok.type = TOK_RIGHT_BRACKET;
+                    return tok;
+                }
+                else if (c == ','){
+                    tok.type = TOK_COMMA;
+                    return tok;
+                }
+                else if (c == EOF){
+                    tok.type = TOK_EOF;
+                    return tok;
                 }
                 else if (isspace(c)){
                     continue;
@@ -79,18 +95,23 @@ token_type getToken(FILE *f)
                     charPut(buff, c, &err);
                 }
                 else if (c == '?' || c == '!'){
+                    // This id can only be a function, not a variable
                     charPut(buff, c, &err);
                     state = S_START;
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    free(buff);
-                    return TOK_ID;
+                    tok.type = TOK_ID;
+                    tok.data.s = buff;
+                    //free(buff);
+                    return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    free(buff);
-                    return TOK_ID;
+                    tok.type = TOK_ID;
+                    tok.data.s = buff;
+                    //free(buff);
+                    return tok;
                 }
                 break;
 
@@ -105,10 +126,12 @@ token_type getToken(FILE *f)
                 else {
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_INT;
+                    tok.data.i = convStrToInt(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", convStrToInt(buff));
+                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
                     free(buff);
-                    return TOK_INT;
+                    return tok;
                 }
                 break;
 
@@ -129,19 +152,15 @@ token_type getToken(FILE *f)
                     charPut(buff, c, &err);
                     state = S_INT_HEX;
                 }
-                else if (1 || isspace(c)){
-                    // TODO: Is this correct?
+                else{
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_INT;
+                    tok.data.i = 0;
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", 0);
+                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
                     free(buff);
-                    return TOK_INT;
-                }
-                else {
-                    // TODO: Invalid token
-                    state = S_START;
-                    return TOK_ERR;
+                    return tok;
                 }
                 break;
 
@@ -159,13 +178,14 @@ token_type getToken(FILE *f)
                     charPut(buff, c, &err);
                 }
                 else {
-                    // TODO
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_INT;
+                    tok.data.i = convStrToInt(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", convStrToInt(buff));                    
+                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
                     free(buff);
-                    return TOK_INT;
+                    return tok;
                 }                
                 break;
 
@@ -177,10 +197,12 @@ token_type getToken(FILE *f)
                     // TODO
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_INT;
+                    tok.data.i = convStrToInt(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", convStrToInt(buff));                    
+                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
                     free(buff);
-                    return TOK_INT;
+                    return tok;
                 }
                 break;
 
@@ -200,13 +222,14 @@ token_type getToken(FILE *f)
                     state = S_INT_HEX_NUM;
                 }
                 else {
-                    // TODO
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_INT;
+                    tok.data.i = convStrToInt(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", convStrToInt(buff));                    
+                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
                     free(buff);
-                    return TOK_INT;
+                    return tok;
                 }
                 break;
 
@@ -228,20 +251,17 @@ token_type getToken(FILE *f)
                     charPut(buff, c, &err);
                     state = S_FLOAT_E;
                 }
-                else if (1 || isspace(c)){
+                else {
                     // TODO: Is this correct?
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_FLOAT;
+                    tok.data.f = convStrToDouble(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %lf\n", convStrToDouble(buff));                    
+                    /*DEBUG*/printf("Value: %lf\n", tok.data.f);
                     free(buff);
-                    return TOK_FLOAT;
-                }
-                else {
-                    // TODO: Invalid token
-                    state = S_START;
-                    return TOK_ERR;
-                }                
+                    return tok;
+                }             
                 break;
 
             case S_FLOAT_E:
@@ -261,6 +281,9 @@ token_type getToken(FILE *f)
                 if (isdigit(c)){
                     state = S_FLOAT_E_NUM;
                 }
+                else {
+                    // TODO: Invalid token
+                }
                 break;
             
             case S_FLOAT_E_NUM:
@@ -268,13 +291,14 @@ token_type getToken(FILE *f)
                     charPut(buff, c, &err);
                 }
                 else {
-                    // TODO: if isOperator() -- VALID, else INVALID
                     ungetc(c, f);
                     state = S_START;
+                    tok.type = TOK_FLOAT;
+                    tok.data.f = convStrToDouble(buff);
                     /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %lf\n", convStrToDouble(buff));                           
+                    /*DEBUG*/printf("Value: %lf\n", tok.data.f);
                     free(buff);
-                    return TOK_FLOAT;
+                    return tok;
                 }               
                 break;
 
@@ -283,13 +307,19 @@ token_type getToken(FILE *f)
                     state = S_STR_ESC;
                 }
                 else if (c == '\"'){
-                    state = S_START;
-                    /*DEBUG*/printf("Token read: %s\n", buff);                    
-                    free(buff);
-                    return TOK_STRING;
+                    state = S_START;                 
+                    tok.type = TOK_STRING;
+                    tok.data.s = buff;
+                    /*DEBUG*/printf("Token read: %s\n", buff);
+                    /*DEBUG*/printf("Value: %s\n", tok.data.s);
+                    //free(buff);
+                    return tok;
                 }
                 else if (c >= 32 && c <= 127){
                     charPut(buff, c, &err);
+                }
+                else {
+                    //TODO: Invalid token
                 }
                 break;
 
@@ -314,7 +344,10 @@ token_type getToken(FILE *f)
 
             case S_STR_XH:
                 if (isdigit(c) || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F'){
-                    // TODO: Convert this number to a char
+                    if (isdigit(c))
+                        conv_esc = c - '0';
+                    else
+                        conv_esc = toupper(c) - 'A' + 10;
                     state = S_STR_XHH;
                 }
                 else {
@@ -324,10 +357,16 @@ token_type getToken(FILE *f)
 
             case S_STR_XHH:
                 if (isdigit(c) || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F'){
-                    // TODO: Convert this number to a char
+                    conv_esc *= 16;
+                    if (isdigit(c))
+                        conv_esc += c - '0';
+                    else
+                        conv_esc += toupper(c) - 'A' + 10;
+                    charPut(buff, conv_esc, &err);
                     state = S_STR;
                 }
                 else {
+                    charPut(buff, conv_esc, &err);
                     ungetc(c, f);
                     state = S_STR;
                 }
@@ -342,42 +381,49 @@ token_type getToken(FILE *f)
             case S_LESS:
                 if (c == '='){
                     state = S_START;
-                    return TOK_LESSEQ;
+                    tok.type = TOK_LEQ;
+                    return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
-                    return TOK_LESS;
+                    tok.type = TOK_LT;
+                    return tok;
                 }
                 break;
             
             case S_GREATER:
                 if (c == '='){
                     state = S_START;
-                    return TOK_GREATEREQ;
+                    tok.type = TOK_GEQ;
+                    return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
-                    return TOK_GREATER;
+                    tok.type = TOK_GT;
+                    return tok;
                 }
                 break;
             
             case S_ASSIGN:
                 if (c == '='){
                     state = S_START;
-                    return TOK_EQ;
+                    tok.type = TOK_EQ;
+                    return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
-                    return TOK_ASSIGN;
+                    tok.type = TOK_ASSIGN;
+                    return tok;
                 }
 
             case S_NOT:
                 if (c == '='){
                     state = S_START;
-                    return TOK_NEQ;
+                    tok.type = TOK_NEQ;
+                    return tok;
                 }
                 break;
 
@@ -388,7 +434,8 @@ token_type getToken(FILE *f)
                 else
                 {*/
                     ungetc(c, f);
-                    return TOK_EOL;
+                    tok.type = TOK_EOL;
+                    return tok;
                 /*}*/
                 break;            
         } //switch
