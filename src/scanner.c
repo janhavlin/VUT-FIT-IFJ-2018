@@ -4,8 +4,24 @@
 #include "dyn_arr.h"
 #include "type_conv.h"
 
-TToken getToken(FILE *f)
-{
+struct {
+    int count;
+    TToken tok[2];
+} tokBuff;
+
+void tokBuffInit(){
+    tokBuff.count = 0;
+}
+
+void returnToken(TToken tok){
+    if (tokBuff.count < 2)
+        tokBuff.tok[tokBuff.count++] = tok;
+}
+
+TToken getToken(FILE *f){
+    if (tokBuff.count > 0)
+        return tokBuff.tok[--tokBuff.count];
+
     int c;
     int state = S_START;
     int conv_int;
@@ -110,7 +126,6 @@ TToken getToken(FILE *f)
                     /*DEBUG*/printf("Token read: %s\n", buff);
                     tok.type = TOK_ID;
                     tok.data.s = buff;
-                    //free(buff);
                     return tok;
                 }
                 break;
@@ -152,7 +167,7 @@ TToken getToken(FILE *f)
                     charPut(buff, c, &err);
                     state = S_INT_HEX;
                 }
-                else{
+                else {
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_INT;
@@ -194,7 +209,6 @@ TToken getToken(FILE *f)
                     charPut(buff, c, &err);
                 }
                 else {
-                    // TODO
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_INT;
@@ -312,7 +326,6 @@ TToken getToken(FILE *f)
                     tok.data.s = buff;
                     /*DEBUG*/printf("Token read: %s\n", buff);
                     /*DEBUG*/printf("Value: %s\n", tok.data.s);
-                    //free(buff);
                     return tok;
                 }
                 else if (c >= 32 && c <= 127){
@@ -428,16 +441,156 @@ TToken getToken(FILE *f)
                 break;
 
             case S_EOL:
-                /*if (c == '='){
+                // TODO: MIGHT need to return EOL every time it's read, now it's ignored if block comment is being read
+                if (c == '='){
                     //TODO: =begin comment case
+                    state = S_COMMENT_E;
                 }
-                else
-                {*/
+                else {
                     ungetc(c, f);
                     tok.type = TOK_EOL;
                     return tok;
-                /*}*/
-                break;            
+                }
+                break;
+            
+            case S_COMMENT_E:           // Read: "\n="
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c = 'b')
+                    state = S_COMMENT_EB;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_EB:          // Read: "\n=b"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c = 'e')
+                    state = S_COMMENT_EBE;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_EBE:         // Read: "\n=be"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c = 'g')
+                    state = S_COMMENT_EBEG;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_EBEG:        // Read: "\n=beg"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c = 'i')
+                    state = S_COMMENT_EBEGI;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_EBEGI:       // Read: "\n=begi"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c = 'n')
+                    state = S_COMMENT_EBEGIN;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_EBEGIN:      // Read: "\n=begin"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else if (isspace(c))
+                    state = S_COMMENT_BLOCK;
+                else {
+                    //TODO: Invalid token
+                }
+            break;
+            
+            case S_COMMENT_BLOCK:       // Skipping every char but '\n'
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else {
+                    state = S_COMMENT_BLOCK;
+                }
+            break;
+            
+            case S_COMMENT_BLOCK_EOL:   // Read: "\n"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else if (c == '=')
+                    state = S_COMMENT_BLOCK_E;
+                else {
+                    state = S_COMMENT_BLOCK;
+                }
+            break;
+            
+            case S_COMMENT_BLOCK_E:     // Read: "\n="
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else if (c == 'e')
+                    state = S_COMMENT_BLOCK_EE;
+                else {
+                    state = S_COMMENT_BLOCK;
+                }
+            break;
+            
+            case S_COMMENT_BLOCK_EE:    // Read: "\n=e"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else if (c == 'n')
+                    state = S_COMMENT_BLOCK_EEN;
+                else {
+                    state = S_COMMENT_BLOCK;
+                }
+            break;
+            
+            case S_COMMENT_BLOCK_EEN:   // Read: "\n=en"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_BLOCK_EOL;
+                else if (c == 'd')
+                    state = S_COMMENT_BLOCK_EEND;
+                else {
+                    state = S_COMMENT_BLOCK;
+                }
+            break;
+            
+            case S_COMMENT_BLOCK_EEND:  // Read: "\n=end"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_EOL_CHECK;
+                else if (isspace(c))
+                    state = S_COMMENT_END_SPACE;
+                else
+                    state = S_COMMENT_BLOCK;
+            break;
+            
+            case S_COMMENT_END_SPACE:   // Read: "\n=end "
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '\n')
+                    state = S_COMMENT_EOL_CHECK;
+                else
+                    state = S_COMMENT_END_SPACE;
+            break;
+
+            case S_COMMENT_EOL_CHECK:   // Read: "\n=end \n"
+                /*DEBUG*/printf("%d %c\n", state, c);
+                if (c == '=')
+                    state = S_COMMENT_E;
+                else {
+                    ungetc(c, f);
+                    state = S_START;
+                }
+            break;
+            
+
         } //switch
     } //while
 }

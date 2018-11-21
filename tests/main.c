@@ -23,6 +23,13 @@ void test_scanner(char *grp_name, int mode) {
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_INT, "Integer test type", mode);
     TEST_EQ_INT(tok.data.i, 42, "Integer test value", mode);
+
+    tokBuffInit();
+    returnToken(tok);
+    tok = getToken(scanner_file);
+    TEST_EQ_INT(tok.type, TOK_INT, "Integer return test type", mode);
+    TEST_EQ_INT(tok.data.i, 42, "Integer return test value", mode);
+
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_FLOAT, "Float 0.0 test", mode);
     tok = getToken(scanner_file);
@@ -32,6 +39,8 @@ void test_scanner(char *grp_name, int mode) {
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_STRING, "String test", mode);
     TEST_EQ_INT(strcmp(tok.data.s, "Ahoj\n\"\tSve'te \\\x22\xfa\xf\x1a\xa1\x11\x2\x41\x48\x4F\x4a"), 0, "String test", mode);
+    
+    
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_EOL, "\'\\n\' test", mode);
     tok = getToken(scanner_file);

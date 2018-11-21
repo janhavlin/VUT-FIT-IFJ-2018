@@ -11,7 +11,6 @@ typedef enum {
     TOK_INT,             // Integer
     TOK_FLOAT,           // Float
     TOK_STRING,          // String
-	TOK_NIL,
     TOK_ADD,             // +
     TOK_SUB,             // -
     TOK_MUL,             // *
@@ -64,14 +63,30 @@ typedef enum {
     S_STR_ESC,
     S_STR_XH,
     S_STR_XHH,
-    S_COMMENT,
     S_LESS,
     S_GREATER,
     S_NOT,
     S_ASSIGN,
     S_EOL,
+    S_COMMENT,
+    S_COMMENT_E,
+    S_COMMENT_EB,
+    S_COMMENT_EBE,
+    S_COMMENT_EBEG,
+    S_COMMENT_EBEGI,
+    S_COMMENT_EBEGIN,
+    S_COMMENT_BLOCK,
+    S_COMMENT_BLOCK_EOL,
+    S_COMMENT_BLOCK_E,
+    S_COMMENT_BLOCK_EE,
+    S_COMMENT_BLOCK_EEN,
+    S_COMMENT_BLOCK_EEND,
+    S_COMMENT_END_SPACE,
+    S_COMMENT_EOL_CHECK
 } state_type;
 
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
+void tokBuffInit();
+void returnToken(TToken tok);
 TToken getToken(FILE *f);
 #endif //IFJ18_SCANNER_H
