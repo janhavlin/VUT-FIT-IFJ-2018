@@ -45,6 +45,8 @@ void test_scanner(char *grp_name, int mode) {
     
     
     tok = getToken(scanner_file);
+    tok = getToken(scanner_file);
+    tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_EOL, "\'\\n\' test", mode);
 
     tok = getToken(scanner_file);
@@ -78,9 +80,9 @@ void test_scanner(char *grp_name, int mode) {
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_ASSIGN, "= test", mode);
     tok = getToken(scanner_file);
-    TEST_EQ_INT(tok.type, TOK_LEFT_BRACKET, "( test", mode);
+    TEST_EQ_INT(tok.type, TOK_LBR, "( test", mode);
     tok = getToken(scanner_file);
-    TEST_EQ_INT(tok.type, TOK_RIGHT_BRACKET, ") test", mode);
+    TEST_EQ_INT(tok.type, TOK_RBR, ") test", mode);
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_COMMA, ", test", mode);
     tok = getToken(scanner_file);

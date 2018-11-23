@@ -16,7 +16,7 @@
 #include "type_conv.h"
 #include "ifj_error.h"
 
-int errflg;
+//int errflg;
 
 #define CHECKERR(errflg, buff, tok)         \
     do{                                     \
@@ -636,6 +636,7 @@ TToken getToken(FILE *f){
                     state = S_COMMENT_E;
                 else {
                     ungetc(c, f);
+                    ungetc('\n', f);
                     state = S_START;
                 }
                 break;
