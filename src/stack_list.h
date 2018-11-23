@@ -20,9 +20,9 @@ typedef struct tStackItem{	// struct for item in stack
 	char *IdName;
 	
 	union value{		// union to store value during expression analysis
-		int 	integer_val;
-		double	double_val; 
-		string	string_val;
+		int 	i;
+		double	d; 
+		string	s;
 	}value;
 }tStackI;
 
