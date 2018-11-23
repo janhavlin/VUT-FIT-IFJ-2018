@@ -40,7 +40,7 @@ char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS)
         return precedenceTable[row][col];
     else {
-        //error
+        //index out of bounds
         return NULL;
     }
 }
@@ -69,7 +69,9 @@ int getIndex(TToken token) {
                             break; 
         case TOK_EOL:   //$ symbol
                         return 13;
-        default: break;
+        default:        ifjErrorPrint("ERROR %d in psa.c in func. getIndex: unexpected token n. %d!\n", ERR_SYNTAX, token.type);
+						errflg = ERR_SYNTAX;
+                        break;
     }
     return -1;
 }
