@@ -44,4 +44,4 @@ typedef struct {
 } TToken;
 
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
-TToken * getToken(FILE *f);
+TToken getToken(FILE *f);
