@@ -34,7 +34,7 @@ char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
         'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'X', 'r', 'X', 'r',
         'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'E', 'r', 'E', 'r',
         's', 's', 's', 's', 's', 's', 's',  's',  's',  's',  's', 'E', 's', 'E'
-    }
+    };
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS)

@@ -7,7 +7,7 @@
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
 	
-	description:	Heart of the compiler, includes main
+	description:	Recursive Descent parser				
 */
 
 #include "parser.h"
@@ -176,7 +176,7 @@ bool plist(TToken **tokenPP, FILE *f) {
 						**tokenPP = getToken(f); //comma is present, call next token
 						value = term(tokenPP, f) && plist(tokenPP, f);
 						break;
-		case TOK_RIGHT_BRACKET:
+		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
 						return true;
 		default:		error("ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
@@ -285,6 +285,7 @@ bool assign(TToken **tokenPP, FILE *f) {
  */
 bool decideExprOrFunc(TToken **tokenPP, FILE *f) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	tokBuffInit();
 	TToken bufferToken = **tokenPP;
 	**tokenPP = getToken(f); //id is present, but I need another token to decide
 	switch ((*tokenPP)->type) {
@@ -472,7 +473,7 @@ bool rbr(TToken **tokenPP, FILE *f) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
-	if (type == TOK_RIGHT_BRACKET) {
+	if (type == TOK_RBR) {
 		**tokenPP = getToken(f); //rbr is present, call next token
 		value = true;
 	} else 
