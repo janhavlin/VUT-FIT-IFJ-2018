@@ -11,10 +11,12 @@
 #ifndef IFJ_ERROR
 #define IFJ_ERROR
 
+extern int errflg;
+
 // chyba v programu v ramci lexikalniho analyzatoru (chybna struktura aktualniho lexemu)
-#define ERR_LEXICAL		1	
+#define ERR_LEXICAL		    1	
 // chyba v programu v ramci syntakticke analyzy (chybna syntaxe programu)
-#define	ERR_SYNTAX		2	
+#define	ERR_SYNTAX		    2	
 // semanticka chyba v programu (nedefinovana funkce/promenna, pokus o redefinovani funkce/promenne,...)
 #define ERR_SEM_DEFINE		3	
 // semanticka/behova chyba typove kompatibility v aritmetickych, retezovych a relacnich vyrazech 				
@@ -26,9 +28,9 @@
 // behova chyba deleni nulou
 #define ERR_DIV_ZERO		9
 // interni chyba prekladace tj. neovlivnena vstupnim programem (napr. chyba alokace pameti, atd.)
-#define ERR_RUNTIME		99
+#define ERR_RUNTIME		    99
 
 // funkce pro vypis chtene chyby
-void error( const char *fmt, ... );
+void ifjErrorPrint( const char *fmt, ... );
 
 #endif // IFJ_ERROR

@@ -1,10 +1,50 @@
+/**
+	file name:		scanner.c
+	project:		VUT-FIT-IFJ-2018
+	created:		19.11.2018
+	last modified:	24.10.2018
+	
+	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
+	modifications:	
+	
+	description:	Reads tokens from input stream
+*/
+
 #include <ctype.h>
 #include <stdbool.h>
 #include "scanner.h"
-#include "dyn_arr.h"
 #include "type_conv.h"
+#include "ifj_error.h"
 
-struct {
+int errflg;
+
+#define CHECKERR(errflg, buff, tok)         \
+    do{                                     \
+        if(errflg == ERR_RUNTIME){          \
+            free(buff);                     \
+            return tok;                     \
+        }                                   \
+    } while(0)
+
+#define SKIPLINE(c, f)                      \
+    do{                                     \
+        while ((c = getc(f)) != EOF){       \
+            if (isspace(c)) break;          \
+        }                                   \
+        if (c == '\n' || c == EOF) ungetc(c, f);        \
+    } while(0)
+
+#define TOKERR(c, f, errflg, buff, tok)     \
+    do{                                     \
+        SKIPLINE(c, f);                     \
+        errflg = ERR_LEXICAL;               \
+        tok.type = TOK_ERR;                 \
+        ifjErrorPrint("ERROR: Invalid token %d\n", errflg); \
+        free(buff);                         \
+        return tok;                         \
+    } while (0)
+
+static struct {
     int count;
     TToken tok[2];
 } tokBuff;
@@ -27,25 +67,27 @@ TToken getToken(FILE *f){
     int conv_int;
     int conv_esc;
     double conv_double;
-    unsigned err;
     TToken tok;
-    string buff = stringInit(&err);
-    //TODO: Return err value to main if err
+    string buff = stringInit();
+    CHECKERR(errflg, buff, tok);
 
     while(c = getc(f)){
-        /*DEBUG*///printf("CHAR READ: %c\n", c);
+        /*DEBUG*/printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
                 if (c >= 'a' && c <= 'z' || c == '_'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_ID;
                 }
                 else if (c >= '1' && c <= '9'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT;
                 }
                 else if (c == '0'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_ZERO;
                 }
                 else if (c == '\"'){
@@ -108,11 +150,13 @@ TToken getToken(FILE *f){
             
             case S_ID:
                 if (isalnum(c) || c == '_'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else if (c == '?' || c == '!'){
                     // This id can only be a function, not a variable
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_START;
                     /*DEBUG*/printf("Token read: %s\n", buff);
                     tok.type = TOK_ID;
@@ -132,10 +176,11 @@ TToken getToken(FILE *f){
 
             case S_INT:
                 if (isdigit(c)){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else if (c == '.'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
                     state = S_FLOAT_DOT;
                 }
                 else {
@@ -152,19 +197,23 @@ TToken getToken(FILE *f){
 
             case S_INT_ZERO:
                 if (c == '.'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_FLOAT_DOT;
                 }
                 else if (c == 'b'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_BIN;
                 }
                 else if (c >= '0' && c <= '7'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_OCT;
                 }
                 else if (c == 'x'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX;
                 }
                 else {
@@ -181,16 +230,18 @@ TToken getToken(FILE *f){
 
             case S_INT_BIN:
                 if (c == '0' || c == '1'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_BIN_NUM;
                 }
-                else {
-                    // TODO: Invalid token
-                }
+                else
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
+
             case S_INT_BIN_NUM:
                 if (c == '0' || c == '1'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else {
                     ungetc(c, f);
@@ -206,7 +257,8 @@ TToken getToken(FILE *f){
 
             case S_INT_OCT:
                 if (c >= '0' && c <= '8'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else {
                     ungetc(c, f);
@@ -222,17 +274,18 @@ TToken getToken(FILE *f){
 
             case S_INT_HEX:
                 if (isdigit(c) || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX_NUM;
                 }
-                else {
-                    // TODO: Invalid token
-                }
+                else
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
 
             case S_INT_HEX_NUM:
                 if (isdigit(c) || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX_NUM;
                 }
                 else {
@@ -249,24 +302,25 @@ TToken getToken(FILE *f){
 
             case S_FLOAT_DOT:
                 if (isdigit(c)){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_FLOAT_DECIMAL;
                 }
-                else {
-                    // TODO: Invalid float
-                }
+                else
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
 
             case S_FLOAT_DECIMAL:
                 if (isdigit(c)){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else if (c == 'e' || c == 'E'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_FLOAT_E;
                 }
                 else {
-                    // TODO: Is this correct?
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_FLOAT;
@@ -280,29 +334,31 @@ TToken getToken(FILE *f){
 
             case S_FLOAT_E:
                 if (c == '+' || c == '-'){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_FLOAT_E_SIGN;
                 }
                 else if (isdigit(c)){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                     state = S_FLOAT_E_NUM;
                 }
-                else {
-                    // TODO: Invalid float
-                }
+                else
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
+
             case S_FLOAT_E_SIGN:
                 if (isdigit(c)){
                     state = S_FLOAT_E_NUM;
                 }
-                else {
-                    // TODO: Invalid token
-                }
+                else
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
             
             case S_FLOAT_E_NUM:
                 if (isdigit(c)){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
                 else {
                     ungetc(c, f);
@@ -329,11 +385,11 @@ TToken getToken(FILE *f){
                     return tok;
                 }
                 else if (c >= 32 && c <= 127){
-                    charPut(buff, c, &err);
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
                 }
-                else {
-                    //TODO: Invalid token
-                }
+                else    // TODO: Should unknown escape sequence be error?
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
 
             case S_STR_ESC:
@@ -342,17 +398,17 @@ TToken getToken(FILE *f){
                 }
                 else if (c == '\"' || c == '\\' || c == 'n' || c == 't' || c == 's'){
                     switch (c){
-                        case '\"': charPut(buff, '\"', &err); break;
-                        case '\\': charPut(buff, '\\', &err); break;
-                        case 'n': charPut(buff, '\n', &err); break;
-                        case 't': charPut(buff, '\t', &err); break;
-                        case 's': charPut(buff, ' ', &err); break;
+                        case '\"': charPut(&buff, '\"'); break;
+                        case '\\': charPut(&buff, '\\'); break;
+                        case 'n': charPut(&buff, '\n'); break;
+                        case 't': charPut(&buff, '\t'); break;
+                        case 's': charPut(&buff, ' '); break;
                     }
+                    CHECKERR(errflg, buff, tok);
                     state = S_STR;
                 }
-                else {
-                    // TODO: Invalid token
-                }
+                else    // TODO: Should unknown escape sequence be error?
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
 
             case S_STR_XH:
@@ -363,9 +419,8 @@ TToken getToken(FILE *f){
                         conv_esc = toupper(c) - 'A' + 10;
                     state = S_STR_XHH;
                 }
-                else {
-                    // TODO: Invalid token
-                }
+                else    // TODO: Should unknown escape sequence be error?
+                    TOKERR(c, f, errflg, buff, tok);
                 break;
 
             case S_STR_XHH:
@@ -375,11 +430,13 @@ TToken getToken(FILE *f){
                         conv_esc += c - '0';
                     else
                         conv_esc += toupper(c) - 'A' + 10;
-                    charPut(buff, conv_esc, &err);
+                    charPut(&buff, conv_esc);
+                    CHECKERR(errflg, buff, tok);
                     state = S_STR;
                 }
                 else {
-                    charPut(buff, conv_esc, &err);
+                    charPut(&buff, conv_esc);
+                    CHECKERR(errflg, buff, tok);
                     ungetc(c, f);
                     state = S_STR;
                 }
@@ -443,7 +500,6 @@ TToken getToken(FILE *f){
             case S_EOL:
                 // TODO: MIGHT need to return EOL every time it's read, now it's ignored if block comment is being read
                 if (c == '='){
-                    //TODO: =begin comment case
                     state = S_COMMENT_E;
                 }
                 else {
@@ -457,46 +513,41 @@ TToken getToken(FILE *f){
                 /*DEBUG*/printf("%d %c\n", state, c);
                 if (c = 'b')
                     state = S_COMMENT_EB;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_EB:          // Read: "\n=b"
                 /*DEBUG*/printf("%d %c\n", state, c);
                 if (c = 'e')
                     state = S_COMMENT_EBE;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_EBE:         // Read: "\n=be"
                 /*DEBUG*/printf("%d %c\n", state, c);
                 if (c = 'g')
                     state = S_COMMENT_EBEG;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_EBEG:        // Read: "\n=beg"
                 /*DEBUG*/printf("%d %c\n", state, c);
                 if (c = 'i')
                     state = S_COMMENT_EBEGI;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_EBEGI:       // Read: "\n=begi"
                 /*DEBUG*/printf("%d %c\n", state, c);
                 if (c = 'n')
                     state = S_COMMENT_EBEGIN;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_EBEGIN:      // Read: "\n=begin"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -504,10 +555,9 @@ TToken getToken(FILE *f){
                     state = S_COMMENT_BLOCK_EOL;
                 else if (isspace(c))
                     state = S_COMMENT_BLOCK;
-                else {
-                    //TODO: Invalid token
-                }
-            break;
+                else
+                    TOKERR(c, f, errflg, buff, tok);
+                break;
             
             case S_COMMENT_BLOCK:       // Skipping every char but '\n'
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -516,7 +566,7 @@ TToken getToken(FILE *f){
                 else {
                     state = S_COMMENT_BLOCK;
                 }
-            break;
+                break;
             
             case S_COMMENT_BLOCK_EOL:   // Read: "\n"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -527,7 +577,7 @@ TToken getToken(FILE *f){
                 else {
                     state = S_COMMENT_BLOCK;
                 }
-            break;
+                break;
             
             case S_COMMENT_BLOCK_E:     // Read: "\n="
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -538,7 +588,7 @@ TToken getToken(FILE *f){
                 else {
                     state = S_COMMENT_BLOCK;
                 }
-            break;
+                break;
             
             case S_COMMENT_BLOCK_EE:    // Read: "\n=e"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -549,7 +599,7 @@ TToken getToken(FILE *f){
                 else {
                     state = S_COMMENT_BLOCK;
                 }
-            break;
+                break;
             
             case S_COMMENT_BLOCK_EEN:   // Read: "\n=en"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -560,7 +610,7 @@ TToken getToken(FILE *f){
                 else {
                     state = S_COMMENT_BLOCK;
                 }
-            break;
+                break;
             
             case S_COMMENT_BLOCK_EEND:  // Read: "\n=end"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -570,7 +620,7 @@ TToken getToken(FILE *f){
                     state = S_COMMENT_END_SPACE;
                 else
                     state = S_COMMENT_BLOCK;
-            break;
+                break;
             
             case S_COMMENT_END_SPACE:   // Read: "\n=end "
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -578,7 +628,7 @@ TToken getToken(FILE *f){
                     state = S_COMMENT_EOL_CHECK;
                 else
                     state = S_COMMENT_END_SPACE;
-            break;
+                break;
 
             case S_COMMENT_EOL_CHECK:   // Read: "\n=end \n"
                 /*DEBUG*/printf("%d %c\n", state, c);
@@ -588,9 +638,7 @@ TToken getToken(FILE *f){
                     ungetc(c, f);
                     state = S_START;
                 }
-            break;
-            
-
+                break;
         } //switch
     } //while
 }

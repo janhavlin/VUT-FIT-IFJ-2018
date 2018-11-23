@@ -5,12 +5,12 @@
 * string_init()
 * 	Allocate memory for string and check if allocation is succesful.
 */
-string stringInit(unsigned int *err){				
+string stringInit(){				
 	string arr = (string) calloc( ALLOC_SIZE + 1,  sizeof(char) );
 
 	if(arr == NULL){
 		ifjErrorPrint("dyn_Arr ERROR in stringInit: I can't initialise array.\n");
-		*err = TRANSLATOR_ERR;
+		errflg = ERR_RUNTIME;
 		return NULL;
 	}
 
@@ -24,7 +24,7 @@ string stringInit(unsigned int *err){
  * 	Check if given string is not NULL and if is not NULL, add char c into string.
  *	If string is full and user wants to add new char, than allocate new memory for him.
  */
-void charPut(string *arr, char c, unsigned int *err){		
+void charPut(string *arr, char c){		
 
 	if((*arr) != NULL){
 			
@@ -33,7 +33,7 @@ void charPut(string *arr, char c, unsigned int *err){
 
 			if((*arr) == NULL){
 				ifjErrorPrint("dyn_Arr ERROR in char_put: Can't allocate new place for string.\n");
-				*err = TRANSLATOR_ERR;
+				errflg = ERR_RUNTIME;
 				free(*arr);
 				return;
 			}
@@ -51,7 +51,7 @@ void charPut(string *arr, char c, unsigned int *err){
 	
 	else{
 		ifjErrorPrint("dyn_ARR ERROR in char_put: Given string is NULL.\n");
-		*err = SEM_DEFINE_ERR;
+		errflg = ERR_RUNTIME;
 		return;
 	}
 }
@@ -73,4 +73,3 @@ bool strDelete( string arr ){
 	}
 
 }
-

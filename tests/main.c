@@ -4,6 +4,9 @@
 #include "../src/scanner.h"
 #include "../src/dyn_arr.h"
 #include "../src/type_conv.h"
+#include "../src/ifj_error.h"
+
+int errflg;
 
 void test_scanner(char *grp_name, int mode) {
     FILE *scanner_file = fopen("tests/test_scanner", "r");
@@ -43,6 +46,15 @@ void test_scanner(char *grp_name, int mode) {
     
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_EOL, "\'\\n\' test", mode);
+
+    tok = getToken(scanner_file);
+    TEST_EQ_INT(errflg, ERR_LEXICAL, "Invalid token test", mode);
+    TEST_EQ_INT(tok.type, TOK_ERR, "Invalid token test", mode);
+    tok = getToken(scanner_file);
+    TEST_EQ_INT(tok.type, TOK_ID, "Identifier test", mode);    
+    tok = getToken(scanner_file);
+    TEST_EQ_INT(tok.type, TOK_EOL, "EOL test", mode);
+
     tok = getToken(scanner_file);
     TEST_EQ_INT(tok.type, TOK_ADD, "+ test", mode);
     tok = getToken(scanner_file);
@@ -1113,7 +1125,7 @@ void test_string(char *grp_name, int mode) {
     TEST_SET_GROUP(grp_name);
     unsigned err;
     string str = stringInit(&err);
-    charPut(str, 'a', &err);
+    charPut(&str, 'a');
     TEST_EQ_INT(strcmp(str, "a"), 0, "str == \"a\"", mode);
 }
 
@@ -1132,6 +1144,7 @@ void test_conv(char *grp_name, int mode)
 
 int main()
 {
+    errflg = 0;
     test_scanner("scanner.c tests", !COMPACT);
     test_string("dyn_arr.c tests", !COMPACT);
     test_conv("type_conv.c tests", !COMPACT);

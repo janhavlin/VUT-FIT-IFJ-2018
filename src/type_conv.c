@@ -2,6 +2,7 @@
 #include <math.h>
 #include <ctype.h>
 #include "type_conv.h"
+#include "ifj_error.h"
 
 
 
@@ -98,12 +99,21 @@ char *convIntToStr(int numb){
 	}
 	
 	while(numb > 0){
-		charPut(res, numb % 10 + '0', &err);
+		charPut(&res, numb % 10 + '0');
+		if (errflg){
+			free(res);
+			return NULL;
+		}
 		numb /= 10;
 	}
 
-	if(sign)
-		charPut(res, '-', &err);
+	if(sign){
+		charPut(&res, '-');
+		if (errflg){
+			free(res);
+			return NULL;
+		}
+	}
 	for(unsigned int i = 0; i < strlen(res)/2; i++){
 		tmp = res[i];
 		res[i] = res[strlen(res)-i-1];

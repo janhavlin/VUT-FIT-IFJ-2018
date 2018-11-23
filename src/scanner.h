@@ -1,3 +1,15 @@
+/**
+	file name:		scanner.h
+	project:		VUT-FIT-IFJ-2018
+	created:		19.11.2018
+	last modified:	24.10.2018
+	
+	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
+	modifications:	
+	
+	description:	Reads tokens from input stream
+*/
+
 #ifndef IFJ18_SCANNER_H
 #define IFJ18_SCANNER_H
 
