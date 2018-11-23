@@ -8,6 +8,13 @@
  * modification:
  * 
  * description: Functions for converting specific block of code into three address code. 
+ *              ADDToAssembler()    convert ADD into 3 address code
+ *              SUBToAssembler()    convert SUB into 3 address code
+ *              MULToAssembler()    convert MUL into 3 address code
+ *              DIVToAssembler()    convert DIV into 3 address code
+ *              IFToAssembler()     convert IF into 3 address code
+ *              WHILEToAssembler()  convert WHILE into 3 address code
+ *              FUNToAssembler()    convert FUN definition into 3 address code
  */
 
 #include "translation.h"
