@@ -34,8 +34,8 @@ typedef enum {
     TOK_EQ,              // ==
     TOK_NEQ,             // !=
     TOK_ASSIGN,          // =
-    TOK_LEFT_BRACKET,    // (
-    TOK_RIGHT_BRACKET,   // )
+    TOK_LBR,             // (
+    TOK_RBR,             // )
     TOK_COMMA,           // ,
     TOK_EOL,             // '\n'
 	TOK_EOF
