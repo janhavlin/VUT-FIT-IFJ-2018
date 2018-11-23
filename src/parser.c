@@ -232,7 +232,7 @@ bool assorfun(TToken **tokenPP, FILE *f) {
 						} else 
 							break;
 		case TOK_COMMA:
-		case TOK_LEFT_BRACKET:
+		case TOK_LBR:
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:
@@ -259,7 +259,7 @@ bool assign(TToken **tokenPP, FILE *f) {
 							//continue to rule#17
 						} else 
 							break;
-		case TOK_LEFT_BRACKET:
+		case TOK_LBR:
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:
@@ -310,7 +310,7 @@ bool decideExprOrFunc(TToken **tokenPP, FILE *f) {
 							//continue to rule #18
 						} else 
 							break;
-		case TOK_LEFT_BRACKET:
+		case TOK_LBR:
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:
@@ -333,7 +333,7 @@ bool pbody(TToken **tokenPP, FILE *f) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
-		case TOK_LEFT_BRACKET: //rule #18 P-BODY -> ( P-LIST )
+		case TOK_LBR:	//rule #18 P-BODY -> ( P-LIST )
 						**tokenPP = getToken(f); //( is present, call next token
 						value = plist(tokenPP, f) && rbr(tokenPP, f);
 						break;
@@ -457,7 +457,7 @@ bool lbr(TToken **tokenPP, FILE *f) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
-	if (type == TOK_LEFT_BRACKET) {
+	if (type == TOK_LBR) {
 		**tokenPP = getToken(f); //lbr is present, call next token
 		value = true;
 	} else 

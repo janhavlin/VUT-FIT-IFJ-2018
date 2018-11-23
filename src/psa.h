@@ -13,6 +13,9 @@
 #define IFJ18_PSA_H
 #include<stdio.h>
 #include "dyn_arr.h"
+#include "scanner.h"
+
+
 
 /**
  * handles expressions
