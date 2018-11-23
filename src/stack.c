@@ -6,14 +6,18 @@ tStackPtr sInit( void ){
 	
 	if(stack != NULL){	
 		stack->buff = (char *) calloc(STACK_SIZE, sizeof(char*));
-		if(stack->buff == NULL)
+		if(stack->buff == NULL){
+			ifjErrorPrint("stack ERROR in sInit: Given string is NULL. ERROR %d\n", ERR_RUNTIME);
 			return NULL; 
+		}
 		stack->top = 0;	
 	}
 	
-	else
-		ifjErrorPrint("stack ERROR in sInit: Given string is NULL.\n");
-		
+	else{
+		ifjErrorPrint("stack ERROR in sInit: Given string is NULL. ERROR %d\n", ERR_RUNTIME);
+		return NULL;
+	}
+
 	return stack;
 }
 

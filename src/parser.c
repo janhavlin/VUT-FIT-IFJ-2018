@@ -7,7 +7,7 @@
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
 	
-	description:	Heart of the compiler, includes main
+	description:	Recursive Descent parser				
 */
 
 #include "parser.h"
@@ -20,8 +20,9 @@ int main() {
 	bool success = false;
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
-		error("ERROR %d in parser.c in func. main: allocation failed!\n", ERR_RUNTIME);
-		return ERR_RUNTIME;
+		ifjErrorPrint("ERROR %d in parser.c in func. main: allocation failed!\n", ERR_RUNTIME);
+		errflg = ERR_RUNTIME;
+		return ERR_RUNTIME; 
 	}
 	TToken **tokenPP = &token;
 	FILE *f = stdin;
@@ -67,7 +68,8 @@ bool start(TToken **tokenPP, FILE *f) {
 						value = true;
 						**tokenPP = getToken(f);
 						break;
-		default:		error("ERROR %d in parser.c in func. start: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. start: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -99,7 +101,8 @@ bool stat(TToken **tokenPP, FILE *f) {
 						break;
 		case TOK_EOL:	//rule #13 STAT -> eps
 						return true;
-		default:		error("ERROR %d in parser.c in func. stat: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. stat: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;							
 	}
 	return value;
@@ -122,7 +125,8 @@ bool fundef(TToken **tokenPP, FILE *f) {
 					 eol(tokenPP, f) && stlist(tokenPP, f) && end(tokenPP, f);
 		} 
 	} else {
-		error("ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		errflg = ERR_SYNTAX;
 	} 
 	return value;
 }
@@ -147,7 +151,8 @@ bool stlist(TToken **tokenPP, FILE *f) {
 		case TOK_EOL:	//rule #4 ST-LIST -> STAT eol ST-LIST
 						value = stat(tokenPP, f) && eol(tokenPP, f) && stlist(tokenPP, f);
 						break;
-		default:		error("ERROR %d in parser.c in func. stlist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. stlist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -176,10 +181,11 @@ bool plist(TToken **tokenPP, FILE *f) {
 						**tokenPP = getToken(f); //comma is present, call next token
 						value = term(tokenPP, f) && plist(tokenPP, f);
 						break;
-		case TOK_RIGHT_BRACKET:
+		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
 						return true;
-		default:		error("ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -208,7 +214,8 @@ bool term(TToken **tokenPP, FILE *f) {
 							return true;
 						} 
 						break;
-		default:		error("ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -240,7 +247,8 @@ bool assorfun(TToken **tokenPP, FILE *f) {
 		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY
 						value = pbody(tokenPP, f);
 						break;
-		default:		error("ERROR %d in parser.c in func. assorfun: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. assorfun: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -272,7 +280,8 @@ bool assign(TToken **tokenPP, FILE *f) {
 						break;
 		case TOK_ID:	value = decideExprOrFunc(tokenPP, f);
 						break;
-		default:		error("ERROR %d in parser.c in func. assign: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. assign: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -285,6 +294,7 @@ bool assign(TToken **tokenPP, FILE *f) {
  */
 bool decideExprOrFunc(TToken **tokenPP, FILE *f) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	tokBuffInit();
 	TToken bufferToken = **tokenPP;
 	**tokenPP = getToken(f); //id is present, but I need another token to decide
 	switch ((*tokenPP)->type) {
@@ -317,7 +327,8 @@ bool decideExprOrFunc(TToken **tokenPP, FILE *f) {
 		case TOK_ID:	//rule #18 ASSIGN -> id P-BODY
 						//actually no need of returning any tokens to scanner
 						return plist(tokenPP, f); 
-		default:		error("ERROR %d in parser.c in func. decideExprOrFunc: unexpected token n. %d!\n", ERR_SYNTAX, (*tokenPP)->type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. decideExprOrFunc: unexpected token n. %d!\n", ERR_SYNTAX, (*tokenPP)->type);
+						errflg = ERR_SYNTAX;
 						break;
 	}
 	return false;
@@ -349,7 +360,8 @@ bool pbody(TToken **tokenPP, FILE *f) {
 		case TOK_EOL:	//rule #19 P-BODY -> P-LIST
 						value = plist(tokenPP, f);
 						break;
-		default:		error("ERROR %d in parser.c in func. pbody: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("ERROR %d in parser.c in func. pbody: unexpected token n. %d!\n", ERR_SYNTAX, type);
+						errflg = ERR_SYNTAX;
 						break;						
 	}
 	return value;
@@ -365,8 +377,10 @@ bool eol(TToken **tokenPP, FILE *f) {
 	if (type == TOK_EOL) {
 		**tokenPP = getToken(f); //eol is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. eol: unexpected token n. %d!\n", ERR_SYNTAX, type);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. eol: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -381,8 +395,10 @@ bool then(TToken **tokenPP, FILE *f) {
 	if (type == TOK_KEY && (strcmp(keyW, "then") == 0)) {
 		**tokenPP = getToken(f); //then is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. then: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. then: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -397,8 +413,10 @@ bool telse(TToken **tokenPP, FILE *f) {
 	if (type == TOK_KEY && (strcmp(keyW, "else") == 0)) {
 		**tokenPP = getToken(f); //else is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. telse: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. telse: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -414,8 +432,10 @@ bool end(TToken **tokenPP, FILE *f) {
 	if (type == TOK_KEY && (strcmp(keyW, "end") == 0)) {
 		**tokenPP = getToken(f); //end is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -430,8 +450,10 @@ bool tdo(TToken **tokenPP, FILE *f) {
 	if (type == TOK_KEY && (strcmp(keyW, "do") == 0)) {
 		**tokenPP = getToken(f); //do is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. tdo: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. tdo: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -445,8 +467,10 @@ bool id(TToken **tokenPP, FILE *f) {
 	if (type == TOK_ID) {
 		**tokenPP = getToken(f); //id is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. id: unexpected token n. %d!\n", ERR_SYNTAX, type);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. id: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -460,8 +484,10 @@ bool lbr(TToken **tokenPP, FILE *f) {
 	if (type == TOK_LBR) {
 		**tokenPP = getToken(f); //lbr is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. lbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. lbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 
@@ -472,11 +498,13 @@ bool rbr(TToken **tokenPP, FILE *f) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
-	if (type == TOK_RIGHT_BRACKET) {
+	if (type == TOK_RBR) {
 		**tokenPP = getToken(f); //rbr is present, call next token
 		value = true;
-	} else 
-		error("ERROR %d in parser.c in func. rbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. rbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		errflg = ERR_SYNTAX;
+	}
 	return value;
 }
 

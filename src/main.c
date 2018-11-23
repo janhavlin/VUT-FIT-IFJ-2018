@@ -1,6 +1,10 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include "stack_list.h"
 
-int main() {
-    printf("Hello, World!\n");
-    return 0;
+
+int main( void ){
+	tStackLPtr s = sLInit();
+	sLDelete(s);
+	return 0;
 }
