@@ -128,11 +128,11 @@ TToken getToken(FILE *f){
                     return tok;
                 }
                 else if (c == '('){
-                    tok.type = TOK_LEFT_BRACKET;
+                    tok.type = TOK_LBR;
                     return tok;
                 }
                 else if (c == ')'){
-                    tok.type = TOK_RIGHT_BRACKET;
+                    tok.type = TOK_RBR;
                     return tok;
                 }
                 else if (c == ','){
