@@ -99,11 +99,13 @@ TToken testArray[TOK_AMOUNT] = {
 };
 
 
-TToken * getToken(FILE *f) {
+TToken getToken(FILE *f) {
 	static int index = 0;
 	if (index < TOK_AMOUNT)
-		return &(testArray[index++]);
-	else
-		return NULL;
+		return testArray[index++];
+	else {
+		TToken tok = {TOK_ERR, .data.s = "err"};
+		return tok;
+	}
 }
     
