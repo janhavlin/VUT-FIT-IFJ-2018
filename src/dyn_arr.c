@@ -1,6 +1,7 @@
 #include "dyn_arr.h"
 #include "ifj_error.h"
 
+int errflg = 0;
 /*
 * string_init()
 * 	Allocate memory for string and check if allocation is succesful.
@@ -38,7 +39,7 @@ void charPut(string *arr, char c){
 				return;
 			}
 			
-			for(int i = strlen(*arr); i < strlen(*arr)+ALLOC_SIZE+1; i++)
+			for(unsigned int i = strlen(*arr); i < strlen(*arr)+ALLOC_SIZE+1; i++)
 				(*arr)[i] = '\0';
 				
 			(*arr)[strlen(*arr)] = c;
