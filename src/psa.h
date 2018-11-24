@@ -30,5 +30,24 @@
  */
 bool processExpression(FILE *, string);
 
+char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
+int getIndex(TToken token);
+
+char **rules = {"E+E",
+				"E-E",
+				"+E",
+				"-E",
+				"E*E",
+				"E/E",
+				"E<E",
+				"E>E",
+				"E<=E",
+				"E>=E",
+				"E==E",
+				"E!=E",
+				"(E)",
+				"i",
+				"+E"};
+
 #endif //IFJ18_PSA_H
 /* end of psa.h */

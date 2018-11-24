@@ -1,4 +1,5 @@
 #include "stack_list.h"
+#include "scanner.h"
 
 tStackLPtr sLInit( void ){
 	tStackLPtr stack = (tStackLPtr) malloc(sizeof(tStackL));
@@ -46,6 +47,12 @@ tStackLPtr sLInit( void ){
 		return NULL;
 	}
 }
+
+tStackIPtr sHighestTerminal( tStackLPtr stack ){
+	//TODO:
+}
+
+
 
 bool sLDelete( tStackLPtr stack ){
 	if(stack != NULL){
@@ -137,9 +144,8 @@ void sLPush( tStackLPtr stack, char *type, char *name ){
 		New->next = NULL;
 		New->pred = NULL;
 		
-		New->IdName 	= (char *) calloc(strlen(name) + 1, sizeof(char));
-		New->type 		= (char *) calloc(strlen(type) + 1, sizeof(char));		
-		
+		New->IdName = (char *) calloc(strlen(name) + 1, sizeof(char));
+		New->type 	= (char *) calloc(strlen(type) + 1, sizeof(char));		
 		
 		if(New->IdName == NULL){
 			ifjErrorPrint("stack_list ERROR in sLPush: Can't allocate item 'IdName' in New. ERROR %d\n", ERR_RUNTIME);
@@ -152,8 +158,8 @@ void sLPush( tStackLPtr stack, char *type, char *name ){
 		}
 		
 
-		New->IdName 	= strcpy(New->IdName, name);
-		New->type 		= strcpy(New->type, type);
+		New->IdName = strcpy(New->IdName, name);
+		New->type 	= strcpy(New->type, type);
 		
 		tStackIPtr Help;
 
@@ -176,4 +182,3 @@ void sLPush( tStackLPtr stack, char *type, char *name ){
 		}
 	}
 }
-

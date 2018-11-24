@@ -37,11 +37,12 @@ typedef tStackL* tStackLPtr;	// list ptr
 
 
 tStackLPtr sLInit( void );
+tStackIPtr sHighestTerminal( tStackLPtr stack);
+tStackIPtr sLTop( tStackLPtr stack );
+tStackIPtr sLPop( tStackLPtr stack );
 bool sLDelete( tStackLPtr stack );
 bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
-tStackIPtr sLTop( tStackLPtr stack );
-tStackIPtr sLPop( tStackLPtr stack );
 void sLPush( tStackLPtr stack, char *type, char *name );
 
 #endif // STACK_PR
