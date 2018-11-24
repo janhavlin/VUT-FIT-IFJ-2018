@@ -1,3 +1,14 @@
+/**
+	file name:		symtable.h
+	project:		VUT-FIT-IFJ-2018
+	created:		15.11.2018
+	last modified:	24.11.2018
+	
+	created by: 	Jan Vavřina xvavri10@stud.fit.vutbr.cz
+	modifications:	
+	
+	description:	Header file for the symtable			
+*/
 #ifndef SYMTABLE
 #define SYMTABLE
 
@@ -7,13 +18,11 @@
 #include<string.h>
 #include<ctype.h>
 
-#define TYPE_INT 0
-#define TYPE_FLOAT 1
-#define TYPE_STRING 2
-#define TYPE_FUNCTION 3
-#define TYPE_KEYWORD 4
+typedef char* string; //tmp - testing only
 
-typedef char* string;
+/**
+ * Definition of used keywords
+ */
 char keywords[12][7] = {
 	"def", 
 	"do", 
@@ -29,23 +38,26 @@ char keywords[12][7] = {
 	"String"
 };
 
-/*typedef enum {
-	TYPE_INT = 0
-	TYPE_FLOAT = 1
-	TYPE_STRING = 2
-	TYPE_FUCNTION = 3
-	TYPE_KEYWORD = 4
-} types;*/
+/** An enum type
+ * Enumerate for token types
+ */
+typedef enum {
+    TYPE_INT,
+    TYPE_FLT,
+    TYPE_STR,
+    TYPE_FUN,
+    TYPE_KWD
+} TsymType;
 
 typedef union {
 	int i;
 	double f;
 	string s;
-} TsymType;
+} TsymValue;
 
 typedef struct TsymData {
 	int type;
-	TsymType value;
+	TsymValue value;
 } *TsymDataPtr;
 
 typedef struct TNode {
@@ -55,13 +67,10 @@ typedef struct TNode {
 	struct TNode *rPtr;
 } *NodePtr;
 
-/*typedef struct {
-	struct symItem *first;
-} TsymTable;*/
-
 void symTableInit(NodePtr *);
 int symTableInsert(NodePtr *, string, TsymDataPtr);
 TsymDataPtr symTableSearch(NodePtr, string);
 void symTableFree(NodePtr *t);
 
 #endif //SYMTABLE
+/* end of symtable.h */
