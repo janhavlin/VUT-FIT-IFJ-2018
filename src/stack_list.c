@@ -54,17 +54,28 @@ tStackLPtr sLInit( void ){
 }
 
 /*
- * sHighestTerminal()
- * 	Find highest terminal in stack. Return pointer to it.
-*/
+ *  sHighestTerminal()
+ * 		Find highest terminal in stack. Return pointer to it.
+ */
 tStackIPtr sHighestTerminal( tStackLPtr stack ){
 	//TODO:
 }
 
+
+/*
+ *	sFindRule()
+ * 		While reducing items in struct, because of semantic analysiss,
+ * 		it tries to find corresponding rule for that.
+ *	
+ */
 int sFindRule( tStackLPtr stack ){
 	//TODO:
 }
 
+/*
+ *	sLDelete()
+ *		Delete whole stack.
+*/
 bool sLDelete( tStackLPtr stack ){
 	if(stack != NULL){
 		tStackIPtr help = stack->first;
@@ -104,7 +115,10 @@ bool sLDelete( tStackLPtr stack ){
 		return 0;
 }
 
-
+/*
+ *	sLEmpty()
+ *		Check if stack is empty. If yes, return 1, otherwise return 0.
+*/
 bool sLEmpty( tStackLPtr stack ){	// return 1 if stack is empty
 	if(stack != NULL){
 		if( !(strcmp(stack->top->type, "EOS")) || !(strcmp(stack->top->IdName, "$")) ){
@@ -122,7 +136,10 @@ bool sLEmpty( tStackLPtr stack ){	// return 1 if stack is empty
 	return 1;
 }
 
-
+/*
+ *	sLTop()
+ *		Return value at the top of stack. It will not delete it.
+*/
 tStackIPtr sLTop( tStackLPtr stack ){
 	if(stack != NULL)
 		return stack->top;
@@ -130,7 +147,10 @@ tStackIPtr sLTop( tStackLPtr stack ){
 		return NULL;
 }
 
-
+/*
+ *	sLPop()
+ *		Return value at the top of stack. Decrement top value.
+ */
 tStackIPtr sLPop( tStackLPtr stack ){
 	if( !sLEmpty(stack) ){
 		tStackIPtr res = stack->top;
@@ -143,7 +163,10 @@ tStackIPtr sLPop( tStackLPtr stack ){
 
 			
 				
-
+/*
+ *	sLPush()
+ *		Create new stack list, fill it with 'type' and 'name' and then put it into stack.
+*/
 void sLPush( tStackLPtr stack, char *type, char *name ){
 	if(stack != NULL){
 		tStackIPtr New 	= (tStackIPtr) malloc(sizeof(tStackI));
