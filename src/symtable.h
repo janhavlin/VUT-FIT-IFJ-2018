@@ -23,7 +23,7 @@ typedef char* string; //tmp - testing only
 /**
  * Definition of used keywords
  */
-char keywords[12][7] = {
+char keywords[9][7] = {
 	"def", 
 	"do", 
 	"else", 
@@ -33,9 +33,6 @@ char keywords[12][7] = {
 	"nil", 
 	"then", 
 	"while", 
-	"Integer", 
-	"Float", 
-	"String"
 };
 
 /** An enum type
@@ -68,7 +65,7 @@ typedef struct TNode {
 } *NodePtr;
 
 void symTableInit(NodePtr *);
-int symTableInsert(NodePtr *, string, TsymDataPtr);
+void symTableInsert(NodePtr *, string, TsymDataPtr);
 TsymDataPtr symTableSearch(NodePtr, string);
 void symTableFree(NodePtr *t);
 
