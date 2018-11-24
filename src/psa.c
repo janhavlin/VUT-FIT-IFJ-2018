@@ -17,7 +17,7 @@
  * @param stackTopTok is token currently at the top of stack
  * @param newToken is token received by scanner
  */
-char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
+char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     char precedenceTable[NUMBER_OF_TOKENS][NUMBER_OF_TOKENS] = {
     //   +    -    *    /    <    >   <=    >=    ==    !=     (    )    i    $  
         {'r', 'r', 's', 's', 'r', 'r', 'r',  'r',  'r',  'r',  's', 'r', 's', 'r'},
@@ -32,8 +32,8 @@ char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
         {'s', 's', 's', 's', 's', 's', 's',  's',  'r',  'r',  's', 'r', 's', 'r'},
         {'s', 's', 's', 's', 's', 's', 's',  's',  's',  's',  's', 'e', 's', 'X'},
         {'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'X', 'r', 'X', 'r'},
-        {'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'E', 'r', 'E', 'r'},
-        {'s', 's', 's', 's', 's', 's', 's',  's',  's',  's',  's', 'E', 's', 'E'}
+        {'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'X', 'r', 'X', 'r'},
+        {'s', 's', 's', 's', 's', 's', 's',  's',  's',  's',  's', 'X', 's', 'X'}
     };
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
@@ -76,7 +76,7 @@ int getIndex(TToken token) {
     return -1;
 }
 
-bool processExpression(FILE *, string){
+bool processExpression(FILE * f, string followingToken){
 
 }
 
@@ -85,10 +85,10 @@ bool processExpression(FILE *, string){
  *  HighestTerminal()
  * 		Find highest terminal in stack. Return pointer to it.
  */
-tStackIPtr HighestTerminal( tStackLPtr stack ){
-	tStatIPtr tmp = stack->top;
+tStackIPtr highestTerminal( tStackLPtr stack ){
+	tStackIPtr tmp = stack->top;
     if(stack != NULL){
-        while( !strcmp( tmp->IdName, E) );
+        while( !strcmp( tmp->IdName, 'E'));
         return tmp;
     }
     return NULL;
@@ -100,7 +100,7 @@ tStackIPtr HighestTerminal( tStackLPtr stack ){
  * 		While reducing items in struct, because of semantic analysiss,
  * 		it tries to find corresponding rule for that.
  */
-int FindRule( string readRule ){
+int findRule( string readRule ){
     if(readRule != NULL){
 	string help;
         for(unsigned int ruleNum = 0; ruleNum < AMOUNT_OF_RULES; ruleNum++){

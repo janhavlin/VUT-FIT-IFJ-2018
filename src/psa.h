@@ -33,26 +33,26 @@
  */
 bool processExpression(FILE *, string);
 
-char * lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
+char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
 
 char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
-												{"E+E"},// rule 0 
-												{"E-E"},// rule 1
-												{"+E"},	// rule 2
-												{"-E"},	// rule 3
-												{"E*E"},// rule 4
-												{"E/E"},// rule 5
-												{"E<E"},// rule 6
-												{"E>E"},// rule 7
-												{"E<=E"},// rule 8
-												{"E>=E"},// rule 9
-												{"E==E"},// rule 10
-												{"E!=E"},// rule 11
-												{"(E)"},// rule 12
-												{"i"},	// rule 13
-												{"+E"}	// rule 14
-											};	
+	{"E+E"},// rule 0 
+	{"E-E"},// rule 1
+	{"+E"},	// rule 2
+	{"-E"},	// rule 3
+	{"E*E"},// rule 4
+	{"E/E"},// rule 5
+	{"E<E"},// rule 6
+	{"E>E"},// rule 7
+	{"E<=E"},// rule 8
+	{"E>=E"},// rule 9
+	{"E==E"},// rule 10
+	{"E!=E"},// rule 11
+	{"(E)"},// rule 12
+	{"i"},	// rule 13
+	{"+E"}	// rule 14
+};	
 
 tStackIPtr HighestTerminal( tStackLPtr stack );
 int FindRule( string readRule );

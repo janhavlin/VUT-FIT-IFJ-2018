@@ -17,7 +17,6 @@
 #include "ifj_error.h"
 #include "dyn_arr.h"
 #define DEBUG 0
-#define KWD_AMMOUNT 9
 
 /**
  * EXAMPLE OF SYMBOL TABLE USAGE:
@@ -46,21 +45,6 @@
 	}
 	symTabDispose(tablePP);
 */
-
-/**
- * Keywords in the IFJ18 language
- */ 
-char *kwds[] = {
-	"if", 	
-	"do",	
-	"nil",	
-	"def",	
-	"else", 
-	"not",	
-	"then",	
-	"end",	
-	"while"	
-};
 
 /**
  * types of items in symbol table
@@ -97,6 +81,7 @@ typedef struct symItem {
 } TsymItem;
 
 void symTabInit(TsymItem **rootPP);
+void fillTabWithKwds (TsymItem **tablePP);
 bool symTabSearch(TsymItem *rootPtr, string key, TsymData *data);
 void symTabInsert(TsymItem **rootPP, string key, TsymData *data);
 void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP);
