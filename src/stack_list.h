@@ -36,11 +36,10 @@ typedef tStackI* tStackIPtr;	// item ptr
 typedef tStackL* tStackLPtr;	// list ptr
 
 
-tStackLPtr sLInit( void );
-tStackIPtr sHighestTerminal( tStackLPtr stack);
-int sFindRule( tStackLPtr stack );
+tStackLPtr sLInit( void );		
 tStackIPtr sLTop( tStackLPtr stack );
 tStackIPtr sLPop( tStackLPtr stack );
+string sGetExprToReduce( tStackLPtr stack );
 bool sLDelete( tStackLPtr stack );
 bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
