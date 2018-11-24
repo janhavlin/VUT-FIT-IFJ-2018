@@ -76,13 +76,22 @@ int getIndex(TToken token) {
     return -1;
 }
 
+bool processExpression(FILE *, string){
+
+}
+
+
 /*
  *  HighestTerminal()
  * 		Find highest terminal in stack. Return pointer to it.
  */
 tStackIPtr HighestTerminal( tStackLPtr stack ){
-	//TODO:
-	return stack;
+	tStatIPtr tmp = stack->top;
+    if(stack != NULL){
+        while( !strcmp( tmp->IdName, E) );
+        return tmp;
+    }
+    return NULL;
 }
 
 
