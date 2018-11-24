@@ -1,6 +1,11 @@
 #include "stack_list.h"
 #include "scanner.h"
 
+/*
+ *	sLInit()
+ *		Inicialise all stack + add first item with $.
+ *		Return pointer to inicialise stack.
+ */
 tStackLPtr sLInit( void ){
 	tStackLPtr stack = (tStackLPtr) malloc(sizeof(tStackL));
 	
@@ -9,10 +14,10 @@ tStackLPtr sLInit( void ){
 		stack->first = (tStackIPtr) malloc(sizeof(tStackI));
 		
 		if(stack->first != NULL){
-			stack->first->pred 		= NULL;	
-			stack->first->next 		= NULL;
-			stack->first->type 		= (char *) calloc(4, sizeof(char));
-			stack->first->IdName 	= (char *) calloc(2, sizeof(char));
+			stack->first->pred 	 = NULL;	
+			stack->first->next 	 = NULL;
+			stack->first->type 	 = (char *) calloc(4, sizeof(char));
+			stack->first->IdName = (char *) calloc(2, sizeof(char));
 
 			if(stack->first->IdName == NULL){
 				free(stack->first);
@@ -48,11 +53,17 @@ tStackLPtr sLInit( void ){
 	}
 }
 
+/*
+ * sHighestTerminal()
+ * 	Find highest terminal in stack. Return pointer to it.
+*/
 tStackIPtr sHighestTerminal( tStackLPtr stack ){
 	//TODO:
 }
 
-
+int sFindRule( tStackLPtr stack ){
+	//TODO:
+}
 
 bool sLDelete( tStackLPtr stack ){
 	if(stack != NULL){
