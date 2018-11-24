@@ -17,6 +17,35 @@ void symTabInit (TsymItem **rootPP) {
 }	
 
 /**
+ * number of keywords
+ */ 
+#define KWD_AMMOUNT 9
+/**
+ * Fills given symbol table with the IFJ18 keywords
+ */ 
+void fillTabWithKwds (TsymItem **tablePP) {
+	// Keywords in the IFJ18 language 
+	char *kwds[] = {
+		"not", "end", "then", "def", "if", "nil", "while", "do", "else"
+	};
+	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
+	if(newData != NULL){
+		newData->type = TYPE_KWD;
+		newData->defined = false;
+		newData->value.i = 0;
+
+		for (int i = 0; i < KWD_AMMOUNT; i++)
+			symTabInsert(tablePP, kwds[i], newData);
+
+		free(newData);
+		newData = NULL;
+	} else {
+		errflg = ERR_RUNTIME;
+		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
+	}
+}
+
+/**
  * Finds a node with key in symbol table tree
  * 
  * @param data is destination to copy found data to
@@ -151,9 +180,9 @@ void symTabToString(TsymItem *rootPtr, int depth) {
 			for (int i = 0; i < depth; i++)
 				printf(" ");
 			switch(rootPtr->data->type) {
-				case 0:	printf("key:%s\ttype:%d\tdefined:%d\tvalue:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.i); break;
-				case 1: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%f\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.f); break;
-				case 2: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%s\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.s); break;
+				case TYPE_INT:	printf("key:%s\ttype:%d\tdefined:%d\tvalue:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.i); break;
+				case TYPE_FLT: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%f\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.f); break;
+				case TYPE_STR: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%s\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.s); break;
 				default:	printf("key:%s\ttype:%d\tdefined:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined); break;
 			}
 		}
