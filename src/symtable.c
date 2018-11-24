@@ -44,21 +44,29 @@ TsymDataPtr symTableSearch(NodePtr t, string key){
  * @param key is the key we are searching for
  * @param data are the data we want to include into the node
  */
-int symTableInsert(NodePtr *t, string key, TsymDataPtr data)
+void symTableInsert(NodePtr *t, string key, TsymDataPtr data)
 {
-    if (t != NULL){
-        if  ((*t)->key > key) symTableInsert(&(*t)->lPtr, key, data);
-		else if((*t)->key < key) symTableInsert(&(*t)->rPtr, key, data);
-		else (*t)->data = data;
+    if (*t != NULL){
+        if ((*t)->key == key){
+            (*t)->data = data;
+        }
+		else if((*t)->key < key){
+            symTableInsert(&((*t)->rPtr), key, data);
+        }
+        else{
+            symTableInsert(&((*t)->lPtr), key, data);
+        }
     }else{
-        NodePtr newItem;
-        if ((newItem = malloc(sizeof(struct TNode))) != NULL)
+        NodePtr newItem = malloc(sizeof(struct TNode));
+        if (newItem == NULL){
+            return;
+        }else
         {
-            newItem->key = memcpy(newItem->key, key, strlen(key)+1);
+            newItem->key = key; //memcpy(newItem->key, key, strlen(key)+1);
             newItem->data = data;
             newItem->lPtr = NULL;
             newItem->rPtr = NULL;
-            (*t) = newItem;
+            *t = newItem;
         }
     }
 }
@@ -69,7 +77,7 @@ int symTableInsert(NodePtr *t, string key, TsymDataPtr data)
  */
 void symTableFree(NodePtr *t)
 {
-    if (t != NULL)
+    if (*t != NULL)
     {
         symTableFree(&(*t)->rPtr);
         symTableFree(&(*t)->lPtr);
@@ -83,6 +91,15 @@ void symTableFree(NodePtr *t)
  */
 void symTableInit(NodePtr *t){
     *t = NULL;
-    for(int i = 0; i < 12; i++) symTableInsert(t,keywords[i],NULL);
+    for(int i = 0; i < 9; i++){
+        symTableInsert(t,keywords[i],NULL);
+    }
+}
+
+int main(){
+    NodePtr *t;
+    symTableInit(t);
+    symTableSearch(*t,keywords[5]);
+    symTableFree(t);
 }
 /* end of symtable.c */
