@@ -1,8 +1,6 @@
 #include "symtable.h"
 
-void symTableInit(NodePtr *t){
-    *t = NULL;
-}
+
 
 TsymDataPtr symTableSearch(NodePtr t, string key){
     if (t != NULL)
@@ -55,6 +53,12 @@ void symTableFree(NodePtr *t)
         *t = NULL;
     }
 }
+
+void symTableInit(NodePtr *t){
+    *t = NULL;
+    for(int i = 0; i < 12; i++) symTableInsert(t,keywords[i],NULL);
+}
+
 int main(){
     NodePtr* t;
     symTableInit(t);

@@ -1,3 +1,6 @@
+#ifndef SYMTABLE
+#define SYMTABLE
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdarg.h>
@@ -10,6 +13,22 @@
 #define TYPE_FUNCTION 3
 #define TYPE_KEYWORD 4
 
+typedef char* string;
+char keywords[12][7] = {
+	"def", 
+	"do", 
+	"else", 
+	"end", 
+	"if", 
+	"not", 
+	"nil", 
+	"then", 
+	"while", 
+	"Integer", 
+	"Float", 
+	"String"
+};
+
 /*typedef enum {
 	TYPE_INT = 0
 	TYPE_FLOAT = 1
@@ -17,8 +36,6 @@
 	TYPE_FUCNTION = 3
 	TYPE_KEYWORD = 4
 } types;*/
-
-typedef char* string;
 
 typedef union {
 	int i;
@@ -46,3 +63,5 @@ void symTableInit(NodePtr *);
 int symTableInsert(NodePtr *, string, TsymDataPtr);
 TsymDataPtr symTableSearch(NodePtr, string);
 void symTableFree(NodePtr *t);
+
+#endif //SYMTABLE
