@@ -4,8 +4,7 @@ void symTableInit(NodePtr *t){
     *t = NULL;
 }
 
-TsymData symTableSearch(NodePtr t, string key)
-{
+TsymDataPtr symTableSearch(NodePtr t, string key){
     if (t != NULL)
     {
         NodePtr *searchedItem = NULL;
@@ -22,11 +21,11 @@ TsymData symTableSearch(NodePtr t, string key)
             return t->data;
         }
     } else{
-        return; //dořešit co vlastně se bude vracet
+        return NULL; //dořešit co vlastně se bude vracet
     }
 }
 
-int symTableInsert(NodePtr *t, string key, TsymData data)
+int symTableInsert(NodePtr *t, string key, TsymDataPtr data)
 {
     if (t != NULL){
         if  ((*t)->key > key) symTableInsert(&(*t)->lPtr, key, data);
@@ -34,7 +33,7 @@ int symTableInsert(NodePtr *t, string key, TsymData data)
 		else (*t)->data = data;
     }else{
         NodePtr newItem;
-        if ((newItem = malloc(sizeof(struct symItem))) != NULL)
+        if ((newItem = malloc(sizeof(struct TNode))) != NULL)
         {
             newItem->key = memcpy(newItem->key, key, strlen(key)+1);
             newItem->data = data;

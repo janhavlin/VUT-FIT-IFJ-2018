@@ -26,16 +26,16 @@ typedef union {
 	string s;
 } TsymType;
 
-typedef struct {
+typedef struct TsymData {
 	int type;
 	TsymType value;
-} TsymData;
+} *TsymDataPtr;
 
-typedef struct symItem {
+typedef struct TNode {
 	string key;
-	TsymData data;
-	struct symItem *lPtr;
-	struct symItem *rPtr;
+	TsymDataPtr data;
+	struct TNode *lPtr;
+	struct TNode *rPtr;
 } *NodePtr;
 
 /*typedef struct {
@@ -43,6 +43,6 @@ typedef struct symItem {
 } TsymTable;*/
 
 void symTableInit(NodePtr *);
-int symTableInsert(NodePtr *, string, TsymData);
-TsymData symTableSearch(NodePtr, string);
+int symTableInsert(NodePtr *, string, TsymDataPtr);
+TsymDataPtr symTableSearch(NodePtr, string);
 void symTableFree(NodePtr *t);
