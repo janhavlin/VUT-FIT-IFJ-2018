@@ -47,6 +47,9 @@
 	symTabDispose(tablePP);
 */
 
+/**
+ * Keywords in the IFJ18 language
+ */ 
 char *kwds[] = {
 	"if", 	
 	"do",	
@@ -59,6 +62,9 @@ char *kwds[] = {
 	"while"	
 };
 
+/**
+ * types of items in symbol table
+ */ 
 typedef enum {
     TYPE_INT,
     TYPE_FLT,
@@ -67,6 +73,9 @@ typedef enum {
     TYPE_KWD
 } TsymType;
 
+/**
+ * data structure for item in symbol table
+ */ 
 typedef struct {
 	TsymType type;  
     bool defined;   //only used for functions, false by default
@@ -77,6 +86,9 @@ typedef struct {
     } value;
 } TsymData;
 
+/**
+ * Node in symbol table tree
+ */ 
 typedef struct symItem {
 	string key;
 	TsymData *data;

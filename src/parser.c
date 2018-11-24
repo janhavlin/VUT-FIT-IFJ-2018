@@ -90,12 +90,12 @@ bool stat(TToken **tokenPP, FILE *f) {
 						break;
 		case TOK_KEY:	if (strcmp(keyW, "if") == 0) {
 							//rule #11 STAT -> if expr then eol ST-LIST else eol ST-LIST end
-							**tokenPP = getToken(f); //if is present, call next token
+							//**tokenPP = getToken(f); //if is present, call next token  DONT GET NEXT TOKEN
 							value = processExpression(f, "then") && then(tokenPP, f) && eol(tokenPP, f) && stlist(tokenPP, f) &&
 								    telse(tokenPP, f) && eol(tokenPP, f) && stlist(tokenPP, f) && end(tokenPP, f);
 						} else if (strcmp(keyW, "while") == 0) {
 							//rule #12 STAT -> while expr do eol ST-LIST end
-							**tokenPP = getToken(f); //while is present, call next token
+							//**tokenPP = getToken(f); //while is present, call next token DONT GET NEXT TOKEN
 							value = processExpression(f, "do") && tdo(tokenPP, f) && eol(tokenPP, f) && stlist(tokenPP, f) && end(tokenPP, f);
 						}
 						break;
@@ -275,7 +275,7 @@ bool assign(TToken **tokenPP, FILE *f) {
 		case TOK_SUB:	//rule #17 ASSIGN -> expr 
 						//case 1 - found after examining 1 token, therefore return 1 token to scanner
 						returnToken(**tokenPP);
-						**tokenPP = getToken(f); //expr is present, call next token
+						//**tokenPP = getToken(f); //expr is present, call next token //DONT CALL NEXT TOKEN
 						value = processExpression(f, "eol");
 						break;
 		case TOK_ID:	value = decideExprOrFunc(tokenPP, f);

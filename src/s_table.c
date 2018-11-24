@@ -141,6 +141,9 @@ void symTabDispose (TsymItem **rootPP) {
 	}
 }
 
+/**
+ * Prints the tree structure, call with initial depth of 0
+ */
 void symTabToString(TsymItem *rootPtr, int depth) {
 	if (DEBUG) printf("Function: %s\n", __func__);
 	if (rootPtr != NULL) {
