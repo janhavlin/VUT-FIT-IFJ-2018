@@ -2,7 +2,7 @@
 	file name:		parser.c
 	project:		VUT-FIT-IFJ-2018
 	created:		19.11.2018
-	last modified:	19.11.2018
+	last modified:	25.11.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -12,11 +12,7 @@
 
 #include "parser.h"
 
-#define DEBUG 0
-
-/** ##################### MAIN ############################ */
-
-int main() {
+void parserStart(TsymItem *globalSymTable, TsymItem *localSymTable, FILE *f) {
 	bool success = false;
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
@@ -25,12 +21,10 @@ int main() {
 		return ERR_RUNTIME; 
 	}
 	TToken **tokenPP = &token;
-	FILE *f = stdin;
 	
-	//TODO: assume that getToken(f) vrací token.
-	**tokenPP = getToken(f);
+	**tokenPP = getToken(f, globalSymTable); //globalSymTable???
 	if (*tokenPP != NULL) {
-		success = start(tokenPP, f);
+		success = start(tokenPP, f);	//TODO: pass GT a LT too
 	}
 	if (success) 
 		printf("Syntax OK!\n");
