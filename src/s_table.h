@@ -50,24 +50,21 @@
  * types of items in symbol table
  */ 
 typedef enum {
-    TYPE_INT,
-    TYPE_FLT,
-    TYPE_STR,
+    TYPE_VAR,
     TYPE_FUN,
     TYPE_KWD
 } TsymType;
 
+struct symItem;
 /**
  * data structure for item in symbol table
  */ 
 typedef struct {
 	TsymType type;  
-    bool defined;   //only used for functions, false by default
-	union Value {
-        int i;
-        double f;
-        string s;
-    } value;
+    bool defined;   			//only for functions
+	int funParamsAmnt;			//only for functions
+	string label;				//only for functions
+	struct symItem *localST;	//only for functions
 } TsymData;
 
 /**
