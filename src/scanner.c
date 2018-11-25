@@ -1,8 +1,8 @@
 /**
 	file name:		scanner.c
 	project:		VUT-FIT-IFJ-2018
-	created:		19.11.2018
-	last modified:	24.10.2018
+	created:		24.10.2018
+	last modified:	24.11.2018
 	
 	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
 	modifications:	
@@ -15,9 +15,11 @@
 #include "scanner.h"
 #include "type_conv.h"
 #include "ifj_error.h"
+#include "s_table.h"
 
 //int errflg;
 
+// Returns to parser if a runtime error occurs
 #define CHECKERR(errflg, buff, tok)         \
     do{                                     \
         if(errflg == ERR_RUNTIME){          \
@@ -26,6 +28,7 @@
         }                                   \
     } while(0)
 
+// Skips chars until it founds '\n'
 #define SKIPLINE(c, f)                      \
     do{                                     \
         while ((c = getc(f)) != EOF){       \
@@ -34,6 +37,7 @@
         if (c == '\n' || c == EOF) ungetc(c, f);        \
     } while(0)
 
+// Returns to parser if an invalid token is read
 #define TOKERR(c, f, errflg, buff, tok)     \
     do{                                     \
         SKIPLINE(c, f);                     \
@@ -58,7 +62,7 @@ void returnToken(TToken tok){
         tokBuff.tok[tokBuff.count++] = tok;
 }
 
-TToken getToken(FILE *f){
+TToken getToken(FILE *f, TsymItem *symTableP){
     if (tokBuff.count > 0)
         return tokBuff.tok[--tokBuff.count];
 
@@ -72,7 +76,7 @@ TToken getToken(FILE *f){
     CHECKERR(errflg, buff, tok);
 
     while(c = getc(f)){
-        /*DEBUG*/printf("CHAR READ: %c\n", c);
+        /*DEBUG*///printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
                 if (c >= 'a' && c <= 'z' || c == '_'){
@@ -158,7 +162,7 @@ TToken getToken(FILE *f){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_START;
-                    /*DEBUG*/printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
                     tok.type = TOK_ID;
                     tok.data.s = buff;
                     //free(buff);
@@ -167,8 +171,13 @@ TToken getToken(FILE *f){
                 else {
                     ungetc(c, f);
                     state = S_START;
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    tok.type = TOK_ID;
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    TsymData *data;
+                    if (symTabSearch(symTableP, buff, data) && data->type == TYPE_KWD)
+                        tok.type = TOK_KEY;
+                    else
+                        tok.type = TOK_ID;
+
                     tok.data.s = buff;
                     return tok;
                 }
@@ -188,8 +197,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -221,8 +230,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = 0;
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -248,8 +257,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }                
@@ -265,8 +274,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -293,8 +302,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %d\n", tok.data.i);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -325,8 +334,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_FLOAT;
                     tok.data.f = convStrToDouble(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %lf\n", tok.data.f);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %lf\n", tok.data.f);
                     free(buff);
                     return tok;
                 }             
@@ -365,8 +374,8 @@ TToken getToken(FILE *f){
                     state = S_START;
                     tok.type = TOK_FLOAT;
                     tok.data.f = convStrToDouble(buff);
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %lf\n", tok.data.f);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %lf\n", tok.data.f);
                     free(buff);
                     return tok;
                 }               
@@ -380,15 +389,15 @@ TToken getToken(FILE *f){
                     state = S_START;                 
                     tok.type = TOK_STRING;
                     tok.data.s = buff;
-                    /*DEBUG*/printf("Token read: %s\n", buff);
-                    /*DEBUG*/printf("Value: %s\n", tok.data.s);
+                    /*DEBUG*///printf("Token read: %s\n", buff);
+                    /*DEBUG*///printf("Value: %s\n", tok.data.s);
                     return tok;
                 }
                 else if (c >= 32 && c <= 127){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                 }
-                else    // TODO: Should unknown escape sequence be error?
+                else
                     TOKERR(c, f, errflg, buff, tok);
                 break;
 
@@ -498,7 +507,6 @@ TToken getToken(FILE *f){
                 break;
 
             case S_EOL:
-                // TODO: MIGHT need to return EOL every time it's read, now it's ignored if block comment is being read
                 if (c == '='){
                     state = S_COMMENT_E;
                 }
@@ -510,7 +518,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_E:           // Read: "\n="
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c = 'b')
                     state = S_COMMENT_EB;
                 else
@@ -518,7 +526,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_EB:          // Read: "\n=b"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c = 'e')
                     state = S_COMMENT_EBE;
                 else
@@ -526,7 +534,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_EBE:         // Read: "\n=be"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c = 'g')
                     state = S_COMMENT_EBEG;
                 else
@@ -534,7 +542,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_EBEG:        // Read: "\n=beg"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c = 'i')
                     state = S_COMMENT_EBEGI;
                 else
@@ -542,7 +550,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_EBEGI:       // Read: "\n=begi"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c = 'n')
                     state = S_COMMENT_EBEGIN;
                 else
@@ -550,7 +558,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_EBEGIN:      // Read: "\n=begin"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (isspace(c))
@@ -560,7 +568,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK:       // Skipping every char but '\n'
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else {
@@ -569,7 +577,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK_EOL:   // Read: "\n"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (c == '=')
@@ -580,7 +588,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK_E:     // Read: "\n="
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (c == 'e')
@@ -591,7 +599,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK_EE:    // Read: "\n=e"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (c == 'n')
@@ -602,7 +610,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK_EEN:   // Read: "\n=en"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (c == 'd')
@@ -613,7 +621,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_BLOCK_EEND:  // Read: "\n=end"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_EOL_CHECK;
                 else if (isspace(c))
@@ -623,7 +631,7 @@ TToken getToken(FILE *f){
                 break;
             
             case S_COMMENT_END_SPACE:   // Read: "\n=end "
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_EOL_CHECK;
                 else
@@ -631,7 +639,7 @@ TToken getToken(FILE *f){
                 break;
 
             case S_COMMENT_EOL_CHECK:   // Read: "\n=end \n"
-                /*DEBUG*/printf("%d %c\n", state, c);
+                /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '=')
                     state = S_COMMENT_E;
                 else {

@@ -1,8 +1,8 @@
 /**
 	file name:		scanner.h
 	project:		VUT-FIT-IFJ-2018
-	created:		19.11.2018
-	last modified:	24.10.2018
+	created:		24.10.2018
+	last modified:	24.11.2018
 	
 	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
 	modifications:	
@@ -100,5 +100,5 @@ typedef enum {
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
 void tokBuffInit();
 void returnToken(TToken tok);
-TToken getToken(FILE *f);
+TToken getToken(FILE *f, TsymItem *symTable);
 #endif //IFJ18_SCANNER_H
