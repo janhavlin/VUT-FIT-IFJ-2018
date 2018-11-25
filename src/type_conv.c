@@ -1,4 +1,4 @@
-	#include <stdbool.h>
+#include <stdbool.h>
 #include <math.h>
 #include <ctype.h>
 #include "type_conv.h"
@@ -88,8 +88,7 @@ int convStrToInt(string str){
 * 	Converts integer to string.
 */
 char *convIntToStr(int numb){
-	unsigned err;		
-	char *res = stringInit(&err);
+	char *res = stringInit();
 	char tmp;
 	bool sign = false;
 	
@@ -120,7 +119,6 @@ char *convIntToStr(int numb){
 		res[strlen(res)-i-1] = tmp;
 	}
 
-		
 	return res;	
 }
 

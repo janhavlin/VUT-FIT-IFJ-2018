@@ -19,7 +19,7 @@ int main() {
     symTabInit(&globalSymTable); //TODO: can throw error
     fillTabWithKwds(&globalSymTable); //TODO: can throw error
     symTabInit(&localSymTable); //TODO: can throw error
-    File *f = stdin;
+    FILE *f = stdin;
     
     parserStart(globalSymTable, localSymTable, f); //TODO: can throw error
 	

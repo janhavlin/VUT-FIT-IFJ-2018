@@ -18,27 +18,28 @@
 #include "scanner.h"
 #include "ifj_error.h"
 #include "dyn_arr.h"
-#include "psa.h"
+//#include "psa.h" 			TODO: TEMPORARILY COMMENTED
 #include "s_table.h"
 
-bool parserStart(TsymItem *global, TsymItem *local, FILE *;
-bool start(TToken **, FILE *);
-bool stat(TToken **, FILE *);
-bool fundef(TToken **, FILE *);
-bool stlist(TToken **, FILE *);
-bool plist(TToken **, FILE *);
-bool term(TToken **, FILE *);
-bool assorfun(TToken **, FILE *);
-bool assign(TToken **, FILE *);
-bool pbody(TToken **, FILE *);
-bool eol(TToken **, FILE *);
-bool then(TToken **, FILE *);
-bool telse(TToken **, FILE *);
-bool end(TToken **, FILE *);
-bool tdo(TToken **, FILE *);
-bool id(TToken **, FILE *);
-bool lbr(TToken **, FILE *);
-bool rbr(TToken **, FILE *);
+void parserStart(TsymItem *, TsymItem *, FILE *f);
+bool start(TToken **, FILE *, TsymItem *, TsymItem *);
+bool stat(TToken **, FILE *, TsymItem *, TsymItem *);
+bool fundef(TToken **, FILE *, TsymItem *, TsymItem *);
+bool stlist(TToken **, FILE *, TsymItem *, TsymItem *);
+bool plist(TToken **, FILE *, TsymItem *, TsymItem *);
+bool term(TToken **, FILE *, TsymItem *, TsymItem *);
+bool assorfun(TToken **, FILE *, TsymItem *, TsymItem *);
+bool assign(TToken **, FILE *, TsymItem *, TsymItem *);
+bool decideExprOrFunc(TToken **, FILE *, TsymItem *, TsymItem *);
+bool pbody(TToken **, FILE *, TsymItem *, TsymItem *);
+bool eol(TToken **, FILE *, TsymItem *, TsymItem *);
+bool then(TToken **, FILE *, TsymItem *, TsymItem *);
+bool telse(TToken **, FILE *, TsymItem *, TsymItem *);
+bool end(TToken **, FILE *, TsymItem *, TsymItem *);
+bool tdo(TToken **, FILE *, TsymItem *, TsymItem *);
+bool id(TToken **, FILE *, TsymItem *, TsymItem *);
+bool lbr(TToken **, FILE *, TsymItem *, TsymItem *);
+bool rbr(TToken **, FILE *, TsymItem *, TsymItem *);
 
 #endif //IFJ18_PARSER_H
 /* end of parser.h */
