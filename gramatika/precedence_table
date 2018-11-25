@@ -1,19 +1,18 @@
-Pravidla:
-1:  E -> E+E
-2:  E -> E-E
-3:  E -> +E
-4:  E -> -E
-5:  E -> E*E
-6:  E -> E/E
-7:  E -> E<E
-8:  E -> E>E
-9:  E -> E<=E
-10: E -> E>=E
-11: E -> E==E
-12: E -> E!=E
-13: E -> (E)
-14: E -> i
-15: E -> +E
+Pravidla:         | Sémantická akce:
+1:  E -> E+E      | Ei.a = Ej.a + Ek.a
+2:  E -> E-E      | Ei.a = Ej.a - Ek.a
+3:  E -> +E       | Ei.a = Ej.a
+4:  E -> -E       | Ei.a = -Ej.a
+5:  E -> E*E      | Ei.a = Ej.a * Ek.a
+6:  E -> E/E      | Ei.a = Ej.a / Ek.a
+7:  E -> E<E      | Ei.a = Ej.a < Ek.a
+8:  E -> E>E      | Ei.a = Ej.a > Ek.a
+9:  E -> E<=E     | Ei.a = Ej.a <= Ek.a
+10: E -> E>=E     | Ei.a = Ej.a >= Ek.a
+11: E -> E==E     | Ei.a = Ej.a == Ek.a
+12: E -> E!=E     | Ei.a = Ej.a != Ek.a
+13: E -> (E)      | Ei.a = Ej.a
+14: E -> i        | Ei.a = i.val
 
 Precedenční tabulka:
   |+ - * / < > <= >= == != ( ) i $		<---	vstupní token
