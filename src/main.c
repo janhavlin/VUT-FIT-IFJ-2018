@@ -14,14 +14,15 @@
 
 int main() {
     //symbol tables initialization
-    TsymItem *globalSymTable = NULL;
-    TsymItem *localSymTable = NULL;
-    symTabInit(&globalSymTable); //TODO: can throw error
-    fillTabWithKwds(&globalSymTable); //TODO: can throw error
-    symTabInit(&localSymTable); //TODO: can throw error
+    TsymItem *GT = NULL;
+    TsymItem *LT = NULL;
+    symTabInit(&GT); //TODO: can throw error
+    symTabAddKwds(&GT); //TODO: can throw error
+    symTabAddFuns(&GT); //TODO: can throw error
+    symTabInit(&LT); //TODO: can throw error
     FILE *f = stdin;
     
-    parserStart(globalSymTable, localSymTable, f); //TODO: can throw error
+    parserStart(f, GT, LT); //TODO: can throw error
 	
     return errflg;
 }

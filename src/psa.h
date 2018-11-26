@@ -31,7 +31,7 @@
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-bool processExpression(FILE *, string);
+bool processExpression(FILE *, TsymItem *GT, TsymItem *LT);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
