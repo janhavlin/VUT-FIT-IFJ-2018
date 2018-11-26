@@ -19,14 +19,14 @@ void symTabInit (TsymItem **rootPP) {
 /**
  * Finds a node with key in symbol table tree
  * 
- * @param data is destination to copy found data to
+ * @param data will return pointer to found data
  */ 
 bool symTabSearch (TsymItem *rootPtr, string key, TsymData *data)	{
 	if (DEBUG) printf("Function: %s\n", __func__);
 	if (rootPtr == NULL)
 		return false;	
 	else if (strcmp(rootPtr->key, key) == 0) {
-		memcpy(data, rootPtr->data, sizeof(TsymData));
+		data = rootPtr->data;
 		return true;
 	} else if (strcmp(rootPtr->key, key) > 0) 
 		return symTabSearch(rootPtr->lPtr, key, data);

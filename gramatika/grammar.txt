@@ -20,3 +20,4 @@ P-BODY -> P-LIST
 TERM -> id
 TERM -> const
 TERM -> nil
+ASSIGN -> eps       //for b = eol
