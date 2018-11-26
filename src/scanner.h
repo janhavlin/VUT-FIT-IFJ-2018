@@ -15,6 +15,7 @@
 
 #include <stdio.h>
 #include "dyn_arr.h"
+#include "s_table.h"
 
 typedef enum {
     TOK_ERR,             // Unidentified token type

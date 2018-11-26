@@ -32,7 +32,7 @@ void fillTabWithKwds (TsymItem **tablePP) {
 	if(newData != NULL){
 		newData->type = TYPE_KWD;
 		newData->defined = false;
-		newData->value.i = 0;
+		//newData->value.i = 0;
 
 		for (int i = 0; i < KWD_AMMOUNT; i++)
 			symTabInsert(tablePP, kwds[i], newData);
@@ -179,12 +179,12 @@ void symTabToString(TsymItem *rootPtr, int depth) {
 		if (rootPtr->data != NULL) {
 			for (int i = 0; i < depth; i++)
 				printf(" ");
-			switch(rootPtr->data->type) {
+			/*switch(rootPtr->data->type) {
 				case TYPE_INT:	printf("key:%s\ttype:%d\tdefined:%d\tvalue:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.i); break;
 				case TYPE_FLT: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%f\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.f); break;
 				case TYPE_STR: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%s\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.s); break;
 				default:	printf("key:%s\ttype:%d\tdefined:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined); break;
-			}
+			}*/
 		}
 		symTabToString(rootPtr->lPtr, depth+1);
 		symTabToString(rootPtr->rPtr, depth+1);

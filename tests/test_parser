@@ -1,0 +1,36 @@
+def factorial (n)
+	if eXPR then
+		result = 1
+	else
+		decremented_n = eXPR
+		temp_result = factorial decremented_n
+		result = eXPR
+	end
+result
+end
+
+print
+a = inputi
+if eXPR then
+    print "\nFaktorial nelze spocitat\n"
+else
+    vysl = factorial a
+print("\nVysledek je:", vysl, "\n")
+end
+
+
+
+# Program 1: Vypocet faktorialu (iterativne)
+print "Zadejte cislo pro vypocet faktorialu: "
+a = inputi
+if expr then
+    print("\nFaktorial nelze spocitat\n")
+else
+    vysl = expr
+    while expr do
+        vysl = expr
+        a = expr
+    end
+print "\nVysledek je:", vysl, "\n"
+end
+
