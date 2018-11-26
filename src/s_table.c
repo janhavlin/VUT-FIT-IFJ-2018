@@ -17,35 +17,6 @@ void symTabInit (TsymItem **rootPP) {
 }	
 
 /**
- * number of keywords
- */ 
-#define KWD_AMMOUNT 9
-/**
- * Fills given symbol table with the IFJ18 keywords
- */ 
-void fillTabWithKwds (TsymItem **tablePP) {
-	// Keywords in the IFJ18 language 
-	char *kwds[] = {
-		"not", "end", "then", "def", "if", "nil", "while", "do", "else"
-	};
-	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
-	if(newData != NULL){
-		newData->type = TYPE_KWD;
-		newData->defined = false;
-		//newData->value.i = 0;
-
-		for (int i = 0; i < KWD_AMMOUNT; i++)
-			symTabInsert(tablePP, kwds[i], newData);
-
-		free(newData);
-		newData = NULL;
-	} else {
-		errflg = ERR_RUNTIME;
-		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
-	}
-}
-
-/**
  * Finds a node with key in symbol table tree
  * 
  * @param data is destination to copy found data to
@@ -167,6 +138,73 @@ void symTabDispose (TsymItem **rootPP) {
 		free((*rootPP)->data);
 		free(*rootPP);
 		*rootPP = NULL;
+	}
+}
+
+/**
+ * number of keywords
+ */ 
+#define KWD_AMMOUNT 9
+/**
+ * Fills given symbol table with the IFJ18 keywords
+ */ 
+void symTabFillKwds (TsymItem **tablePP) {
+	// Keywords in the IFJ18 language 
+	char *kwds[] = {
+		"not", "end", "then", "def", "if", "nil", "while", "do", "else"
+	};
+	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
+	if(newData != NULL){
+		newData->type = TYPE_KWD;
+		newData->defined = false;
+		//newData->value.i = 0;
+
+		for (int i = 0; i < KWD_AMMOUNT; i++)
+			symTabInsert(tablePP, kwds[i], newData);
+
+		free(newData);
+		newData = NULL;
+	} else {
+		errflg = ERR_RUNTIME;
+		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
+	}
+}
+
+/**
+ * Fills given symbol table with the IFJ18 predefined functions
+ * 
+ * these functions don't need LT
+ */ 
+void symTabFillFuns (TsymItem **tablePP) {
+	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
+	if(newData != NULL){
+		newData->type = TYPE_FUN;
+		newData->defined = true;
+		newData->params = 0;
+		newData->LT = NULL;
+		//functions with 0 parameters
+		symTabInsert(tablePP, "inputs", newData);
+		symTabInsert(tablePP, "inputi", newData);
+		symTabInsert(tablePP, "inputf", newData);
+		//functions with 1 parameter
+		newData->params = 1;
+		symTabInsert(tablePP, "length", newData);
+		symTabInsert(tablePP, "chr", newData);
+		//functions with 2 parameters
+		newData->params = 2;
+		symTabInsert(tablePP, "ord", newData);
+		//functions with 3 parameters
+		newData->params = 3;
+		symTabInsert(tablePP, "substr", newData);
+		//unlimited parameters 
+		newData->params = -1;
+		symTabInsert(tablePP, "print", newData); //print must have at least one parameter!!
+
+		free(newData);
+		newData = NULL;
+	} else {
+		errflg = ERR_RUNTIME;
+		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
 	}
 }
 
