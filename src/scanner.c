@@ -172,7 +172,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     ungetc(c, f);
                     state = S_START;
                      /*DEBUG*///printf("Token read: %s\n", buff);
-                    TsymData *data;
+                    TsymData *data = NULL;
                     if (symTabSearch(symTableP, buff, data) && data->type == TYPE_KWD)
                         tok.type = TOK_KEY;
                     else
