@@ -110,16 +110,20 @@ bool stat(TToken **tokenPP) {
 		case TOK_ID:	//rule #10 STAT -> id ASS-OR-FUN
 						**tokenPP = getToken(f, currGT); //cover id
 						value = assorfun(tokenPP);
+						//----SEMANTICS----
+						//assign value to id? 
+						//----SEMANTICS----
 						break;
 		case TOK_KEY:	if (strcmp(keyW, "if") == 0) {
 							//rule #11 STAT -> if expr then eol ST-LIST else eol ST-LIST end
 							//**tokenPP = getToken(f, currGT); //if is present, call next token  DONT GET NEXT TOKEN
-							value = processExpression(tokenPP, f, currGT, currLT) && then(tokenPP) && eol(tokenPP) && stlist(tokenPP) &&
-								    telse(tokenPP) && eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
+							value = tif(tokenPP) && processExpression(f, currGT, currLT) && then(tokenPP) && eol(tokenPP) && 
+									stlist(tokenPP) && telse(tokenPP) && eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 						} else if (strcmp(keyW, "while") == 0) {
 							//rule #12 STAT -> while expr do eol ST-LIST end
 							//**tokenPP = getToken(f, currGT); //while is present, call next token DONT GET NEXT TOKEN
-							value = processExpression(tokenPP, f, currGT, currLT) && tdo(tokenPP) && eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
+							value = tWhile(tokenPP) && processExpression(f, currGT, currLT) && tdo(tokenPP) && 
+									eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 						}
 						break;
 		case TOK_EOL:	//rule #13 STAT -> eps
@@ -143,9 +147,8 @@ bool fundef(TToken **tokenPP) {
 	if (type == TOK_KEY) {
 		if (strcmp(keyW, "def") == 0) {
 			//rule #6 FUN-DEF -> def id ( P-LIST ) eol ST-LIST end
-			**tokenPP = getToken(f, currGT); //def is present, call next token
-			value = id(tokenPP) && lbr(tokenPP) && plist(tokenPP) && rbr(tokenPP) &&
-					 eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
+			value = def(tokenPP) && id(tokenPP) && lbr(tokenPP) && plist(tokenPP) && rbr(tokenPP) &&
+					eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 		} 
 	} else {
 		ifjErrorPrint("ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
@@ -201,8 +204,7 @@ bool plist(TToken **tokenPP) {
 						value = term(tokenPP) && plist(tokenPP);
 						break;
 		case TOK_COMMA: //rule #8 P-LIST -> , TERM P-LIST
-						**tokenPP = getToken(f, currGT); //comma is present, call next token
-						value = term(tokenPP) && plist(tokenPP);
+						value = comma(tokenPP) && term(tokenPP) && plist(tokenPP);
 						break;
 		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
@@ -229,12 +231,10 @@ bool term(TToken **tokenPP) {
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:	//rule #21 TERM -> const
-						**tokenPP = getToken(f, currGT); //const is present, call next token
-						return true;
+						return tconst(tokenPP);
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//rule #22 TERM -> nil
-							**tokenPP = getToken(f, currGT); //nil is present, call next token
-							return true;
+							return nil(tokenPP);
 						} 
 						break;
 		default:		ifjErrorPrint("ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
@@ -254,8 +254,7 @@ bool assorfun(TToken **tokenPP) {
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
 		case TOK_ASSIGN: //rule #14 ASS-OR-FUN -> = ASSIGN
-						**tokenPP = getToken(f, currGT); //= is present, call next token
-						value = assign(tokenPP);
+						value = eq(tokenPP) && assign(tokenPP);
 						break;
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//continue to rule #15
@@ -301,7 +300,7 @@ bool assign(TToken **tokenPP) {
 						//case 1 - found after examining 1 token, therefore return 1 token to scanner
 						returnToken(**tokenPP);
 						//**tokenPP = getToken(f, currGT); //expr is present, call next token //DONT CALL NEXT TOKEN
-						value = processExpression(tokenPP, f, currGT, currLT);
+						value = processExpression(f, currGT, currLT);
 						break;
 		case TOK_ID:	value = decideExprOrFunc(tokenPP);
 						break;
@@ -340,7 +339,7 @@ bool decideExprOrFunc(TToken **tokenPP) {
 						//case 2 - found after examining 2 tokens, therefore return 2 tokens to scanner
 						returnToken(bufferToken);
 						returnToken(**tokenPP);
-						return processExpression(tokenPP, f, currGT, currLT);
+						return processExpression(f, currGT, currLT);
 		case TOK_KEY:		if (strcmp((*tokenPP)->data.s, "nil")==0) {
 							//continue to rule #18
 						} else 
@@ -393,7 +392,7 @@ bool pbody(TToken **tokenPP) {
 }
 
 /**
-	represents eol terminal processing
+	eol terminal
 */
 bool eol(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -410,7 +409,18 @@ bool eol(TToken **tokenPP) {
 }
 
 /**
-	represents then terminal processing
+	if terminal
+*/
+bool tif(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	//----SEMANTICS----
+	
+	//----SEMANTICS----
+	return true;
+}
+
+/**
+	then terminal
 */
 bool then(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -428,7 +438,7 @@ bool then(TToken **tokenPP) {
 }
 
 /**
-	represents else terminal processing
+	else terminal
 */
 bool telse(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -445,28 +455,17 @@ bool telse(TToken **tokenPP) {
 	return value;
 }
 
-
 /**
-	represents end terminal processing
-*/
-bool end(TToken **tokenPP) {
+ * while terminal
+ */ 
+bool tWhile(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	bool value = false;
-	TTokenType type = (*tokenPP)->type;
-	string keyW = (*tokenPP)->data.s;
-	if (type == TOK_KEY && (strcmp(keyW, "end") == 0)) {
-		**tokenPP = getToken(f, currGT); //end is present, call next token
-		value = true;
-	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
-		errflg = ERR_SYNTAX;
-	}
-	return value;
+	return true;
 }
 
 /**
-	represents do terminal processing
-*/
+ *	do terminal
+ */
 bool tdo(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
@@ -483,13 +482,44 @@ bool tdo(TToken **tokenPP) {
 }
 
 /**
-	represents id terminal processing
+ * def terminal
+ */ 
+bool def(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	**tokenPP = getToken(f, currGT); //def is present, call next token
+	return true;
+}
+
+/**
+	end terminal
+*/
+bool end(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	bool value = false;
+	TTokenType type = (*tokenPP)->type;
+	string keyW = (*tokenPP)->data.s;
+	if (type == TOK_KEY && (strcmp(keyW, "end") == 0)) {
+		**tokenPP = getToken(f, currGT); //end is present, call next token
+		value = true;
+	} else {
+		ifjErrorPrint("ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		errflg = ERR_SYNTAX;
+	}
+	return value;
+}
+
+
+/**
+	id terminal
 */
 bool id(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_ID) {
+		//----SEMANTICS----
+			
+		//----SEMANTICS----
 		**tokenPP = getToken(f, currGT); //id is present, call next token
 		value = true;
 	} else {
@@ -500,7 +530,25 @@ bool id(TToken **tokenPP) {
 }
 
 /**
-	represents left bracket terminal processing
+ * const terminal
+ */ 
+bool tconst(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	**tokenPP = getToken(f, currGT); //const is present, call next token
+	return true;
+}
+
+/**
+ * nil terminal
+ */ 
+bool tconst(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	**tokenPP = getToken(f, currGT); //nil is present, call next token
+	return true;
+}
+
+/**
+	left bracket terminal
 */
 bool lbr(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -517,7 +565,16 @@ bool lbr(TToken **tokenPP) {
 }
 
 /**
-	represents right bracket terminal processing
+ * comma terminal
+ */ 
+bool comma(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	**tokenPP = getToken(f, currGT); //comma is present, call next token
+	return true;
+}
+
+/**
+	right bracket terminal
 */
 bool rbr(TToken **tokenPP) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -531,6 +588,15 @@ bool rbr(TToken **tokenPP) {
 		errflg = ERR_SYNTAX;
 	}
 	return value;
+}
+
+/**
+ * assign '=' terminal
+ */ 
+bool eq(TToken **tokenPP) {
+	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
+	**tokenPP = getToken(f, currGT); //'=' is present, call next token
+	return true;
 }
 
 /** end of parser.c */
