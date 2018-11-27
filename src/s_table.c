@@ -135,6 +135,7 @@ void symTabDispose (TsymItem **rootPP) {
 		symTabDispose(&((*rootPP)->lPtr));
 		symTabDispose(&((*rootPP)->rPtr));
 		free((*rootPP)->key);
+		symTabDispose(&((*rootPP)->data->LT)); //dispose LT inside data node
 		free((*rootPP)->data);
 		free(*rootPP);
 		*rootPP = NULL;

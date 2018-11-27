@@ -20,6 +20,7 @@
 TsymItem *mainLT;
 TsymItem *currLT;
 TsymItem *currGT;
+TToken *lastIDtok;
 /**
  * Keep track about main input file
  */
@@ -27,17 +28,8 @@ FILE *f;
 
 //--------------RECURSIVE DESCENT------------------------
 
-/* TODO: TEMPORARY FUNCTION */
-/*bool processExpression(TToken **tokenPP, FILE *f, char *c, TsymItem *currGT, TsymItem *localSymTable){
-
-	getToken(f, currGT);				// skip expr token
-	**tokenPP = getToken(f, currGT);	// load token after expr
-	(void)localSymTable;
-	(void)f;
-	return true;								// psa is always correct
-}*/
-
-void parserStart(FILE *input, TsymItem *GT, TsymItem *LT) {
+int parserStart(FILE *input, TsymItem *GT, TsymItem *LT) {
+	int result = PROGRAM_OK;
 	mainLT = LT;
 	currLT = LT;
 	currGT = GT;
@@ -45,23 +37,22 @@ void parserStart(FILE *input, TsymItem *GT, TsymItem *LT) {
 	bool success = false;
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
-		ifjErrorPrint("ERROR %d in parser.c in func. main: allocation failed!\n", ERR_RUNTIME);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. main: allocation failed!\n", ERR_RUNTIME);
 		errflg = ERR_RUNTIME;
 		return;
 	}
 	TToken **tokenPP = &token;
 	
 	**tokenPP = getToken(f, currGT);
+	if (errflg == ERR_LEXICAL) return;
 	if (*tokenPP != NULL) {
-		success = start(tokenPP);
+		result = start(tokenPP);	//SETS ERRFLG to PROGRAM_OK or ERR
 	}
-	if (success) 
-		printf("Syntax OK!\n");
-	else 
-		printf("Syntax ERROR!!!\n");
-	
+
+	//TODO: check if all functions are defined
+
 	free(token);
-	return;
+	return result;
 }
 
 /**
@@ -69,9 +60,9 @@ void parserStart(FILE *input, TsymItem *GT, TsymItem *LT) {
 	
 	assert *tokenPP != NULL
 */
-bool start(TToken **tokenPP) {
+int start(TToken **tokenPP) {
+	int value = true;
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
@@ -91,7 +82,7 @@ bool start(TToken **tokenPP) {
 						value = true;
 						**tokenPP = getToken(f, currGT);
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. start: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. start: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -128,7 +119,7 @@ bool stat(TToken **tokenPP) {
 						break;
 		case TOK_EOL:	//rule #13 STAT -> eps
 						return true;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. stat: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. stat: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;							
 	}
@@ -151,7 +142,7 @@ bool fundef(TToken **tokenPP) {
 					eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 		} 
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
 		errflg = ERR_SYNTAX;
 	} 
 	return value;
@@ -177,7 +168,7 @@ bool stlist(TToken **tokenPP) {
 		case TOK_EOL:	//rule #4 ST-LIST -> STAT eol ST-LIST
 						value = stat(tokenPP) && eol(tokenPP) && stlist(tokenPP);
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. stlist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. stlist: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -209,7 +200,7 @@ bool plist(TToken **tokenPP) {
 		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
 						return true;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -237,7 +228,7 @@ bool term(TToken **tokenPP) {
 							return nil(tokenPP);
 						} 
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -269,7 +260,7 @@ bool assorfun(TToken **tokenPP) {
 		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY
 						value = pbody(tokenPP);
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. assorfun: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. assorfun: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -304,7 +295,7 @@ bool assign(TToken **tokenPP) {
 						break;
 		case TOK_ID:	value = decideExprOrFunc(tokenPP);
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. assign: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. assign: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -351,7 +342,7 @@ bool decideExprOrFunc(TToken **tokenPP) {
 		case TOK_ID:	//rule #18 ASSIGN -> id P-BODY
 						//actually no need of returning any tokens to scanner
 						return plist(tokenPP); 
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. decideExprOrFunc: unexpected token n. %d!\n", ERR_SYNTAX, (*tokenPP)->type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. decideExprOrFunc: unexpected token n. %d!\n", ERR_SYNTAX, (*tokenPP)->type);
 						errflg = ERR_SYNTAX;
 						break;
 	}
@@ -384,7 +375,7 @@ bool pbody(TToken **tokenPP) {
 		case TOK_EOL:	//rule #19 P-BODY -> P-LIST
 						value = plist(tokenPP);
 						break;
-		default:		ifjErrorPrint("ERROR %d in parser.c in func. pbody: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. pbody: unexpected token n. %d!\n", ERR_SYNTAX, type);
 						errflg = ERR_SYNTAX;
 						break;						
 	}
@@ -402,7 +393,7 @@ bool eol(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //eol is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. eol: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. eol: unexpected token n. %d!\n", ERR_SYNTAX, type);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -431,7 +422,7 @@ bool then(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //then is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. then: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. then: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -449,7 +440,7 @@ bool telse(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //else is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. telse: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. telse: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -475,7 +466,7 @@ bool tdo(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //do is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. tdo: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. tdo: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -502,7 +493,7 @@ bool end(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //end is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -523,7 +514,7 @@ bool id(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //id is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. id: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. id: unexpected token n. %d!\n", ERR_SYNTAX, type);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -558,7 +549,7 @@ bool lbr(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //lbr is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. lbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. lbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
 		errflg = ERR_SYNTAX;
 	}
 	return value;
@@ -584,7 +575,7 @@ bool rbr(TToken **tokenPP) {
 		**tokenPP = getToken(f, currGT); //rbr is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("ERROR %d in parser.c in func. rbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
+		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. rbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
 		errflg = ERR_SYNTAX;
 	}
 	return value;

@@ -23,8 +23,8 @@
 
 /* NON-TERMINALS */
 
-void parserStart(FILE *, TsymItem *GT, TsymItem *LT);
-bool start(TToken **);
+int parserStart(FILE *, TsymItem *GT, TsymItem *LT);
+int start(TToken **);
 bool stat(TToken **);
 bool fundef(TToken **);
 bool stlist(TToken **);
