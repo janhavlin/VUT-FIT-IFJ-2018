@@ -13,6 +13,7 @@
 
 extern int errflg;
 
+#define PROGRAM_OK          0
 // chyba v programu v ramci lexikalniho analyzatoru (chybna struktura aktualniho lexemu)
 #define ERR_LEXICAL		    1	
 // chyba v programu v ramci syntakticke analyzy (chybna syntaxe programu)

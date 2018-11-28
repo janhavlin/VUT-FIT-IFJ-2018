@@ -19,34 +19,6 @@
 #define DEBUG 0
 
 /**
- * EXAMPLE OF SYMBOL TABLE USAGE:
- * 
- * TsymItem *tablePtr = NULL;
-	TsymItem **tablePP = &tablePtr;
-	symTabInit(tablePP);
-	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
-	if(newData != NULL){
-		newData->type = TYPE_KWD;
-		newData->defined = false;
-		newData->value.i = 0;
-
-		//INITIALIZATION OF KEYWORDS
-
-		for (int i = 0; i < KWD_AMMOUNT; i++)
-			symTabInsert(tablePP, kwds[i], newData);
-				
-		//END OF INITIALIZATION
-
-		printf("Tree:\n");
-		symTabToString(*tablePP, 0);		
-		
-		free(newData);
-		newData = NULL;
-	}
-	symTabDispose(tablePP);
-*/
-
-/**
  * types of items in symbol table
  */ 
 typedef enum {
@@ -61,10 +33,11 @@ struct symItem;
  */ 
 typedef struct {
 	TsymType type;  
-    bool defined;   			//only for functions
-	int funParamsAmnt;			//only for functions
-	string label;				//only for functions
-	struct symItem *localST;	//only for functions
+	unsigned order;				//VAR ONLY: 1, 2, .. for parameter, 0 for later defined variable
+    bool defined;   			//FUN ONLY: false if the function was called but not defined
+	int params;					//FUN ONLY: number of parameters (-1 means unlimited)
+	struct symItem *LT;			//FUN ONLY: own LT = local symbol table
+	//return type?
 } TsymData;
 
 /**
@@ -78,12 +51,13 @@ typedef struct symItem {
 } TsymItem;
 
 void symTabInit(TsymItem **rootPP);
-void fillTabWithKwds (TsymItem **tablePP);
 bool symTabSearch(TsymItem *rootPtr, string key, TsymData *data);
 void symTabInsert(TsymItem **rootPP, string key, TsymData *data);
 void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP);
 void symTabDelete (TsymItem **rootPP, string key);
 void symTabDispose(TsymItem **rootPP);
+void symTabAddKwds(TsymItem **tablePP);
+void symTabAddFuns(TsymItem **tablePP);
 void symTabToString(TsymItem *rootPtr, int depth);
 
 #endif //IFJ18_S_TABLE_H
