@@ -15,6 +15,7 @@
 #include "dyn_arr.h"
 #include "scanner.h"
 #include "stack_list.h"
+#include "s_table.h"
 
 #define MAX_RULE_LENGTH	5
 #define AMOUNT_OF_RULES	15
@@ -31,7 +32,7 @@
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-bool processExpression(FILE *, TsymItem *GT, TsymItem *LT);
+bool processExpression(FILE *, string, TsymItem *);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
@@ -54,8 +55,8 @@ char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
 	{"+E"}	// rule 14
 };	
 
-tStackIPtr HighestTerminal( tStackLPtr stack );
-int FindRule( string readRule );
+tStackIPtr highestTerminal( tStackLPtr stack );
+int findRule( string readRule );
 
 
 #endif //IFJ18_PSA_H

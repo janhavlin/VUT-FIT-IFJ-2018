@@ -16,15 +16,10 @@
 typedef struct tStackItem{	// struct for item in stack
 	struct tStackItem *next;
 	struct tStackItem *pred;
-	char *type;
 	char *IdName;
-	
-	union value{		// union to store value during expression analysis
-		int 	i;
-		double	d; 
-		string	s;
-	}value;
+	unsigned int numberOfE;
 }tStackI;
+
 
 typedef struct tStackList{	// struct for whole stack 
 	tStackI *top;
@@ -36,13 +31,13 @@ typedef tStackI* tStackIPtr;	// item ptr
 typedef tStackL* tStackLPtr;	// list ptr
 
 
-tStackLPtr sLInit( void );		
+tStackLPtr sLInit( string bottomOfStack );		
 tStackIPtr sLTop( tStackLPtr stack );
 tStackIPtr sLPop( tStackLPtr stack );
 string sGetExprToReduce( tStackLPtr stack );
 bool sLDelete( tStackLPtr stack );
 bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
-void sLPush( tStackLPtr stack, char *type, char *name );
+void sLPush( tStackLPtr stack, char *name );
 
 #endif // STACK_PR

@@ -76,19 +76,18 @@ int getIndex(TToken token) {
     return -1;
 }
 
-bool processExpression(FILE * f, string followingToken){
-
-}
-
-
 /*
- *  HighestTerminal()
+ *  highestTerminal()
  * 		Find highest terminal in stack. Return pointer to it.
  */
 tStackIPtr highestTerminal( tStackLPtr stack ){
-	tStackIPtr tmp = stack->top;
     if(stack != NULL){
-        while( !strcmp( tmp->IdName, 'E'));
+        tStackIPtr tmp = stack->top;         
+        while( !strcmp( tmp->IdName, "E") ){
+            tmp = tmp->pred;
+            if(tmp == NULL)
+                return NULL;
+        }
         return tmp;
     }
     return NULL;
@@ -106,11 +105,68 @@ int findRule( string readRule ){
         for(unsigned int ruleNum = 0; ruleNum < AMOUNT_OF_RULES; ruleNum++){
 		help = rules[ruleNum];         
             if( strcmp(readRule, help) == 0 ){    // if rule was found
-                        return ruleNum;    
+                return ruleNum;    
             }
         }
     }
     return RULE_NOT_FOUND;
+}
+
+
+/*
+ *  processExpression
+ * 
+ */ 
+bool processExpression(FILE * f, string followingToken, TsymItem *symTableP){
+    tStackLPtr s  = sLInit(followingToken);          // followingToken == bottom of stack
+    TToken get    = getToken(stdout, symTableP);       // token got from scanner 
+    char todo     = lookInPrecedenceTable( highestTerminal(s), get);
+    string toReduce;
+
+    while( strcmp(get->data.s, followingToken) && strcmp(get->data.s,) ){    // key do, key then, eol
+        
+        switch(todo){
+            case 'r':
+                toReduce = sGetExprToReduce(s);
+                if( findRule(toReduce) != RULE_NOT_FOUND){
+                    while(s->top->IdName != "s\0"){
+                        sLPop(s);
+                    }
+                    sLPop(s);
+                    sLPush(s, "E\0");
+                }
+                else{
+                    sLDelete(s);
+                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for %s. ERROR %d\n",toReduce, ERR_SYNTAX);
+				    errflg = ERR_SYNTAX;
+                }
+                break;
+
+            case 's':
+                sLPush(s, "s");
+                sLPush(s, get->data.s);
+                get = getToken(stdout, symTableP);
+                break;
+
+            case 'e':
+                sLPush(s, get->data.s);
+                get = getToken(stdout, symTableP);
+                break;            
+            
+            case 'X':
+                TODO: if( !strcmp(get->data.s, ) && !strcmp(highestTerminal(s), ) ){
+                    sLDelete(s);
+                    return true;
+                }
+                else{
+                    sLDelete(s);
+                    ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
+				    errflg = ERR_SYNTAX;                    
+                }
+                break;
+        }
+       
+    }
 }
 
 
