@@ -32,13 +32,13 @@ typedef tStackI* tStackIPtr;	// item ptr
 typedef tStackL* tStackLPtr;	// list ptr
 
 
-tStackLPtr sLInit( string bottomStakTokType, string bottomStakTokName );
+tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ); //string bottomStakTokType
 tStackIPtr sLTop( tStackLPtr stack );
 tStackIPtr sLPop( tStackLPtr stack );
 string sGetExprToReduce( tStackLPtr stack );
 bool sLDelete( tStackLPtr stack );
 bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
-void sLPush( tStackLPtr stack, char *name, char *type );
+void sLPush( tStackLPtr stack, char *name, int type); //char *type
 
 #endif // STACK_PR

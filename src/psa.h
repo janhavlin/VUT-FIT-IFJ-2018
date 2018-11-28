@@ -54,21 +54,21 @@ unsigned int processExpression(FILE *, string, TsymItem *, TsymItem *);
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
 
-char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
-	{"ETOK_ADDE"},		// rule 0 
-	{"ETOK_SUBE"},		// rule 1
-	{"TOK_ADDE"},		// rule 2
-	{"TOK_SUBE"},		// rule 3
-	{"ETOK_MULE"},		// rule 4
-	{"ETOK_DIVE"},		// rule 5
-	{"ETOK_LTE"},		// rule 6
-	{"ETOK_GTE"},		// rule 7
-	{"ETOK_LEQE"},		// rule 8
-	{"ETOK_GEQE"},		// rule 9
-	{"ETOK_EQE"},		// rule 10
-	{"ETOK_NEQE"},		// rule 11
-	{"TOK_LBRETOK_RBR"},// rule 12
-	{"TOK_ID"}			// rule 13
+char *rules[AMOUNT_OF_RULES] = {
+	{"ETOK_ADDE\0"},		// rule 0 
+	{"ETOK_SUBE\0"},		// rule 1
+	{"TOK_ADDE\0"},		// rule 2
+	{"TOK_SUBE\0"},		// rule 3
+	{"ETOK_MULE\0"},		// rule 4
+	{"ETOK_DIVE\0"},		// rule 5
+	{"ETOK_LTE\0"},		// rule 6
+	{"ETOK_GTE\0"},		// rule 7
+	{"ETOK_LEQE\0"},		// rule 8
+	{"ETOK_GEQE\0"},		// rule 9
+	{"ETOK_EQE\0"},		// rule 10
+	{"ETOK_NEQE\0"},		// rule 11
+	{"TOK_LBRETOK_RBR\0"},// rule 12
+	{"TOK_ID\0"}			// rule 13
 };
 
 TToken highestTerminal( tStackLPtr stack );
