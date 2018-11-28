@@ -12,6 +12,7 @@
 
 #include "s_table.h"
 #include "ifj_error.h"
+#include "scanner.h"
 #include<stdio.h>
 
 /* end of main.h */

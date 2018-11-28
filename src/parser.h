@@ -23,15 +23,15 @@
 
 /* NON-TERMINALS */
 
-int parserStart(FILE *, TsymItem *GT, TsymItem *LT);
+int parse(FILE *, TsymItem *GT, TsymItem *LT);
 int start(TToken **);
-bool stat(TToken **);
+int stat(TToken **);
 bool fundef(TToken **);
 bool stlist(TToken **);
 bool plist(TToken **);
 bool term(TToken **);
-bool assorfun(TToken **);
-bool assign(TToken **);
+int assorfun(TToken **, TToken *);
+int assign(TToken **, TToken *);
 bool decideExprOrFunc(TToken **);
 bool pbody(TToken **);
 
