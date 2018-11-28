@@ -78,19 +78,27 @@ int getIndex(TToken token) {
 
 /*
  *  highestTerminal()
- * 		Find highest terminal in stack. Return pointer to it.
+ * 		Find highest terminal in stack. Return string with its name.
  */
-tStackIPtr highestTerminal( tStackLPtr stack ){
+TToken highestTerminal( tStackLPtr stack ){
+	tStackIPtr tmp = stack->top;
+    TToken result;
+
     if(stack != NULL){
-        tStackIPtr tmp = stack->top;         
+        
         while( !strcmp( tmp->IdName, "E") ){
-            tmp = tmp->pred;
-            if(tmp == NULL)
-                return NULL;
+            tmp=tmp->pred;
         }
-        return tmp;
+
+        memcpy(result.data.s, tmp->IdName, strlen(tmp->IdName));
+        memcpy(result.type, tmp->type, strlen(tmp->type));
+        result.data.s = tmp->IdName;
+        return result;
     }
-    return NULL;
+    
+    result.data.s = "ERROR\0";
+    strcpy(result.type, "ERROR\0");
+    return result;
 }
 
 
@@ -115,53 +123,106 @@ int findRule( string readRule ){
 
 /*
  *  processExpression
- * 
+ *  symTablePG == global symbol table
+ *  symTablePL == local symbol table
  */ 
-bool processExpression(FILE * f, string followingToken, TsymItem *symTableP){
-    tStackLPtr s  = sLInit(followingToken);          // followingToken == bottom of stack
-    TToken get    = getToken(stdout, symTableP);       // token got from scanner 
-    char todo     = lookInPrecedenceTable( highestTerminal(s), get);
-    string toReduce;
+unsigned int processExpression(FILE * f, string followingToken, TsymItem *symTablePL, TsymItem *symTablePG){
+    
+    unsigned int Ecount  = 0;                       // counter of element E in stack when reduce
+    static unsigned int psaCntr = 0;
+    tStackLPtr s    = sLInit(followingToken, "TOK_KEY\0");             // followingToken == bottom of stack
+    TToken get      = getToken(stdout, symTablePL);        // token got from scanner 
+    char todo       = lookInPrecedenceTable( highestTerminal(s), get );     // reduce, shift, ...
+    string toReduce;                    // string to reduce
+    TToken ter = highestTerminal(s);    // highest terminal
+    int ruleGet = 0;
 
-    while( strcmp(get->data.s, followingToken) && strcmp(get->data.s,) ){    // key do, key then, eol
-        
+    while((!strcmp(ter.data.s , followingToken)) && 
+         (( get.type == TOK_KEY) && (!strcmp(highestTerminal(s).data.s, get.data.s)) &&
+         (get.type == TOK_KEY))){    // key do, key then, eol
+
+        todo = lookInPrecedenceTable( highestTerminal(s), get );
+        if( get.type == TOK_ID ){
+            /*if(  ){
+                kontrola, jestli je promenna v LT a ne GT
+            }
+            else{
+                sLDelete(s);
+                ifjErrorPrint("psa ERROR in processExpression: Variable %s was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
+                return NO_E_NONTERM;
+            }*/
+        }
+
         switch(todo){
+            
+            // reduce
             case 'r':
                 toReduce = sGetExprToReduce(s);
-                if( findRule(toReduce) != RULE_NOT_FOUND){
-                    while(s->top->IdName != "s\0"){
+                
+                if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){
+                    while(s->top->IdName != "s"){
                         sLPop(s);
                     }
+
                     sLPop(s);
-                    sLPush(s, "E\0");
+                    sLPush(s, "E", "NON_TERM\0");
+                    Ecount++;
+
+                    if(ruleGet == ADD_RULE){        // E+E
+                       // genADD(psaCntr, Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji ADD s E%d = E%d + E%d",Ecount,Ecount-1,Ecount-2);
+                    }
+
+                    else if(ruleGet == SUB_RULE){   // E-E
+                       // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji SUB s E%d = E%d - E%d",Ecount,Ecount-1,Ecount-2);
+                    }
+
+                    else if(ruleGet == MUL_RULE){   // E*E
+                       // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji MUL s E%d = E%d * E%d",Ecount,Ecount-1,Ecount-2);
+                    }
+
+                    else if(ruleGet == DIV_RULE){   // E/E
+                       // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji DIV s E%d = E%d / E%d",Ecount,Ecount-1,Ecount-2);
+                    }
+
+
                 }
                 else{
                     sLDelete(s);
                     ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for %s. ERROR %d\n",toReduce, ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
+                    return NO_E_NONTERM;
                 }
                 break;
 
+            // shift
             case 's':
-                sLPush(s, "s");
-                sLPush(s, get->data.s);
-                get = getToken(stdout, symTableP);
+                sLPush(s, "s", "NULL\0");
+                sLPush(s, get.data.s, get.type);
+                get = getToken(stdout, symTablePL);
                 break;
 
+            // equal
             case 'e':
-                sLPush(s, get->data.s);
-                get = getToken(stdout, symTableP);
+                sLPush(s, get.data.s, get.type);
+                get = getToken(stdout, symTablePL);
                 break;            
             
+            // nothing
             case 'X':
-                TODO: if( !strcmp(get->data.s, ) && !strcmp(highestTerminal(s), ) ){
+                if( (!strcmp(get.data.s, followingToken)) || (get.type == TOK_KEY) ){
                     sLDelete(s);
-                    return true;
+                    returnToken(get);
+                    return psaCntr++;
                 }
                 else{
                     sLDelete(s);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
-				    errflg = ERR_SYNTAX;                    
+				    errflg = ERR_SYNTAX;
+                    return NO_E_NONTERM;                    
                 }
                 break;
         }

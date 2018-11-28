@@ -20,6 +20,23 @@
 #define MAX_RULE_LENGTH	5
 #define AMOUNT_OF_RULES	15
 #define RULE_NOT_FOUND	-1
+#define NO_E_NONTERM	0
+
+#define ADD_RULE		0
+#define SUB_RULE		1
+#define PLUSE_RULE		2
+#define MINUSE_RULE		3
+#define MUL_RULE		4
+#define DIV_RULE		5
+#define LT_RULE			6
+#define GT_RULE			7
+#define LEQ_RULE		8
+#define GEQ_RULE		9
+#define EQ_RULE			10
+#define NEQ_RULE		11
+#define LBR_E_RBR_TOK	12
+#define ID_RULE			13
+
 
 /**
  * handles expressions
@@ -28,34 +45,33 @@
  * 
  * @param string represents token expected after expression ("then", "do" or "eol")
  * 
- * @returns true if successfull, false othervise 
+ * @returns true if amount of nonterminal E, when it is 0, it is ERROR 
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-bool processExpression(FILE *, string, TsymItem *);
+unsigned int processExpression(FILE *, string, TsymItem *, TsymItem *);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
 
 char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
-	{"E+E"},// rule 0 
-	{"E-E"},// rule 1
-	{"+E"},	// rule 2
-	{"-E"},	// rule 3
-	{"E*E"},// rule 4
-	{"E/E"},// rule 5
-	{"E<E"},// rule 6
-	{"E>E"},// rule 7
-	{"E<=E"},// rule 8
-	{"E>=E"},// rule 9
-	{"E==E"},// rule 10
-	{"E!=E"},// rule 11
-	{"(E)"},// rule 12
-	{"i"},	// rule 13
-	{"+E"}	// rule 14
-};	
+	{"ETOK_ADDE"},		// rule 0 
+	{"ETOK_SUBE"},		// rule 1
+	{"TOK_ADDE"},		// rule 2
+	{"TOK_SUBE"},		// rule 3
+	{"ETOK_MULE"},		// rule 4
+	{"ETOK_DIVE"},		// rule 5
+	{"ETOK_LTE"},		// rule 6
+	{"ETOK_GTE"},		// rule 7
+	{"ETOK_LEQE"},		// rule 8
+	{"ETOK_GEQE"},		// rule 9
+	{"ETOK_EQE"},		// rule 10
+	{"ETOK_NEQE"},		// rule 11
+	{"TOK_LBRETOK_RBR"},// rule 12
+	{"TOK_ID"}			// rule 13
+};
 
-tStackIPtr highestTerminal( tStackLPtr stack );
+TToken highestTerminal( tStackLPtr stack );
 int findRule( string readRule );
 
 
