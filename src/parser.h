@@ -21,37 +21,54 @@
 #include "psa.h" 			//TODO: TEMPORARILY COMMENTED
 #include "s_table.h"
 
+/**
+ * Instead of keeping global variables in parser.c
+ * or passing million of arguments between functions
+ * this wrapper structure carries all the data needed 
+ * for semantic analysis.
+ */ 
+typedef struct {
+	FILE *file;
+	TsymItem *mainLT;
+	TsymItem *currLT;
+	TsymItem *currGT;
+	unsigned whileCounter;
+	unsigned ifCounter;
+	unsigned psaCounter;
+	unsigned paramCounter;	//set to 0 before every function call and function def
+} TWrapper;
+
 /* NON-TERMINALS */
 
 int parse(FILE *, TsymItem *GT, TsymItem *LT);
-int start(TToken **);
-int stat(TToken **);
-bool fundef(TToken **);
-bool stlist(TToken **);
-bool plist(TToken **);
-bool term(TToken **);
-int assorfun(TToken **, TToken *);
-int assign(TToken **, TToken *);
-bool decideExprOrFunc(TToken **);
-bool pbody(TToken **);
+int start(TToken **, TWrapper *);
+int stat(TToken **, TWrapper *);
+bool fundef(TToken **, TWrapper *);
+bool stlist(TToken **, TWrapper *);
+bool plist(TToken **, TWrapper *);
+bool term(TToken **, TWrapper *);
+int assorfun(TToken **, TWrapper *, string);
+int assign(TToken **, TWrapper *, string);
+int decideExprOrFunc(TToken **, TWrapper *, string, string);
+bool pbody(TToken **, TWrapper *);
 
 /* TERMINALS */
 
-bool eol(TToken **);
-bool tif(TToken **);
-bool then(TToken **);
-bool telse(TToken **);
-bool tWhile(TToken **);
-bool tdo(TToken **);
-bool def(TToken **);
-bool end(TToken **);
-bool id(TToken **);
-bool tconst(TToken **);
-bool nil(TToken **);
-bool lbr(TToken **);
-bool comma(TToken **);
-bool rbr(TToken **);
-bool eq(TToken **);
+bool eol(TToken **, TWrapper *);
+bool tif(TToken **, TWrapper *);
+bool then(TToken **, TWrapper *);
+bool telse(TToken **, TWrapper *);
+bool tWhile(TToken **, TWrapper *);
+bool tdo(TToken **, TWrapper *);
+bool def(TToken **, TWrapper *);
+bool end(TToken **, TWrapper *);
+bool id(TToken **, TWrapper *);
+bool tconst(TToken **, TWrapper *);
+bool nil(TToken **, TWrapper *);
+bool lbr(TToken **, TWrapper *);
+bool comma(TToken **, TWrapper *);
+bool rbr(TToken **, TWrapper *);
+bool eq(TToken **, TWrapper *);
 
 #endif //IFJ18_PARSER_H
 /* end of parser.h */

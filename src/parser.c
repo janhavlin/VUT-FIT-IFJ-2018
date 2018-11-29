@@ -27,30 +27,58 @@ FILE *f;
 
 //--------------RECURSIVE DESCENT------------------------
 
+int parserError(int err, string where, int tokenType) {
+	errflg = err;
+	switch(err):
+		case ERR_SEM_DEFINE:	ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: id not available!\n", errflg, err); break;
+		case ERR_SEM_PARAM:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: wrong amount of parameters!\n", errflg, err); break;
+		case ERR_SYNTAX:		if (tokenType != TOK_KEY)
+									ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: unexpected token type n.%d!\n", errflg, err, tokenType); 
+								else
+									ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: unexpected token type n.%d or unexpected keyword!\n", errflg, err, tokenType); break;
+		case ERR_RUNTIME: 		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: allocation failed!\n", errflg, err); break;
+		default: break;
+	return errflg;
+}
+
+void initTWrapper(TWrapper *info) {
+	info->file = NULL;
+	info->mainLT = NULL;
+	info->currLT = NULL;
+	info->currGT = NULL;
+	info->whileCounter = 0;
+	info->ifCounter = 0;
+	info->psaCounter = 0;
+	info->paramCounter = 0;
+}
+
 int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
 	int result = PROGRAM_OK;
-	mainLT = LT;
-	currLT = LT;
-	currGT = GT;
-	f = input;
-	bool success = false;
+	TWrapper *globalInfo = (TWrapper *) malloc(sizeof(TWrapper));
+	if (token == NULL) {
+		return parserError(ERR_RUNTIME, "parse", 0);
+	}
+	initTWrapper(globalInfo);
+	globalInfo->file = input;
+	globalInfo->mainLT = LT;
+	globalInfo->currLT = LT;
+	globalInfo->currGT = GT;
+
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
-		errflg = ERR_RUNTIME;
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. parse: allocation failed!\n", errflg);
-		return errflg;
+		return parserError(ERR_RUNTIME, "parse", 0);
 	}
 	TToken **tokenPP = &token;
-	
-	**tokenPP = getToken(f, currGT);
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT);
 	if (errflg == ERR_LEXICAL) return;
 	
 	/*START OF PARSING*/
-	result = start(tokenPP);
+	result = start(tokenPP, globalInfo);
 	/*END OF PARSING*/
 
 	//TODO: check if all functions are defined
 
+	free(globalInfo);
 	free(token);
 	return result;
 }
@@ -60,7 +88,7 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
 	
 	assert *tokenPP != NULL
 */
-int start(TToken **tokenPP) {
+int start(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
@@ -68,11 +96,11 @@ int start(TToken **tokenPP) {
 		case TOK_KEY:	if (strcmp(keyW, "def") == 0) {	
 							//rule #2 START -> FUN-DEF eol S
 							//process FUN-DEF
-							if (fundef(tokenPP) != PROGRAM_OK) return errflg;
+							if (fundef(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process eol
-							if (eol(tokenPP) != PROGRAM_OK) return errflg;
+							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process S
-							if (start(tokenPP) != PROGRAM_OK) return errflg;
+							if (start(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							return PROGRAM_OK;
 						} else if (strcmp(keyW, "if") == 0 || strcmp(keyW, "while") == 0) {
 							//continue to rule #1 
@@ -81,54 +109,50 @@ int start(TToken **tokenPP) {
 		case TOK_EOL:
 		case TOK_ID:	//rule #1 START -> STAT eol S
 						//process STAT
-						if (stat(tokenPP) != PROGRAM_OK) return errflg;
+						if (stat(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 						//process eol
-						if (eol(tokenPP) != PROGRAM_OK) return errflg;
+						if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 						//process S
-						if (start(tokenPP) != PROGRAM_OK) return errflg;
+						if (start(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_EOF:	//rule #3 START -> eof
 						genSTOP();
 						return PROGRAM_OK;
 		default:		break;						
 	}
-	errflg = ERR_SYNTAX;
-	ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. start: unexpected token n. %d!\n", errflg, type);
-	return errflg;
+	return parserError(ERR_SYNTAX, __func__, type);
 }
 
 /**
 	represents STAT non-terminal
 */
-int stat(TToken **tokenPP) {
+int stat(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
 		case TOK_ID:	//rule #10 STAT -> id ASS-OR-FUN
-						TToken savedIdOne = **tokenPP;	//save ID for later usage
-						**tokenPP = getToken(f, currGT);	//get next token
+						string savedIdOne = (*tokenPP)->data.s;	//save ID for later call of generator
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT);	//get next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 						//process ASS-OR-FUN
-						if (assorfun(tokenPP, &savedIdOne) != PROGRAM_OK) return errflg;
+						if (assorfun(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp(keyW, "if") == 0) {
 							//rule #11 STAT -> if expr then eol ST-LIST else eol ST-LIST end
-							//**tokenPP = getToken(f, currGT); //if is present, call next token  DONT GET NEXT TOKEN
-							value = tif(tokenPP) && processExpression(f, currGT, currLT) && then(tokenPP) && eol(tokenPP) && 
+							//**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //if is present, call next token  DONT GET NEXT TOKEN
+							value = tif(tokenPP) && processExpression(f, globalInfo->currGT, globalInfo->currLT) && then(tokenPP) && eol(tokenPP) && 
 									stlist(tokenPP) && telse(tokenPP) && eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 						} else if (strcmp(keyW, "while") == 0) {
 							//rule #12 STAT -> while expr do eol ST-LIST end
-							//**tokenPP = getToken(f, currGT); //while is present, call next token DONT GET NEXT TOKEN
-							value = tWhile(tokenPP) && processExpression(f, currGT, currLT) && tdo(tokenPP) && 
+							//**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //while is present, call next token DONT GET NEXT TOKEN
+							value = tWhile(tokenPP) && processExpression(f, globalInfo->currGT, globalInfo->currLT) && tdo(tokenPP) && 
 									eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 						}
 						break;
 		case TOK_EOL:	//rule #13 STAT -> eps
 						return true;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. stat: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;							
+		default:		return parserError(ERR_SYNTAX, __func__, type);							
 	}
 	return value;
 }
@@ -136,7 +160,7 @@ int stat(TToken **tokenPP) {
 /**
 	represents FUN-DEF non-terminal
 */
-bool fundef(TToken **tokenPP) {
+bool fundef(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
@@ -149,8 +173,7 @@ bool fundef(TToken **tokenPP) {
 					eol(tokenPP) && stlist(tokenPP) && end(tokenPP);
 		} 
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. fundef: unexpected token n. %d!\n", ERR_SYNTAX, type);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	} 
 	return value;
 }
@@ -158,7 +181,7 @@ bool fundef(TToken **tokenPP) {
 /**
 	represents ST-LIST non-terminal
 */
-bool stlist(TToken **tokenPP) {
+bool stlist(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
@@ -175,9 +198,7 @@ bool stlist(TToken **tokenPP) {
 		case TOK_EOL:	//rule #4 ST-LIST -> STAT eol ST-LIST
 						value = stat(tokenPP) && eol(tokenPP) && stlist(tokenPP);
 						break;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. stlist: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;						
+		default:		return parserError(ERR_SYNTAX, __func__, type);					
 	}
 	return value;
 }
@@ -185,7 +206,7 @@ bool stlist(TToken **tokenPP) {
 /**
 	represents P-LIST non-terminal
 */
-bool plist(TToken **tokenPP) {
+bool plist(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
@@ -207,9 +228,7 @@ bool plist(TToken **tokenPP) {
 		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
 						return true;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. plist: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;						
+		default:		return parserError(ERR_SYNTAX, __func__, type);						
 	}
 	return value;
 }
@@ -217,14 +236,14 @@ bool plist(TToken **tokenPP) {
 /**
 	represents TERM non-terminal
 */
-bool term(TToken **tokenPP) {
+bool term(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
 		case TOK_ID:	//rule #20 TERM -> id
-						**tokenPP = getToken(f, currGT); //id is present, call next token
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //id is present, call next token
 						return true;
 		case TOK_STRING:
 		case TOK_FLOAT:
@@ -235,9 +254,7 @@ bool term(TToken **tokenPP) {
 							return nil(tokenPP);
 						} 
 						break;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. term: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;						
+		default:		return parserError(ERR_SYNTAX, __func__, type);						
 	}
 	return value;
 }
@@ -245,27 +262,25 @@ bool term(TToken **tokenPP) {
 /**
 	represents ASS-OR-FUN non-terminal
 */
-int assorfun(TToken **tokenPP, TToken *savedIdOne) {
+int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
 		case TOK_ASSIGN: //rule #14 ASS-OR-FUN -> = ASSIGN
-						**tokenPP = getToken(f, currGT);	//= is present, call next token
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT);	//= is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						//process Lvalue Var ID
 						TsymData *data = NULL;
-						if (!symTabSearch(currLT, savedIdOne->data->s, data)) {	//ID not present in current LT
-							if (!symTabSearch(currGT, savedIdOne->data->s, data)) {	//ID not defined as function
-								genDEFVAR(savedIdOne->data->s);
+						if (!symTabSearch(globalInfo->currLT, savedIdOne, data)) {	//ID not present in current LT
+							if (!symTabSearch(globalInfo->currGT, savedIdOne, data)) {	//ID not defined as function
+								genDEFVAR(savedIdOne);
 							} else {
-								errflg = ERR_SEM_DEFINE;
-								ifjErrorPrint("SEMANTICS ERROR %d in parser.c in func. assorfun. Identifier already taken.\n", errflg, type);
-								return errflg;
+								return parserError(ERR_SEM_DEFINE, "assorfun", 0);
 							}
 						} //else Variable already defined
 						//process assign
-						if (assign(tokenPP, savedIdOne) != PROGRAM_OK) return errflg;
+						if (assign(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//continue to rule #15
@@ -280,9 +295,7 @@ int assorfun(TToken **tokenPP, TToken *savedIdOne) {
 		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY
 						value = pbody(tokenPP);
 						break;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. assorfun: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;						
+		default:		return parserError(ERR_SYNTAX, __func__, type);						
 	}
 	return value;
 }
@@ -290,7 +303,7 @@ int assorfun(TToken **tokenPP, TToken *savedIdOne) {
 /**
 	represents ASSIGN non-terminal
 */
-int assign(TToken **tokenPP, TToken *savedIdOne) {
+int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
@@ -309,34 +322,50 @@ int assign(TToken **tokenPP, TToken *savedIdOne) {
 		case TOK_SUB:	//rule #17 ASSIGN -> expr 
 						//case 1 - found after examining 1 token, therefore return 1 token to scanner
 						returnToken(**tokenPP);
-						//**tokenPP = getToken(f, currGT); //expr is present, call next token //DONT CALL NEXT TOKEN
-						int E = processExpression(f, currGT, currLT);
+						//**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //expr is present, call next token //DONT CALL NEXT TOKEN
+						int E = processExpression(f, globalInfo->currGT, globalInfo->currLT);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-						genASSIGN(savedIdOne->data->s, E);
+						(globalInfo->psaCounter)++;
+						genASSIGN(to savedIdOne, E);
 						return PROGRAM_OK;
-		case TOK_ID:	TToken savedIdTwo = **tokenPP;
-						if (decideExprOrFunc(tokenPP) != PROGRAM_OK) return errflg;
+		case TOK_ID:	string savedIdTwo = (*tokenPP)->data.s;
+						if (decideExprOrFunc(tokenPP, savedIdOne, savedIdTwo) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		default:		break;						
 	}
-	errflg = ERR_SYNTAX;
-	ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. assign: unexpected token n. %d!\n", errflg, type);
+	return parserError(ERR_SYNTAX, __func__, type);
 }
 
 /**
- * decides if there is an expression or not
+ * decides if there is an expression or function
  * 
  * eventually passes program to PSA
  */
-bool decideExprOrFunc(TToken **tokenPP) {
+int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, string savedIdTwo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	tokBuffInit();
 	TToken bufferToken = **tokenPP;
-	**tokenPP = getToken(f, currGT); //id is present, but I need another token to decide
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //id is present, but I need another token to decide
+	if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 	switch ((*tokenPP)->type) {
-		case TOK_EOL:	//rules #17 and #16 both work, it is a simple function or id = id expression;
+		case TOK_EOL:	//rules #17 and #16 both work, it is a simple function id = fun or id = id expression;
 						returnToken(**tokenPP); //must return the eol though, so stat can read it
-						return true;
+						TsymData data;
+						if (symTabSearch(globalInfo->currGT, savedIdTwo, &data)) {	//ID is function
+							if (data.params == 0) {	
+								genFUNCALL(savedIdTwo);
+								genASSIGN(to savedIdOne, from funcall);
+							} else {	//0 is wrong amount of parameters
+								return parserError(ERR_SEM_PARAM, "dedideExprOrFunc", 0);
+							}
+						} else if (symTabSearch(globalInfo->currLT, savedIdTwo, &data)) {	//ID is variable
+							genASSIGN(to savedIdOne, from savedIdTwo);
+						} else {	//function call before definition
+							data = createDataForFunDefinition(false, 0);
+							symTabInsert(&currGT, savedIdTwo, TsymData *data);
+							genFUNCALL(savedIdTwo);
+							genASSIGN(to savedIdOne, from funcall);
+						}
+						return PROGRAM_OK;
 		case TOK_ADD:             // +
 		case TOK_SUB:             // -
 		case TOK_MUL:             // *
@@ -351,8 +380,12 @@ bool decideExprOrFunc(TToken **tokenPP) {
 						//case 2 - found after examining 2 tokens, therefore return 2 tokens to scanner
 						returnToken(bufferToken);
 						returnToken(**tokenPP);
-						return processExpression(f, currGT, currLT);
-		case TOK_KEY:		if (strcmp((*tokenPP)->data.s, "nil")==0) {
+						int E = processExpression(f, globalInfo->currGT, globalInfo->currLT);
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
+						(globalInfo->psaCounter)++;
+						genASSIGN(to savedIdOne, E);
+						return PROGRAM_OK;
+		case TOK_KEY:	if (strcmp((*tokenPP)->data.s, "nil")==0) {
 							//continue to rule #18
 						} else 
 							break;
@@ -360,28 +393,54 @@ bool decideExprOrFunc(TToken **tokenPP) {
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:
-		case TOK_ID:	//rule #18 ASSIGN -> id P-BODY
+		case TOK_ID:	//rule #16 ASSIGN -> id P-BODY
 						//actually no need of returning any tokens to scanner
+						Data data;
+						if (symTabSearch(globalInfo->currLT, savedIdTwo, &data)) {
+							return parserError(ERR_SEM_DEFINE, "decideExprOrFunc", 0);
+						} else if (symTabSearch(globalInfo->currGT, savedIdTwo, &data)) {
+							//function is defined
+						} else {
+							//new function
+						}
+						//call plist, store params and count them
 						return plist(tokenPP); 
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. decideExprOrFunc: unexpected token n. %d!\n", ERR_SYNTAX, (*tokenPP)->type);
-						errflg = ERR_SYNTAX;
-						break;
+						//if errflg != PROG_OK, return
+						//if amount of parameters is wrong, semantic error
+						//function call
+						//genASSIGN(to savedIdOne, from funcall)
+		default:		break;
 	}
-	return false;
+	return parserError(ERR_SYNTAX, __func__, (*tokenPP)->type);
+}
+
+/**
+ * creates data structure for new function
+ * includes creating inner LT
+ */ 
+TsymData createDataForFunDefinition(bool defined, int params) {
+	TsymItem *newLT = NULL;    // local symbol table
+	symTabInit(&newLT);
+	TsymData data;
+	data.type = TYPE_FUN;
+	data.defined = defined;
+	data.params = params;
+	data.LT = newLT;
+	return data;
 }
 
 /**
 	represents pbody non-terminal
 	pbody represents syntax for inserting parameters when calling a function like '(a, b, c)'
 */
-bool pbody(TToken **tokenPP) {
+bool pbody(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
 		case TOK_LBR:	//rule #18 P-BODY -> ( P-LIST )
-						**tokenPP = getToken(f, currGT); //( is present, call next token
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //( is present, call next token
 						value = plist(tokenPP) && rbr(tokenPP);
 						break;
 		case TOK_KEY:	if(strcmp(keyW, "nil") == 0) {
@@ -396,34 +455,30 @@ bool pbody(TToken **tokenPP) {
 		case TOK_EOL:	//rule #19 P-BODY -> P-LIST
 						value = plist(tokenPP);
 						break;
-		default:		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. pbody: unexpected token n. %d!\n", ERR_SYNTAX, type);
-						errflg = ERR_SYNTAX;
-						break;						
+		default:		break;						
 	}
-	return value;
+	return parserError(ERR_SYNTAX, __func__, type);
 }
 
 /**
 	eol terminal
 */
-int eol(TToken **tokenPP) {
+int eol(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_EOL) {
-		**tokenPP = getToken(f, currGT); //eol is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //eol is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		errflg = ERR_SYNTAX;
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. eol: unexpected token n. %d!\n", errflg, type);
-		return errflg;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 }
 
 /**
 	if terminal
 */
-bool tif(TToken **tokenPP) {
+bool tif(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	//----SEMANTICS----
 	
@@ -434,17 +489,16 @@ bool tif(TToken **tokenPP) {
 /**
 	then terminal
 */
-bool then(TToken **tokenPP) {
+bool then(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "then") == 0)) {
-		**tokenPP = getToken(f, currGT); //then is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //then is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. then: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -452,17 +506,16 @@ bool then(TToken **tokenPP) {
 /**
 	else terminal
 */
-bool telse(TToken **tokenPP) {
+bool telse(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "else") == 0)) {
-		**tokenPP = getToken(f, currGT); //else is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //else is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. telse: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -470,7 +523,7 @@ bool telse(TToken **tokenPP) {
 /**
  * while terminal
  */ 
-bool tWhile(TToken **tokenPP) {
+bool tWhile(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	return true;
 }
@@ -478,17 +531,16 @@ bool tWhile(TToken **tokenPP) {
 /**
  *	do terminal
  */
-bool tdo(TToken **tokenPP) {
+bool tdo(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "do") == 0)) {
-		**tokenPP = getToken(f, currGT); //do is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //do is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. tdo: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -496,26 +548,25 @@ bool tdo(TToken **tokenPP) {
 /**
  * def terminal
  */ 
-bool def(TToken **tokenPP) {
+bool def(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(f, currGT); //def is present, call next token
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //def is present, call next token
 	return true;
 }
 
 /**
 	end terminal
 */
-bool end(TToken **tokenPP) {
+bool end(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "end") == 0)) {
-		**tokenPP = getToken(f, currGT); //end is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //end is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. end: unexpected token n. %d or keyword %s!\n", ERR_SYNTAX, type, keyW);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -524,7 +575,7 @@ bool end(TToken **tokenPP) {
 /**
 	id terminal
 */
-bool id(TToken **tokenPP) {
+bool id(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
@@ -532,11 +583,10 @@ bool id(TToken **tokenPP) {
 		//----SEMANTICS----
 			
 		//----SEMANTICS----
-		**tokenPP = getToken(f, currGT); //id is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //id is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. id: unexpected token n. %d!\n", ERR_SYNTAX, type);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -544,34 +594,33 @@ bool id(TToken **tokenPP) {
 /**
  * const terminal
  */ 
-bool tconst(TToken **tokenPP) {
+bool tconst(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(f, currGT); //const is present, call next token
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //const is present, call next token
 	return true;
 }
 
 /**
  * nil terminal
  */ 
-bool tconst(TToken **tokenPP) {
+bool tconst(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(f, currGT); //nil is present, call next token
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //nil is present, call next token
 	return true;
 }
 
 /**
 	left bracket terminal
 */
-bool lbr(TToken **tokenPP) {
+bool lbr(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_LBR) {
-		**tokenPP = getToken(f, currGT); //lbr is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //lbr is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. lbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
@@ -579,25 +628,24 @@ bool lbr(TToken **tokenPP) {
 /**
  * comma terminal
  */ 
-bool comma(TToken **tokenPP) {
+bool comma(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(f, currGT); //comma is present, call next token
+	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //comma is present, call next token
 	return true;
 }
 
 /**
 	right bracket terminal
 */
-bool rbr(TToken **tokenPP) {
+bool rbr(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_RBR) {
-		**tokenPP = getToken(f, currGT); //rbr is present, call next token
+		**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //rbr is present, call next token
 		value = true;
 	} else {
-		ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. rbr: unexpected token n. %d!\n", ERR_SYNTAX, type);
-		errflg = ERR_SYNTAX;
+		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
 }
