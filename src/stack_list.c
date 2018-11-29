@@ -6,7 +6,7 @@
  *		Inicialise all stack + add first item with $.
  *		Return pointer to inicialise stack.
  */
-tStackLPtr sLInit( string bottomOfStack ){
+tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string bottomStakTokType
 	tStackLPtr stack = (tStackLPtr) malloc(sizeof(tStackL));
 	
 	if(stack != NULL){
@@ -15,8 +15,9 @@ tStackLPtr sLInit( string bottomOfStack ){
 		if(stack->first != NULL){
 			stack->first->pred 	 = NULL;	
 			stack->first->next 	 = NULL;
-			//stack->first->type 	 = (char *) calloc(4, sizeof(char));
-			stack->first->IdName = (char *) calloc(strlen(bottomOfStack)+1, sizeof(char));
+			//stack->first->type 	 = (char *) calloc(strlen(bottomStakTokType)+1, sizeof(char));
+			stack->first->type = 0;
+			stack->first->IdName = (char *) calloc(strlen(bottomStakTokName)+1, sizeof(char));
 
 			if(stack->first->IdName == NULL){
 				free(stack->first);
@@ -34,8 +35,8 @@ tStackLPtr sLInit( string bottomOfStack ){
 				return NULL;
 			}*/
 			
-			stack->first->IdName = strcpy(stack->first->IdName, bottomOfStack);	
-			//stack->first->type   = strcpy(stack->first->type, "EOS\0");		//EOS End Of Stack
+			stack->first->IdName = strcpy(stack->first->IdName, bottomStakTokName);	
+			stack->first->type   = bottomStakTokType;	//strcpy(stack->first->type, bottomStakTokType);		//EOS End Of Stack
 			stack->top 		 	 = stack->first;
 
 			stack->top->next = NULL;
@@ -107,9 +108,9 @@ bool sLDelete( tStackLPtr stack ){
 */
 bool sLEmpty( tStackLPtr stack ){	// return 1 if stack is empty
 	if(stack != NULL){
-		if( !(strcmp(stack->top->IdName, "$")) ){ // !(strcmp(stack->top->type, "EOS")) ||
+		/*if( !(strcmp(stack->top->IdName, "$")) || !(strcmp(stack->top->type, "EOS")) ){
 			return 1;
-		}
+		}*/
 		
 		if( (stack->top == NULL) || (stack->first == NULL) ){
 			return 1;		
@@ -191,7 +192,7 @@ string sGetExprToReduce( tStackLPtr stack ){	// sE+E
  *	sPreAdd()
  *		Paste item before given item.
 */
-void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name ){
+void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type ){ //char *type
 	if(stack != NULL){
 		if( (before != NULL) && (name != NULL) ){ // (type != NULL) &&
 			tStackIPtr New 	= (tStackIPtr) malloc(sizeof(tStackI));
@@ -206,7 +207,7 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name ){
 			New->pred = NULL;
 		
 			New->IdName = (char *) calloc(strlen(name) + 1, sizeof(char));
-			//New->type 	= (char *) calloc(strlen(type) + 1, sizeof(char));		
+			/*New->type 	= (char *) calloc(strlen(type) + 1, sizeof(char));*/		
 		
 			if(New->IdName == NULL){
 				ifjErrorPrint("stack_list ERROR in sPreAdd: Can't allocate item 'IdName' in New. ERROR %d\n", ERR_RUNTIME);
@@ -222,7 +223,7 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name ){
 		
 		
 			New->IdName = strcpy(New->IdName, name);
-			//New->type 	= strcpy(New->type, type);
+			New->type 	= type;//strcpy(New->type, type);
 			
 			tStackIPtr help = before->pred;
 			
@@ -240,7 +241,7 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name ){
  *	sLPush()
  *		Create new stack list, fill it with 'type' and 'name' and then put it into stack.
 */
-void sLPush( tStackLPtr stack, char *name ){
+void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 	if(stack != NULL){
 		tStackIPtr New 	= (tStackIPtr) malloc(sizeof(tStackI));
 		
@@ -269,7 +270,7 @@ void sLPush( tStackLPtr stack, char *name ){
 		
 
 		New->IdName = strcpy(New->IdName, name);
-		//New->type 	= strcpy(New->type, type);
+		New->type 	= type;//strcpy(New->type, type);
 		
 		tStackIPtr Help;
 
