@@ -2,7 +2,7 @@
 	file name:		parser.c
 	project:		VUT-FIT-IFJ-2018
 	created:		19.11.2018
-	last modified:	26.11.2018
+	last modified:	29.11.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -12,31 +12,25 @@
 
 #include "parser.h"
 
-//--------------GLOBAL VARIABLES-------------------------
-
-/**
- * Keep track about main and current LT and GT
- */ 
-TsymItem *mainLT;
-TsymItem *currLT;
-TsymItem *currGT;
-/**
- * Keep track about main input file
- */
-FILE *f; 
-
 //--------------RECURSIVE DESCENT------------------------
 
-int parserError(int err, string where, int tokenType) {
-	errflg = err;
-	switch(err):
-		case ERR_SEM_DEFINE:	ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: id not available!\n", errflg, err); break;
-		case ERR_SEM_PARAM:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: wrong amount of parameters!\n", errflg, err); break;
+/**
+ * takes care about errors called in parser.c
+ * @param errNbr is error number
+ * @param where is name of parser.c function where the error occured
+ * @tokenType is number of token that came (only used for syntax error)
+ */ 
+int parserError(int errNbr, string where, int tokenType) {
+	errflg = errNbr;
+	switch(errNbr):
+		case ERR_SEM_DEFINE:	ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: Undefined variable or redefinition!\n", errflg, where); break;
+		case ERR_SEM_PARAM:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: wrong amount of parameters!\n", errflg, where); break;
+		case ERR_SEM_OTHER:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: can't define function with constant parameter!\n", errflg, where); break;
 		case ERR_SYNTAX:		if (tokenType != TOK_KEY)
-									ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: unexpected token type n.%d!\n", errflg, err, tokenType); 
+									ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. %s: unexpected token type n.%d!\n", errflg, where, tokenType); 
 								else
-									ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: unexpected token type n.%d or unexpected keyword!\n", errflg, err, tokenType); break;
-		case ERR_RUNTIME: 		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: allocation failed!\n", errflg, err); break;
+									ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. %s: unexpected token type n.%d or unexpected keyword!\n", errflg, where, tokenType); break;
+		case ERR_RUNTIME: 		ifjErrorPrint("RUNTIME ERROR %d in parser.c in func. %s: allocation failed!\n", errflg, where); break;
 		default: break;
 	return errflg;
 }
@@ -50,6 +44,8 @@ void initTWrapper(TWrapper *info) {
 	info->ifCounter = 0;
 	info->psaCounter = 0;
 	info->paramCounter = 0;
+	info->inWhile = false;
+	info->inFunCall = false;
 }
 
 int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
@@ -206,9 +202,8 @@ bool stlist(TToken **tokenPP, TWrapper *globalInfo) {
 /**
 	represents P-LIST non-terminal
 */
-bool plist(TToken **tokenPP, TWrapper *globalInfo) {
+int plist(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
@@ -220,48 +215,94 @@ bool plist(TToken **tokenPP, TWrapper *globalInfo) {
 		case TOK_STRING:
 		case TOK_FLOAT:
 		case TOK_INT:	//rule #7 P-LIST -> TERM P-LIST	
-						value = term(tokenPP) && plist(tokenPP);
-						break;
+						(globalInfo->paramCounter)++;
+						//process term
+						if (term(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //term is present, call next token
+						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
+						if (plist(tokenPP) != PROGRAM_OK) return errflg;
+						return PROGRAM_OK;
 		case TOK_COMMA: //rule #8 P-LIST -> , TERM P-LIST
-						value = comma(tokenPP) && term(tokenPP) && plist(tokenPP);
-						break;
+						//process comma
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //comma is present, call next token
+						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
+						(globalInfo->paramCounter)++;
+						//process term
+						if (term(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
+						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //term is present, call next token
+						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
+						//process plist
+						if (plist(tokenPP) != PROGRAM_OK) return errflg;
+						return PROGRAM_OK;
 		case TOK_RBR:
 		case TOK_EOL:	//rule #9 P-LIST -> eps
-						return true;
-		default:		return parserError(ERR_SYNTAX, __func__, type);						
+						return PROGRAM_OK;
+		default:		break;
 	}
-	return value;
+	return parserError(ERR_SYNTAX, __func__, type);						
 }
 
 /**
-	represents TERM non-terminal
+ * represents TERM non-terminal	
+ * checks if loaded token is correct and calls generator
 */
-bool term(TToken **tokenPP, TWrapper *globalInfo) {
+int term(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	bool value = false;
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	switch (type) {
-		case TOK_ID:	//rule #20 TERM -> id
-						**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //id is present, call next token
-						return true;
-		case TOK_STRING:
-		case TOK_FLOAT:
+		case TOK_ID:	//rule #20 TERM -> id 
+						Data idData;
+						if (globalInfo->inFunCall) {	//passing parameter to function
+							if (!symTabSearch(globalInfo->currLT, keyW, &idData)) {	//try to pass undefined variable to funcall
+								return parserError(ERR_SEM_DEFINE, __func__, 0);
+							} else {
+								genFunCallPar(type, (*token)->data.s, globalInfo->inWhile);
+							}
+						} else { //define variable in new function's LT
+							Data idData = createDataForNewVar(globalInfo->paramCounter);
+							symTabInsert(&(globalInfo->currLT), keyW, idData);
+						}
+						return PROGRAM_OK;
+		case TOK_STRING://rule #21 TERM -> const
+						if (globalInfo->inFunCall) {
+							genFunCallPar(type, (*token)->data.s, globalInfo->inWhile);
+						} else {	//cannot define function with constant
+							return parserError(ERR_SEM_OTHER, __func__, 0);
+						}
+						return PROGRAM_OK;
+		case TOK_FLOAT: //rule #21 TERM -> const
+						if (globalInfo->inFunCall) {
+							genFunCallPar(type, (*token)->data.f, globalInfo->inWhile);
+						} else {	//cannot define function with constant
+							return parserError(ERR_SEM_OTHER, __func__, 0);
+						}
+						return PROGRAM_OK;
 		case TOK_INT:	//rule #21 TERM -> const
-						return tconst(tokenPP);
+						if (globalInfo->inFunCall) {
+							genFunCallPar(type, (*token)->data.i, globalInfo->inWhile);
+						} else {	//cannot define function with constant
+							return parserError(ERR_SEM_OTHER, __func__, 0);
+						}
+						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//rule #22 TERM -> nil
-							return nil(tokenPP);
-						} 
-						break;
-		default:		return parserError(ERR_SYNTAX, __func__, type);						
+							if (globalInfo->inFunCall) {
+								genFunCallPar(type, (*token)->data.s, globalInfo->inWhile);
+							} else {	//cannot define function with constant
+								return parserError(ERR_SEM_OTHER, __func__, 0);
+							}
+							return PROGRAM_OK;
+						}
+		default:		break;
 	}
-	return value;
+	return parserError(ERR_SYNTAX, __func__, type);
 }
 
 /**
-	represents ASS-OR-FUN non-terminal
-*/
+ * represents ASS-OR-FUN non-terminal
+ * @param savedIdOne is the name of the recently red id 
+ */
 int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
@@ -276,7 +317,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							if (!symTabSearch(globalInfo->currGT, savedIdOne, data)) {	//ID not defined as function
 								genDEFVAR(savedIdOne);
 							} else {
-								return parserError(ERR_SEM_DEFINE, "assorfun", 0);
+								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							}
 						} //else Variable already defined
 						//process assign
@@ -301,8 +342,9 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 }
 
 /**
-	represents ASSIGN non-terminal
-*/
+ * represents ASSIGN non-terminal
+ * @param savedIdOne is the name of the first ID in recently red sequence: id = 
+ */
 int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
 	TTokenType type = (*tokenPP)->type;
@@ -340,6 +382,8 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
  * decides if there is an expression or function
  * 
  * eventually passes program to PSA
+ * @param savedIdOne is the name of the first ID in recently red sequence: id = id
+ * @param savedIdTwo is the name of the second ID in recently red sequence: id = id
  */
 int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, string savedIdTwo) {
 	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
@@ -352,17 +396,19 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						TsymData data;
 						if (symTabSearch(globalInfo->currGT, savedIdTwo, &data)) {	//ID is function
 							if (data.params == 0) {	
-								genFUNCALL(savedIdTwo);
+								genFunCallBegin(globalInfo->inWhile);
+								genFunCallEnd(savedIdOne, globalInfo->inWhile);
 								genASSIGN(to savedIdOne, from funcall);
 							} else {	//0 is wrong amount of parameters
-								return parserError(ERR_SEM_PARAM, "dedideExprOrFunc", 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0);
 							}
 						} else if (symTabSearch(globalInfo->currLT, savedIdTwo, &data)) {	//ID is variable
 							genASSIGN(to savedIdOne, from savedIdTwo);
 						} else {	//function call before definition
-							data = createDataForFunDefinition(false, 0);
-							symTabInsert(&currGT, savedIdTwo, TsymData *data);
-							genFUNCALL(savedIdTwo);
+							data = createDataForNewFunc(false, 0);
+							symTabInsert(&(globalInfo->currGT), savedIdTwo, TsymData *data);
+							genFunCallBegin(globalInfo->inWhile);
+							genFunCallEnd(savedIdOne, globalInfo->inWhile);
 							genASSIGN(to savedIdOne, from funcall);
 						}
 						return PROGRAM_OK;
@@ -386,7 +432,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						genASSIGN(to savedIdOne, E);
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp((*tokenPP)->data.s, "nil")==0) {
-							//continue to rule #18
+							//continue to rule #16
 						} else 
 							break;
 		case TOK_LBR:
@@ -395,20 +441,39 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 		case TOK_INT:
 		case TOK_ID:	//rule #16 ASSIGN -> id P-BODY
 						//actually no need of returning any tokens to scanner
-						Data data;
+						Data funcData;
 						if (symTabSearch(globalInfo->currLT, savedIdTwo, &data)) {
-							return parserError(ERR_SEM_DEFINE, "decideExprOrFunc", 0);
+							return parserError(ERR_SEM_DEFINE, __func__, 0);
 						} else if (symTabSearch(globalInfo->currGT, savedIdTwo, &data)) {
 							//function is defined
 						} else {
 							//new function
+							data = createDataForNewFunc(false, 0);	//false means undefined
+							symTabInsert(&(globalInfo->currGT), savedIdTwo, TsymData *data);
 						}
+						globalInfo->paramCounter = 0;
+						genFunCallBegin(globalInfo->inWhile);
+						globalInfo->inFunCall = true;
 						//call plist, store params and count them
-						return plist(tokenPP); 
-						//if errflg != PROG_OK, return
-						//if amount of parameters is wrong, semantic error
+						if (plist(tokenPP, globalInfo) != PROGRAM_OK) return errflg; 
+						//if amount of parameters is wrong, semantic error (only for defined function)
+						if (data.defined) {	//function was defined before, amount of parameters must equal
+							if (globalInfo->paramCounter != data.params) {
+								return parserError(ERR_SEM_PARAM, __func__, 0);
+							}
+						} else if (data.called) {	//function was called before, amounts must match 
+							if (data.params != globalInfo->paramCounter) {
+								return parserError(ERR_SEM_PARAM, __func__, 0);
+							}
+						} else {	//first call of undefined function
+							data.params = globalInfo->paramCounter;
+							data.called = true;
+						}
 						//function call
-						//genASSIGN(to savedIdOne, from funcall)
+						genFunCallEnd(savedIdTwo, globalInfo->inWhile);
+						globalInfo->inFunCall = false;
+						genASSIGN(to savedIdOne, from funcall);
+						return PROGRAM_OK;
 		default:		break;
 	}
 	return parserError(ERR_SYNTAX, __func__, (*tokenPP)->type);
@@ -418,14 +483,25 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
  * creates data structure for new function
  * includes creating inner LT
  */ 
-TsymData createDataForFunDefinition(bool defined, int params) {
+TsymData createDataForNewFunc(bool defined, int params) {
 	TsymItem *newLT = NULL;    // local symbol table
 	symTabInit(&newLT);
 	TsymData data;
 	data.type = TYPE_FUN;
 	data.defined = defined;
+	data.called = false;
 	data.params = params;
 	data.LT = newLT;
+	return data;
+}
+
+/**
+ * creates data structure for new variable
+ */ 
+TsymData createDataForNewVar(unsigned order) {
+	TsymData data;
+	data.type = TYPE_VAR;
+	data.order = order;
 	return data;
 }
 
@@ -592,24 +668,6 @@ bool id(TToken **tokenPP, TWrapper *globalInfo) {
 }
 
 /**
- * const terminal
- */ 
-bool tconst(TToken **tokenPP, TWrapper *globalInfo) {
-	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //const is present, call next token
-	return true;
-}
-
-/**
- * nil terminal
- */ 
-bool tconst(TToken **tokenPP, TWrapper *globalInfo) {
-	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //nil is present, call next token
-	return true;
-}
-
-/**
 	left bracket terminal
 */
 bool lbr(TToken **tokenPP, TWrapper *globalInfo) {
@@ -623,15 +681,6 @@ bool lbr(TToken **tokenPP, TWrapper *globalInfo) {
 		return parserError(ERR_SYNTAX, __func__, type);
 	}
 	return value;
-}
-
-/**
- * comma terminal
- */ 
-bool comma(TToken **tokenPP, TWrapper *globalInfo) {
-	if (DEBUG) printf("TOKEN: '%s' FUNCTION: %s\n", (*tokenPP)->data.s, __func__);
-	**tokenPP = getToken(globalInfo->file, globalInfo->currGT); //comma is present, call next token
-	return true;
 }
 
 /**

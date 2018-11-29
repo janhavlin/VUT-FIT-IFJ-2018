@@ -2,7 +2,7 @@
 	file name:		parser.h
 	project:		VUT-FIT-IFJ-2018
 	created:		19.11.2018
-	last modified:	26.11.2018
+	last modified:	29.11.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -36,6 +36,8 @@ typedef struct {
 	unsigned ifCounter;
 	unsigned psaCounter;
 	unsigned paramCounter;	//set to 0 before every function call and function def
+	bool inWhile;
+	bool inFunCall;			//flag for parameters to determine if we read them for definition or call, false means inFunDef
 } TWrapper;
 
 /* NON-TERMINALS */
