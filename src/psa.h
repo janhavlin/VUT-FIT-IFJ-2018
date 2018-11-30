@@ -4,8 +4,9 @@
 	created:		23.11.2018
 	last modified:	23.11.2018
 	
-	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
+	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+					
+	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	
 	description:	Precedence syntax analysis for expressions
 */
@@ -17,7 +18,7 @@
 #include "stack_list.h"
 #include "s_table.h"
 
-#define MAX_RULE_LENGTH	5
+#define MAX_RULE_LENGTH	17
 #define AMOUNT_OF_RULES	15
 #define RULE_NOT_FOUND	-1
 #define NO_E_NONTERM	0
@@ -49,27 +50,12 @@
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-unsigned int processExpression(FILE *, string, TsymItem *, TsymItem *);
+unsigned int processExpression(FILE *, string, TsymItem *STG, TsymItem *STL);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
 
-char *rules[AMOUNT_OF_RULES] = {
-	{"ETOK_ADDE\0"},		// rule 0 
-	{"ETOK_SUBE\0"},		// rule 1
-	{"TOK_ADDE\0"},		// rule 2
-	{"TOK_SUBE\0"},		// rule 3
-	{"ETOK_MULE\0"},		// rule 4
-	{"ETOK_DIVE\0"},		// rule 5
-	{"ETOK_LTE\0"},		// rule 6
-	{"ETOK_GTE\0"},		// rule 7
-	{"ETOK_LEQE\0"},		// rule 8
-	{"ETOK_GEQE\0"},		// rule 9
-	{"ETOK_EQE\0"},		// rule 10
-	{"ETOK_NEQE\0"},		// rule 11
-	{"TOK_LBRETOK_RBR\0"},// rule 12
-	{"TOK_ID\0"}			// rule 13
-};
+char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH];
 
 TToken highestTerminal( tStackLPtr stack );
 int findRule( string readRule );

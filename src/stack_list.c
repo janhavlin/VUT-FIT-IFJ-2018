@@ -293,3 +293,48 @@ void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 		}
 	}
 }
+
+void sPlaceShiftChar( tStackLPtr s ){
+	tStackIPtr tmp = s->top;
+	tStackIPtr help;
+
+	tStackIPtr New = (tStackIPtr) malloc(sizeof(tStackI));
+	if(New == NULL){
+		ifjErrorPrint("stack_list ERROR in sPlaceShiftChar: Can't allocate item 'New' in stack. ERROR %d\n", ERR_RUNTIME);
+		errflg = ERR_RUNTIME;
+		return;
+	}
+
+	New->IdName = (string) calloc(2, sizeof(char));
+	if(New->IdName == NULL){
+		ifjErrorPrint("stack_list ERROR in sPlaceShiftChar: Can't allocate item 'New' in stack. ERROR %d\n", ERR_RUNTIME);
+		errflg = ERR_RUNTIME;
+		return;
+	}
+
+	New->next = NULL;
+	New->pred = NULL;
+	New->type = 0;
+	New->numberOfE = 0;
+
+	while( !strcmp( tmp->IdName, "E") ){
+            tmp=tmp->pred;
+	}
+
+	if(tmp->next != NULL){
+		help = tmp->next;
+		
+		tmp->next = New;
+		New->pred = tmp;
+		
+		New->next = help;
+		help->pred = New;
+	}
+
+	else{
+		tmp->next = New;
+		New->pred = tmp;
+		s->top = New;
+	}
+
+}
