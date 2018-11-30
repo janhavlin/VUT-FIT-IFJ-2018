@@ -45,6 +45,22 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     }
 }
 
+char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
+	{"ETOK_ADDE"},	// rule 0 
+	{"ETOK_SUBE"},	// rule 1
+	{"TOK_ADDE"},		// rule 2
+	{"TOK_SUBE"},		// rule 3
+	{"ETOK_MULE"},	// rule 4
+	{"ETOK_DIVE"},	// rule 5
+	{"ETOK_LTE"},		// rule 6
+	{"ETOK_GTE"},		// rule 7
+	{"ETOK_LEQE"},	// rule 8
+	{"ETOK_GEQE"},	// rule 9
+	{"ETOK_EQE"},		// rule 10
+	{"ETOK_NEQE"},	// rule 11
+	{"TOK_LBRETOK_RBR"},// rule 12
+	{"TOK_ID"}		// rule 13
+};
 /**
  * returns correct index for each token it the precedence table
  */
@@ -83,6 +99,7 @@ int getIndex(TToken token) {
 TToken highestTerminal( tStackLPtr stack ){
 	tStackIPtr tmp = stack->top;
     TToken result;
+    result.data.s = (string) calloc(strlen(tmp->IdName), sizeof(char));
 
     if(stack != NULL){
         
@@ -128,10 +145,10 @@ int findRule( string readRule ){
 unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, TsymItem *STL){
     
     unsigned int Ecount  = 0;   // counter of element E in stack when reduce
-    unsigned int EFirst = -1;   // number of first E for generator
-    unsigned int ESecond = -1;  // number of second E for gennerator
+    int EFirst = -1;   // number of first E for generator
+    int ESecond = -1;  // number of second E for gennerator
     static unsigned int psaCntr = 0;    // total amount of psa calls
-    tStackLPtr s    = sLInit(followingToken, "TOK_KEY\0");  // followingToken == bottom of stack
+    tStackLPtr s    = sLInit(0, followingToken);  // followingToken == bottom of stack
     TToken get      = getToken(stdout, STL);                // token got from scanner 
     TToken ter      = highestTerminal(s);   // highest terminal in stack
     char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
@@ -144,7 +161,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
         toDo = lookInPrecedenceTable(highestTerminal(s), get);
         if( get.type == TOK_ID ){
             
-            if( ( symTableSearch(STG, get.data.s) != NULL ) && ( symTableSearch(STL, get.data.s) == NULL ) ){   // ID does not exist in Local ST, 
+            if(  symTableSearch(STG, get.data.s, NULL)  &&  !symTableSearch(STL, get.data.s, NULL) ){   // ID does not exist in Local ST, 
                                                                                                                 // but exist in Global ST
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Variable %s was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
@@ -164,7 +181,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
                     ESecond = -1;
                    
                     while(s->top->IdName != "s"){
-                        if(s->top->IdName != "E"){
+                        if(!strcmp(s->top->IdName, "E")){
                             if( EFirst == -1 )
                                 EFirst = s->top->numberOfE;
                             else   
@@ -173,7 +190,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
                         sLPop(s);
                     }
                     sLPop(s);   // pop shift char s
-                    sLPush(s, "E", "NON_TERM\0");   // push E element into stack
+                    sLPush(s, "E", 0);   // push E element into stack
                     (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
 
                     if(ruleGet == ADD_RULE){        // E+E
@@ -212,7 +229,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
 
             // shift
             case 's':
-                void sPlaceShiftChar( tStackLPtr s );
+                sPlaceShiftChar( s );
                 sLPush(s, get.data.s, get.type);
                 get = getToken(stdout, STL);
                 break;
