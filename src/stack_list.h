@@ -17,7 +17,7 @@ typedef struct tStackItem{	// struct for item in stack
 	struct tStackItem *next;
 	struct tStackItem *pred;
 	char *IdName;
-	char *type;
+	int type;
 	unsigned int numberOfE;
 }tStackI;
 
@@ -40,5 +40,6 @@ bool sLDelete( tStackLPtr stack );
 bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
 void sLPush( tStackLPtr stack, char *name, int type); //char *type
+void sPlaceShiftChar( tStackLPtr s );
 
 #endif // STACK_PR

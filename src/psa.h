@@ -4,8 +4,9 @@
 	created:		23.11.2018
 	last modified:	23.11.2018
 	
-	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
+	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+					
+	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	
 	description:	Precedence syntax analysis for expressions
 */
@@ -49,7 +50,7 @@
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-unsigned int processExpression(FILE *, string, TsymItem *, TsymItem *);
+unsigned int processExpression(FILE *, string, TsymItem *STG, TsymItem *STL);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);

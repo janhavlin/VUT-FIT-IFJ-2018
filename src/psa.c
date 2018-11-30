@@ -125,70 +125,80 @@ int findRule( string readRule ){
  *  symTablePG == global symbol table
  *  symTablePL == local symbol table
  */ 
-unsigned int processExpression(FILE * f, string followingToken, TsymItem *symTablePL, TsymItem *symTablePG){
+unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, TsymItem *STL){
     
-    unsigned int Ecount  = 0;                               // counter of element E in stack when reduce
-    static unsigned int psaCntr = 0;
+    unsigned int Ecount  = 0;   // counter of element E in stack when reduce
+    unsigned int EFirst = -1;   // number of first E for generator
+    unsigned int ESecond = -1;  // number of second E for gennerator
+    static unsigned int psaCntr = 0;    // total amount of psa calls
     tStackLPtr s    = sLInit(followingToken, "TOK_KEY\0");  // followingToken == bottom of stack
-    TToken get      = getToken(stdout, symTablePL);         // token got from scanner 
-    char todo       = lookInPrecedenceTable( highestTerminal(s), get );     // reduce, shift, ...
-    string toReduce;                                        // string to reduce
-    TToken ter = highestTerminal(s);                        // highest terminal
-    int ruleGet = 0;
+    TToken get      = getToken(stdout, STL);                // token got from scanner 
+    TToken ter      = highestTerminal(s);   // highest terminal in stack
+    char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
+    string toReduce;    // string that has to be reduced
+    int ruleGet = 0;    // number
 
-    while((!strcmp(ter.data.s , followingToken)) && 
-         (( get.type == TOK_KEY) && (!strcmp(highestTerminal(s).data.s, get.data.s)) &&
-         (get.type == TOK_KEY))){    // key do, key then, eol
+    
+    while(s->first != s->top){    
 
-        todo = lookInPrecedenceTable(highestTerminal(s), get);
+        toDo = lookInPrecedenceTable(highestTerminal(s), get);
         if( get.type == TOK_ID ){
             
-            //TODO:
-            /*if(  ){
-                kontrola, jestli je promenna v LT a ne GT
-            }
-            else{
+            if( ( symTableSearch(STG, get.data.s) != NULL ) && ( symTableSearch(STL, get.data.s) == NULL ) ){   // ID does not exist in Local ST, 
+                                                                                                                // but exist in Global ST
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Variable %s was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
+                errflg = ERR_SEM_DEFINE;
                 return NO_E_NONTERM;
-            }*/
+            }
         }
 
-        switch(todo){
+        switch(toDo){
             
             // reduce
             case 'r':
                 toReduce = sGetExprToReduce(s);
                 
-                if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){
+                if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
+                    EFirst  = -1;
+                    ESecond = -1;
+                   
                     while(s->top->IdName != "s"){
+                        if(s->top->IdName != "E"){
+                            if( EFirst == -1 )
+                                EFirst = s->top->numberOfE;
+                            else   
+                                ESecond = s->top->numberOfE;
+                        }
                         sLPop(s);
                     }
-
-                    sLPop(s);
-                    sLPush(s, "E", "NON_TERM\0");
-                    Ecount++;
+                    sLPop(s);   // pop shift char s
+                    sLPush(s, "E", "NON_TERM\0");   // push E element into stack
+                    (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
 
                     if(ruleGet == ADD_RULE){        // E+E
-                       // genADD(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji ADD s E%d = E%d + E%d",Ecount, Ecount-1, Ecount-2);
+                       // genADD(psaCntr, Ecount, ESecond, EFirst);
+                        printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
                     }
 
                     else if(ruleGet == SUB_RULE){   // E-E
                        // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji SUB s E%d = E%d - E%d",Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji SUB s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
                     }
 
                     else if(ruleGet == MUL_RULE){   // E*E
                        // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji MUL s E%d = E%d * E%d",Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji MUL s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
                     }
 
                     else if(ruleGet == DIV_RULE){   // E/E
                        // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji DIV s E%d = E%d / E%d",Ecount, Ecount-1, Ecount-2);
+                        printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                     }
 
+                    else if(ruleGet == ID_RULE){   // E from ID
+                        printf("Generuji ID s E%d\n", Ecount);
+                    }
 
                 }
                 else{
@@ -199,27 +209,31 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *symTab
                 }
                 break;
 
+
             // shift
             case 's':
-                sLPush(s, "s", "NULL\0");
+                void sPlaceShiftChar( tStackLPtr s );
                 sLPush(s, get.data.s, get.type);
-                get = getToken(stdout, symTablePL);
+                get = getToken(stdout, STL);
                 break;
+
 
             // equal
             case 'e':
                 sLPush(s, get.data.s, get.type);
-                get = getToken(stdout, symTablePL);
+                get = getToken(stdout, STL);
                 break;            
             
+
             // nothing
             case 'X':
-                if( (!strcmp(get.data.s, followingToken)) || (get.type == TOK_KEY) ){
+                if( (get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
+                    (!strcmp(get.data.s, "then")) || (!strcmp(get.data.s, "eol")) ) ){   // end of expression was found
                     sLDelete(s);
                     returnToken(get);
-                    return psaCntr++;
+                    return Ecount;                      
                 }
-                else{
+                else{          // an error was found
                     sLDelete(s);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
@@ -229,6 +243,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *symTab
         }
        
     }
+    return Ecount;
 }
 
 
