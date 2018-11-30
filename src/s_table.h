@@ -2,7 +2,7 @@
 	file name:		s_table.h
 	project:		VUT-FIT-IFJ-2018
 	created:		24.11.2018
-	last modified:	24.11.2018
+	last modified:	29.11.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -28,6 +28,8 @@ typedef enum {
 } TsymType;
 
 struct symItem;
+
+#define UNLIMITED_P -1
 /**
  * data structure for item in symbol table
  */ 
@@ -57,8 +59,8 @@ void symTabInsert(TsymItem **rootPP, string key, TsymData *data);
 void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP);
 void symTabDelete (TsymItem **rootPP, string key);
 void symTabDispose(TsymItem **rootPP);
-void symTabAddKwds(TsymItem **tablePP);
-void symTabAddFuns(TsymItem **tablePP);
+void symTabFillKwds(TsymItem **tablePP);
+void symTabFillFuns(TsymItem **tablePP);
 void symTabToString(TsymItem *rootPtr, int depth);
 
 #endif //IFJ18_S_TABLE_H
