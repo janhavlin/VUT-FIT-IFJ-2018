@@ -17,7 +17,6 @@
 
 typedef struct tDLElem {
     char *inst;
-    bool inWhile;
     struct tDLElem *lptr;
     struct tDLElem *rptr;
 } *tDLElemPtr;
