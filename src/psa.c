@@ -228,7 +228,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
 				    (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
 					printf("Stack po reduce: ");
-					printStack(s);
+					sPrintStack(s);
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 					if(toReduce != NULL)
 						free(toReduce);
@@ -247,9 +247,9 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 's':
                 printf("shiftuji\n");
                 sPlaceShiftChar( s );
-				printStack(s);
-				sLPush(s, sTokToStr(get), get.type);
-				printStack(s);
+				sPintStack(s);
+				sLPush(s, tokToStr(get), get.type);
+				sPintStack(s);
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
@@ -259,9 +259,9 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // equal
             case 'e':
                 printf("ekvivalence\n");
-                sLPush(s, sTokToStr(get), get.type);
+                sLPush(s, tokToStr(get), get.type);
                 get = getToken(f, STG);
-				printStack(s);
+				sPrintStack(s);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
             

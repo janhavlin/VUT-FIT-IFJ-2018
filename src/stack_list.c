@@ -404,7 +404,7 @@ string sTokToStr(TToken tok){
 
 }
 
-void printStack( tStackLPtr s){
+void sPrintStack( tStackLPtr s){
 	if(s != NULL){	
 		tStackIPtr item = s->first;
 		while(item != s->top){
