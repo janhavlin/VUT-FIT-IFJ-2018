@@ -35,6 +35,7 @@ typedef struct {
 	TsymType type;  
 	unsigned order;				//VAR ONLY: 1, 2, .. for parameter, 0 for later defined variable
     bool defined;   			//FUN ONLY: false if the function was called but not defined
+	bool called;				//FUN ONLY: I only care if defined == false
 	int params;					//FUN ONLY: number of parameters (-1 means unlimited)
 	struct symItem *LT;			//FUN ONLY: own LT = local symbol table
 	//return type?
