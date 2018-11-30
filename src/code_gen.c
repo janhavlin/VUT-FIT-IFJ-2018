@@ -2,7 +2,7 @@
  * file name:       code_gen.c
  * project:         VUT-FIT-IFJ-2018
  * created:         23.11.2018
- * last modified:   23.11.2018
+ * last modified:   30.11.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz
  * modification:    
@@ -41,6 +41,10 @@ void DLInitList (tDLList *L){
 	L->Act = NULL;
 }
 
+void DLLast (tDLList *L) {
+	L->Act = L->Last;
+}
+
 void DLDisposeList (tDLList *L){
 	if (L->First == NULL)
 		return;
@@ -60,7 +64,7 @@ void DLDisposeList (tDLList *L){
 	L->Act = NULL;
 }
 
-void DLInsertLast(tDLList *L, char *inst){
+void DLInsertLast(tDLList *L, char *inst, bool inWhile){
 	tDLElemPtr new = (tDLElemPtr)malloc(sizeof(struct tDLElem));
 	if (new == NULL){
 		errflg = ERR_RUNTIME;
@@ -83,9 +87,13 @@ void DLInsertLast(tDLList *L, char *inst){
 		L->Last->rptr = new;
 		L->Last = new;	
 	}
+
+    if (!inWhile){
+        DLLast(L);
+    }
 }
 
-void DLPostInsert (tDLList *L, char *inst, bool inWhile) {
+void DLPostInsert (tDLList *L, char *inst) {
 	if (L->Act == NULL)
 		return;
 	
@@ -153,94 +161,137 @@ char *getInst(int n, ...){
     va_end(vs);
     return p;
 }
-void genFunCallBegin(){
+void genFunCallBegin(bool inWhile){
     char *inst;
     funPara = 0;
     inst = getInst(1, "CREATE FRAME");
-    DLInsertLast(&L, inst);
+    DLInsertLast(&L, inst, inWhile);
 }
 
 void genFunCallPar(char *var, bool inWhile){
     char *inst;
     char *conv = convIntToStr(++funPara);
-    inst = getInst(2, "DEFVAR TF@\x25", conv);
-    DLInsertLast(&L, inst);
+    inst = getInst(2, "DEFVAR TF@&", conv);
+    DLPostInsert(&L, inst);
 
-    inst = getInst(4, "MOVE TF@\x25", conv, " LF@\x25", var);
-    DLInsertLast(&L, inst);
+    inst = getInst(4, "MOVE TF@&", conv, " LF@&", var);
+    DLInsertLast(&L, inst, inWhile);
     free(conv);
 }
 
 void genFunCallEnd(char *fun, bool inWhile){
     char *inst;
     inst = getInst(1, "PUSHFRAME");
-    DLInsertLast(&L, inst);
-    inst = getInst(2, "CALL $func$", fun);
-    DLInsertLast(&L, inst);
+    DLInsertLast(&L, inst, inWhile);
+    inst = getInst(2, "CALL func", fun);
+    DLInsertLast(&L, inst, inWhile);
 }
 
-void genWhile(){
-    
+void genWhileBegin(unsigned whileCnt, bool inWhile){
+    char *inst;
+    char *whileStr = convIntToStr(whileCnt);
+    /*inst = getinst(3, "DEFVAR LF@&while", whileStr, "cond\n");
+    DLInsertLast(&L, inst); // TODO: Insert it after/before active*/
+    inst = getInst(3, "$while", whileStr, "begin:\n");
+    DLInsertLast(&L, inst, inWhile);
+    free(whileStr);
 }
 
-void genAdd(unsigned psa, unsigned res, unsigned var1, unsigned var2){
+void genWhileCond(unsigned whileCnt, unsigned psa, unsigned res, bool inWhile){
+    char *inst;
+    char *whileStr = convIntToStr(whileCnt);
+    char *psaStr = convIntToStr(psa);
+    char *resStr = convIntToStr(res);
+    inst = getInst(7, "JUMPIFEQ $while", whileStr, "end LF@&psa", psaStr, "E", resStr, " bool@false\n");
+    DLInsertLast(&L, inst, inWhile);
+    free(whileStr);
+    free(psaStr);
+    free(resStr);
+}
+
+void genWhileEnd(unsigned whileCnt, bool inWhile){
+    char *inst;
+    char *whileStr = convIntToStr(whileCnt);
+    inst = getInst(6, "JUMP $while", whileStr, "begin\n",
+                      "$while", whileStr, "end:\n"); 
+    DLInsertLast(&L, inst, inWhile);
+    free(whileStr);
+}
+void genE(unsigned psa, unsigned res, char *var, bool inWhile){
+    char *inst;
+    char *psaStr = convIntToStr(psa);
+    char *resStr = convIntToStr(res);
+    inst = getInst(5, "DEFVAR LF@&psa", psaStr, "E", resStr, "\n");
+    DLPostInsert(&L, inst); // TODO: Insert it after/before active
+    inst = getInst(7, "MOVE LF@&psa", psaStr, "E", resStr, " LF@", var, "\n");
+    DLInsertLast(&L, inst, inWhile);
+    free(psaStr);
+    free(resStr);
+}
+
+void genAdd(unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
     char *inst;
     char *psaStr = convIntToStr(psa);
     char *resStr = convIntToStr(res);
     char *var1Str = convIntToStr(var1);
     char *var2Str = convIntToStr(var2);
+    char *E1 = getInst(4, "LF@&psa", psaStr, "E", var1Str);  
+    char *E2 = getInst(4, "LF@&psa", psaStr, "E", var2Str);  
+    char *E3 = getInst(4, "LF@&psa", psaStr, "E", resStr);  
+    char *E1type = getInst(5, "LF@&psa", psaStr, "E", var1Str, "type");  
+    char *E2type = getInst(5, "LF@&psa", psaStr, "E", var2Str, "type");  
 
-    inst = getInst(15,  "DEFVAR LF@\x25psa", psaStr, "\x25""E", resStr, "\n",
-                        "DEFVAR LF@\x25psa", psaStr, "\x25""E", var1Str, "\x25type\n",
-                        "DEFVAR LF@\x25psa", psaStr, "\x25""E", var2Str, "\x25type\n");
-    DLInsertLast(&L, inst); // TODO: Insert it after/before active
+    inst = getInst(9,  "DEFVAR ", E3, "\n",
+                       "DEFVAR ", E1type, "\n",
+                       "DEFVAR ", E2type, "\n");
+    DLPostInsert(&L, inst);
 
-                       //TYPE %psaN%e1%type                              %psaN%e1
-    inst = getInst(9,  "TYPE LF@\x25psa", psaStr, "\x25""E", var1Str, "\x25type LF@\x25psa", psaStr, "\x25""E", var1Str, "\n");
-    inst = getInst(10, inst, "TYPE LF@\x25psa", psaStr, "\x25""E", var2Str, "\x25type LF@\x25psa", psaStr, "\x25""E", var2Str, "\n");
-    inst = getInst(14, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$typeeq LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type LF@psa", psaStr, "\x25""E", var2Str, "\x25""type\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$1float LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type string@float\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$2float LF@\x25""psa", psaStr, "\x25""E", var2Str, "\x25""type string@float\n");
+    inst = getInst(5, "TYPE ", E1type, " ", E1,"\n");
+    inst = getInst(6, inst, "TYPE ", E2type, " ", E2, "\n");
 
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$exit:\n");
-    inst = getInst(2, inst, "EXIT int@4");
+    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "typeeq ", E1type, " ", E2type, "\n");
+    inst = getInst(8, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "floatfirst ", E1type, " string@float\n");
+    inst = getInst(8, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "floatsecond ", E2type, " string@float\n");
 
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$1float:\n");
-    inst = getInst(6, inst, "JUMPIFNEQ LF@\x25""psa", psaStr, "\x25""E", var2Str, "\x25""type string@int\n");
-    inst = getInst(6, inst, "INT2FLOAT LF@\x25""psa", psaStr, "\x25""E", var2Str, "\n");
-    inst = getInst(6, inst, "JUMP $psa", psaStr, "$E", resStr, "$add\n");
-
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$2float:\n");
-    inst = getInst(6, inst, "JUMPIFNEQ LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type string@int\n");
-    inst = getInst(6, inst, "INT2FLOAT LF@\x25""psa", psaStr, "\x25""E", var1Str, "\n");
-    inst = getInst(6, inst, "JUMP $psa", psaStr, "$E", resStr, "$add\n");
-
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$typeeq:\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$add LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type" "string@int\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$add LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type" "string@float\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "$E", resStr, "$cat LF@\x25""psa", psaStr, "\x25""E", var1Str, "\x25""type" "string@string\n");
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "exit:\n");
     inst = getInst(2, inst, "EXIT int@4\n");
 
-    inst = getInst(14, inst, "CONCAT LF@\x25""psa", psaStr, "\x25""E", resStr, "LF@\x25""psa", psaStr, "\x25""E", var1Str, "LF@\x25""psa", psaStr, "\x25""E", var2Str, "\n");
-    inst = getInst(6, inst, "JUMP $psa", psaStr, "$E", resStr, "$end\n");
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "floatfirst:\n");
+    inst = getInst(10, inst, "JUMPIFNEQ $psa", psaStr, "E", resStr, "exit LF@&psa", psaStr, "E", var2Str, "&type string@int\n");
+    inst = getInst(6, inst, "INT2FLOAT LF@&psa", psaStr, "E", var2Str, "\n");
+    inst = getInst(6, inst, "JUMP $psa", psaStr, "E", resStr, "add\n");
 
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$add:\n");
-    inst = getInst(14, inst, "ADD LF@\x25""psa", psaStr, "\x25""E", resStr, "LF@\x25""psa", psaStr, "\x25""E", var1Str, "LF@\x25""psa", psaStr, "\x25""E", var2Str, "\n");
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "floatsecond:\n");
+    inst = getInst(10, inst, "JUMPIFNEQ $psa", psaStr, "E", resStr, "exit LF@&psa", psaStr, "E", var1Str, "&type string@int\n");
+    inst = getInst(6, inst, "INT2FLOAT LF@&psa", psaStr, "E", var1Str, "\n");
+    inst = getInst(6, inst, "JUMP $psa", psaStr, "E", resStr, "add\n");
 
-    inst = getInst(6, inst, "$psa", psaStr, "$E", resStr, "$end:\n");
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "typeeq:\n");
+    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "add LF@&psa", psaStr, "E", var1Str, "type string@int\n");
+    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "add LF@&psa", psaStr, "E", var1Str, "type string@float\n");
+    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "cat LF@&psa", psaStr, "E", var1Str, "type string@string\n");
+    inst = getInst(2, inst, "EXIT int@4\n");
+
+    inst = getInst(14, inst, "CONCAT LF@&psa", psaStr, "E", resStr, " LF@&psa", psaStr, "E", var1Str, " LF@&psa", psaStr, "E", var2Str, "\n");
+    inst = getInst(6, inst, "JUMP psa", psaStr, "E", resStr, "end\n");
+
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "add:\n");
+    inst = getInst(14, inst, "ADD LF@&psa", psaStr, "E", resStr, " LF@&psa", psaStr, "E", var1Str, " LF@&psa", psaStr, "E", var2Str, "\n");
+
+    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "end:\n");
 
 
 
-    //inst = getInst(6, "ADD LF@\x25", resStr, " LF@\x25", var1Str, " LF@\x25", var2Str);
-    DLInsertLast(&L, inst);
+    //inst = getInst(6, "ADD LF@&", resStr, " LF@&", var1Str, " LF@&", var2Str);
+    DLInsertLast(&L, inst, inWhile);
 }
 
-void genDefVar(char *var){
+void genDefVar(char *var, bool inWhile){
     char *inst;
-    inst = getInst(3, "DEFVAR LF@\x25\n", var, "\n");
-    DLInsertLast(&L, inst);
-    inst = getInst(3, "MOVE LF@\x25", var, " nil@nil\n");
-    DLInsertLast(&L, inst);
+    inst = getInst(3, "DEFVAR LF@&\n", var, "\n");
+    DLInsertLast(&L, inst, inWhile);
+    inst = getInst(3, "MOVE LF@&", var, " nil@nil\n");
+    DLInsertLast(&L, inst, inWhile);
 }
 
 int main(){
@@ -255,7 +306,11 @@ int main(){
     //    genFunCallPar("ddd", false);
     genFunCallEnd("myFunc", false);*/
 
-    genAdd(42, 3, 1, 2);
+    //genAdd(42, 3, 1, 2);
+    genE(5,3,"i", false);
+    genE(5,3,"i", true);
+    genE(5,3,"i", true);
+    genE(5,3,"i", true);
     print_elements_of_list(L);
     DLDisposeList(&L);
     return 0;
