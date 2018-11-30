@@ -2,7 +2,7 @@
 	file name:		s_table.c
 	project:		VUT-FIT-IFJ-2018
 	created:		24.11.2018
-	last modified:	24.11.2018
+	last modified:	01.12.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -22,11 +22,11 @@ void symTabInit (TsymItem **rootPP) {
  * @param data will return pointer to found data
  */ 
 bool symTabSearch (TsymItem *rootPtr, string key, TsymData *data)	{
-	if (DEBUG) printf("Function: %s\n", __func__);
+	if (DEBUG) printf("Function:%s key:%s\n", __func__, key);
 	if (rootPtr == NULL)
 		return false;	
 	else if (strcmp(rootPtr->key, key) == 0) {
-		data = rootPtr->data;
+		*data = rootPtr->data;
 		return true;
 	} else if (strcmp(rootPtr->key, key) > 0) 
 		return symTabSearch(rootPtr->lPtr, key, data);
@@ -37,27 +37,18 @@ bool symTabSearch (TsymItem *rootPtr, string key, TsymData *data)	{
 /**
  * Inserts one node into the symbol table tree
  */ 
-void symTabInsert (TsymItem **rootPP, string key, TsymData *data)	{
-	if (DEBUG) printf("Function: %s\n", __func__);	
+void symTabInsert (TsymItem **rootPP, string key, TsymData data)	{
+	if (DEBUG) printf("Function:%s key:%s\n", __func__, key);	
 	if (*rootPP == NULL) {	//pointer points to an empty tree
 		TsymItem *newItemPtr = (TsymItem *) malloc(sizeof(TsymItem));
 		if (newItemPtr != NULL) {
 			newItemPtr->key = (string) calloc(strlen(key)+1, sizeof(char));
 			if(newItemPtr->key != NULL) {
 				strcpy(newItemPtr->key, key);
-				newItemPtr->data = (TsymData *) malloc(sizeof(TsymData));
-				if (newItemPtr->data != NULL) {
-					memcpy(newItemPtr->data, data, sizeof(TsymData));
-					newItemPtr->lPtr = NULL;
-					newItemPtr->rPtr = NULL;
-					*rootPP = newItemPtr;
-				} else {	//INTERNAL ALLOCATION ERROR
-					free(newItemPtr->key);
-					free(newItemPtr);
-					ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", ERR_RUNTIME);
-					errflg = ERR_RUNTIME;
-					return;
-				}	
+				newItemPtr->data = data;
+				newItemPtr->lPtr = NULL;
+				newItemPtr->rPtr = NULL;
+				*rootPP = newItemPtr;
 			} else {	//INTERNAL ALLOCATION ERROR
 				free(newItemPtr);
 				ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", ERR_RUNTIME);
@@ -70,7 +61,7 @@ void symTabInsert (TsymItem **rootPP, string key, TsymData *data)	{
 			return;
 		}
 	} else if (strcmp((*rootPP)->key, key) == 0) {
-		memcpy((*rootPP)->data, data, sizeof(TsymData));
+		(*rootPP)->data = data;
 	} else if (strcmp((*rootPP)->key, key) > 0) {
 		symTabInsert(&((*rootPP)->lPtr), key, data);	//I send pointer to a pointer to a tree
 	} else 
@@ -89,54 +80,24 @@ void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP) {
 		TsymItem *rightMost = *rootPP;
 		*rootPP = (rightMost)->lPtr;	//parent node will show directly to left child (can be also NULL)
 		strcpy(ptrReplaced->key, rightMost->key);	//shift of the key
-		memcpy(ptrReplaced->data, rightMost->data, sizeof(TsymData));	//shift of the content
-		free(rightMost->data);
+		ptrReplaced->data = rightMost->data;	//shift of the content
 		free(rightMost);
 		rightMost = NULL;
 	}
 }
 
 /**
- * Deletes one node from the tree 
- */ 
-void symTabDelete (TsymItem **rootPP, string key) {
-	if (DEBUG) printf("Function: %s\n", __func__);
-	if (*rootPP != NULL) {
-		if (strcmp((*rootPP)->key, key) == 0) {
-			TsymItem *toDelete = *rootPP;
-			if (toDelete->lPtr == NULL) {
-				*rootPP = toDelete->rPtr;
-				free(toDelete->key);
-				free(toDelete->data);
-				free(toDelete);
-				toDelete = NULL;
-			} else if (toDelete->rPtr == NULL) {
-				*rootPP = toDelete->lPtr;
-				free(toDelete->key);
-				free(toDelete->data);
-				free(toDelete);
-				toDelete = NULL;
-			} else {
-				replaceByRightmost(toDelete, &(toDelete->lPtr));	
-			}				
-		} else if (strcmp((*rootPP)->key, key) > 0)
-			symTabDelete(&((*rootPP)->lPtr), key);
-		else 
-			symTabDelete(&((*rootPP)->rPtr), key);		
-	}
-} 
-/**
  * Destroys whole symbol table tree
  * tree will return to its state after initialization
  */ 
 void symTabDispose (TsymItem **rootPP) {
-	if (DEBUG) printf("Function: %s\n", __func__);
 	if (*rootPP != NULL) {
+		if (DEBUG) printf("Function:%s rootKey:%s\n", __func__, (*rootPP)->key);
 		symTabDispose(&((*rootPP)->lPtr));
 		symTabDispose(&((*rootPP)->rPtr));
 		free((*rootPP)->key);
-		symTabDispose(&((*rootPP)->data->LT)); //dispose LT inside data node
-		free((*rootPP)->data);
+		if ((*rootPP)->data.LT != NULL)
+			symTabDispose(&((*rootPP)->data.LT)); //dispose LT inside data node
 		free(*rootPP);
 		*rootPP = NULL;
 	}
@@ -154,21 +115,13 @@ void symTabFillKwds (TsymItem **tablePP) {
 	char *kwds[] = {
 		"not", "end", "then", "def", "if", "nil", "while", "do", "else"
 	};
-	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
-	if(newData != NULL){
-		newData->type = TYPE_KWD;
-		newData->defined = false;
-		//newData->value.i = 0;
+	TsymData newData;
+	newData.type = TYPE_KWD;
+	newData.defined = false;
+	newData.LT = NULL;
 
-		for (int i = 0; i < KWD_AMMOUNT; i++)
-			symTabInsert(tablePP, kwds[i], newData);
-
-		free(newData);
-		newData = NULL;
-	} else {
-		errflg = ERR_RUNTIME;
-		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
-	}
+	for (int i = 0; i < KWD_AMMOUNT; i++)
+		symTabInsert(tablePP, kwds[i], newData);
 }
 
 /**
@@ -177,57 +130,48 @@ void symTabFillKwds (TsymItem **tablePP) {
  * these functions don't need LT
  */ 
 void symTabFillFuns (TsymItem **tablePP) {
-	TsymData *newData = (TsymData *) malloc(sizeof(TsymData));
-	if(newData != NULL){
-		newData->type = TYPE_FUN;
-		newData->defined = true;
-		newData->params = 0;
-		newData->LT = NULL;
+		TsymData newData;
+		newData.type = TYPE_FUN;
+		newData.defined = true;
+		newData.called = false;
+		newData.params = 0;
+		newData.LT = NULL;
 		//functions with 0 parameters
 		symTabInsert(tablePP, "inputs", newData);
 		symTabInsert(tablePP, "inputi", newData);
 		symTabInsert(tablePP, "inputf", newData);
 		//functions with 1 parameter
-		newData->params = 1;
+		newData.params = 1;
 		symTabInsert(tablePP, "length", newData);
 		symTabInsert(tablePP, "chr", newData);
 		//functions with 2 parameters
-		newData->params = 2;
+		newData.params = 2;
 		symTabInsert(tablePP, "ord", newData);
 		//functions with 3 parameters
-		newData->params = 3;
+		newData.params = 3;
 		symTabInsert(tablePP, "substr", newData);
 		//unlimited parameters 
-		newData->params = -1;
+		newData.params = -1;
 		symTabInsert(tablePP, "print", newData); //print must have at least one parameter!!
-
-		free(newData);
-		newData = NULL;
-	} else {
-		errflg = ERR_RUNTIME;
-		ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", errflg);
-	}
 }
 
 /**
  * Prints the tree structure, call with initial depth of 0
  */
 void symTabToString(TsymItem *rootPtr, int depth) {
-	if (DEBUG) printf("Function: %s\n", __func__);
 	if (rootPtr != NULL) {
-		if (rootPtr->data != NULL) {
-			for (int i = 0; i < depth; i++)
-				printf(" ");
-			/*switch(rootPtr->data->type) {
-				case TYPE_INT:	printf("key:%s\ttype:%d\tdefined:%d\tvalue:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.i); break;
-				case TYPE_FLT: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%f\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.f); break;
-				case TYPE_STR: printf("key:%s\ttype:%d\tdefined:%d\tvalue:%s\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined, rootPtr->data->value.s); break;
-				default:	printf("key:%s\ttype:%d\tdefined:%d\n", rootPtr->key, rootPtr->data->type, rootPtr->data->defined); break;
-			}*/
+		TsymData d = rootPtr->data;
+		for (int i = 0; i < depth; i++)
+			printf(" ");
+		switch(d.type) {
+			case TYPE_VAR:	printf("key:%s\ttype:%d\torder:%u\n", rootPtr->key, d.type, d.order); break;
+			case TYPE_FUN:	printf("key:%s\ttype:%d\tdefined:%d\tcalled:%d\tparams:%d\n", rootPtr->key, d.type, d.defined, d.called, d.params); break;
+			case TYPE_KWD:	printf("key:%s\ttype:%d\n", rootPtr->key, d.type); break;
 		}
 		symTabToString(rootPtr->lPtr, depth+1);
 		symTabToString(rootPtr->rPtr, depth+1);
 	}
+	if (depth == 0) printf("end of tree\n");
 }
 
 /** end of s_table.c */
