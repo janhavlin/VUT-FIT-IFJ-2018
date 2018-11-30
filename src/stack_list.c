@@ -156,7 +156,7 @@ tStackIPtr sLPop( tStackLPtr stack ){
  *		When reduce is asserted, this function find string from top of stack to symbol 's' == '<'
  *		and return this string (without 's').
  */
-string sGetExprToReduce( tStackLPtr stack ){	// sE+E
+string sGetExprToReduce( tStackLPtr stack ){	// for example sE+E
 	if(stack != NULL){
 		unsigned long amount = 0;
 		tStackIPtr item = stack->top;
@@ -164,22 +164,26 @@ string sGetExprToReduce( tStackLPtr stack ){	// sE+E
 		while( strcmp(item->IdName, "s") != 0 ){
 			amount += strlen(item->IdName);
 			item = item->pred;
-			if( (item == NULL) || (item->IdName == NULL) || (strcmp(item->IdName, "$") == 0) )
+			if( (item == NULL) || (item->IdName == NULL) || (item == stack->first) )
 				return NULL;
 		}
 
-		if((item = item->next) == NULL)
+		if((item = item->next) == NULL)	// move one item next to shift char 's'
 			return NULL;
 
 		string exp = (string) calloc(amount+1, sizeof(char));
 		
-		if(exp == NULL)
-			return NULL;
+		if(exp == NULL){
+			ifjErrorPrint("stack_list ERROR in sGetExprToReduce: Can't allocate item 'exp' in stack. ERROR %d\n", ERR_RUNTIME);
+			errflg = ERR_RUNTIME;
+			return;		
+		}
 		
-		while ( item != NULL ){
-			strcat(exp, item->IdName);
+		while ( item != stack->top->next ){
+			strcat(exp, item->IdName);	//, strlen(item->IdName)
 			item = item->next;
 		}
+
 		return exp;
 	}
 	else
@@ -235,7 +239,6 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type ){ //cha
 		}
 	}
 }
-
 				
 /*
  *	sLPush()
@@ -269,7 +272,7 @@ void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 		}*/
 		
 
-		New->IdName = strcpy(New->IdName, name);
+		New->IdName = memcpy(New->IdName, name, strlen(name));
 		New->type 	= type;//strcpy(New->type, type);
 		
 		tStackIPtr Help;
@@ -305,23 +308,25 @@ void sPlaceShiftChar( tStackLPtr s ){
 		return;
 	}
 
-	New->IdName = (string) calloc(2, sizeof(char));
+	New->IdName = (string) calloc(3, sizeof(char));
 	if(New->IdName == NULL){
 		ifjErrorPrint("stack_list ERROR in sPlaceShiftChar: Can't allocate item 'New' in stack. ERROR %d\n", ERR_RUNTIME);
 		errflg = ERR_RUNTIME;
 		return;
 	}
-
+	
+	memcpy(New->IdName, "s", 1);
 	New->next = NULL;
 	New->pred = NULL;
-	New->type = 0;
+	New->type = 15;
 	New->numberOfE = 0;
 
 	while( !strcmp( tmp->IdName, "E") ){
-            tmp=tmp->pred;
+            tmp = tmp->pred;
 	}
+	 
 
-	if(tmp->next != NULL){
+	if(tmp != s->top){
 		help = tmp->next;
 		
 		tmp->next = New;
@@ -333,8 +338,88 @@ void sPlaceShiftChar( tStackLPtr s ){
 
 	else{
 		tmp->next = New;
-		New->pred = tmp;
+		New->pred = s->top;
 		s->top = New;
 	}
 
 }
+
+string sTokToStr(TToken tok){
+	
+	switch(tok.type){
+		case TOK_ID:
+			return "TOK_ID";
+
+		case TOK_ADD:
+			return "TOK_ADD";
+			
+		case TOK_SUB:
+			return "TOK_SUB";
+
+		case TOK_MUL:
+			return "TOK_MUL";
+
+		case TOK_DIV:
+			return "TOK_DIV";
+
+		case TOK_LT:
+			return "TOK_LT";
+
+		case TOK_GT:
+			return "TOK_GT";
+
+		case TOK_LEQ:
+			return "TOK_LEQ";
+	
+		case TOK_GEQ:
+			return "TOK_GEQ";
+
+		case TOK_EQ:
+			return "TOK_EQ";
+
+		case TOK_NEQ:
+			return "TOK_NEQ";
+
+		case TOK_ASSIGN:
+			return "TOK_ASSIGN";
+
+		case TOK_LBR:
+			return "TOK_LBR";
+
+		case TOK_RBR:
+			return "TOK_RBR";
+
+		case TOK_COMMA:
+			return "TOK_COMMA";
+
+		case TOK_EOL:
+			return "TOK_EOL";
+
+		case TOK_EOF:
+			return "TOK_EOF";
+		
+		default:
+			return tok.data.s;
+	}
+
+}
+
+void printStack( tStackLPtr s){
+	if(s != NULL){	
+		tStackIPtr item = s->first;
+		while(item != s->top){
+			printf("[Name: %s, Type: %d]-", item->IdName, item->type);
+			if(item->next == NULL){
+				printf("-/\n\n");
+			}
+			else
+				printf("->");
+			item = item->next;
+		}
+		printf("[Name: %s, Type: %d]-/\n", item->IdName, item->type);
+	}
+}
+
+
+
+

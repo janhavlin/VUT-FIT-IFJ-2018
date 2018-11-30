@@ -35,6 +35,7 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
         {'r', 'r', 'r', 'r', 'r', 'r', 'r',  'r',  'r',  'r',  'X', 'r', 'X', 'r'},
         {'s', 's', 's', 's', 's', 's', 's',  's',  's',  's',  's', 'X', 's', 'X'}
     };
+
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS)
@@ -45,22 +46,6 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     }
 }
 
-char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
-	{"ETOK_ADDE"},	// rule 0 
-	{"ETOK_SUBE"},	// rule 1
-	{"TOK_ADDE"},		// rule 2
-	{"TOK_SUBE"},		// rule 3
-	{"ETOK_MULE"},	// rule 4
-	{"ETOK_DIVE"},	// rule 5
-	{"ETOK_LTE"},		// rule 6
-	{"ETOK_GTE"},		// rule 7
-	{"ETOK_LEQE"},	// rule 8
-	{"ETOK_GEQE"},	// rule 9
-	{"ETOK_EQE"},		// rule 10
-	{"ETOK_NEQE"},	// rule 11
-	{"TOK_LBRETOK_RBR"},// rule 12
-	{"TOK_ID"}		// rule 13
-};
 /**
  * returns correct index for each token it the precedence table
  */
@@ -80,7 +65,7 @@ int getIndex(TToken token) {
         case TOK_RBR:   return 11;
         case TOK_ID:    return 12;
         case TOK_KEY:   if(strcmp(token.data.s, "then") == 0 || strcmp(token.data.s, "do") == 0) {
-                           //continue to case $
+                           return 13;//continue to case $
                         } else 
                             break; 
         case TOK_EOL:   //$ symbol
@@ -99,7 +84,7 @@ int getIndex(TToken token) {
 TToken highestTerminal( tStackLPtr stack ){
 	tStackIPtr tmp = stack->top;
     TToken result;
-    result.data.s = (string) calloc(strlen(tmp->IdName), sizeof(char));
+	result.data.s = (string) calloc(strlen(tmp->IdName), sizeof(char));
 
     if(stack != NULL){
         
@@ -108,15 +93,31 @@ TToken highestTerminal( tStackLPtr stack ){
         }
 
         memcpy(result.data.s, tmp->IdName, strlen(tmp->IdName));
-        result.type = TOK_ERR;
+        result.type = tmp->type;
         return result;
     }
     
     result.data.s = "ERROR\0";
-    result.type = TOK_ERR;
+    result.type = 0;
     return result;
 }
 
+char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
+	{"ETOK_ADDE"},		// rule 0 
+	{"ETOK_SUBE"},		// rule 1
+	{"TOK_ADDE"},		// rule 2
+	{"TOK_SUBE"},		// rule 3
+	{"ETOK_MULE"},		// rule 4
+	{"ETOK_DIVE"},		// rule 5
+	{"ETOK_LTE"},		// rule 6
+	{"ETOK_GTE"},		// rule 7
+	{"ETOK_LEQE"},		// rule 8
+	{"ETOK_GEQE"},		// rule 9
+	{"ETOK_EQE"},		// rule 10
+	{"ETOK_NEQE"},		// rule 11
+	{"TOK_LBRETOK_RBR"},// rule 12
+	{"TOK_ID"}			// rule 13
+};
 
 /*
  *	FindRule()
@@ -142,45 +143,52 @@ int findRule( string readRule ){
  *  symTablePG == global symbol table
  *  symTablePL == local symbol table
  */ 
-unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, TsymItem *STL){
-    
+unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, TsymItem *STL){
+
     unsigned int Ecount  = 0;   // counter of element E in stack when reduce
     int EFirst = -1;   // number of first E for generator
     int ESecond = -1;  // number of second E for gennerator
     static unsigned int psaCntr = 0;    // total amount of psa calls
-    tStackLPtr s    = sLInit(0, followingToken);  // followingToken == bottom of stack
-    TToken get      = getToken(stdout, STL);                // token got from scanner 
+    tStackLPtr s    = sLInit(TOK_KEY,followingToken);  // followingToken == bottom of stack
+    TToken get      = getToken(f, STG);                // token got from scanner 
     TToken ter      = highestTerminal(s);   // highest terminal in stack
     char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
     string toReduce;    // string that has to be reduced
     int ruleGet = 0;    // number
 
-    
-    while(s->first != s->top){    
-
-        toDo = lookInPrecedenceTable(highestTerminal(s), get);
-        if( get.type == TOK_ID ){
-            
-            if(  symTableSearch(STG, get.data.s, NULL)  &&  !symTableSearch(STL, get.data.s, NULL) ){   // ID does not exist in Local ST, 
+	
+	while( 1 ){  
+       if( get.type == TOK_ID ){
+            if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
                                                                                                                 // but exist in Global ST
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Variable %s was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
+                ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
                 errflg = ERR_SEM_DEFINE;
                 return NO_E_NONTERM;
             }
         }
 
-        switch(toDo){
-            
-            // reduce
+        switch(toDo){           
+
+			// reduce
             case 'r':
-                toReduce = sGetExprToReduce(s);
-                
-                if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
+				
+
+				toReduce = sGetExprToReduce(s);       
+				printf("redukuji = %s\n", toReduce);         
+               
+				 if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
                     EFirst  = -1;
                     ESecond = -1;
                    
-                    while(s->top->IdName != "s"){
+					if( (s == NULL) || (sLEmpty(s)) || (s->top == NULL) ){
+						sLDelete(s);
+                		ifjErrorPrint("psa ERROR in processExpression: Stack is empty. ERROR %d\n", ERR_RUNTIME);
+                		errflg = ERR_RUNTIME;
+                		return ERR_RUNTIME;
+					}
+
+                    while( strcmp(s->top->IdName, "s") ){
                         if(!strcmp(s->top->IdName, "E")){
                             if( EFirst == -1 )
                                 EFirst = s->top->numberOfE;
@@ -189,10 +197,11 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
                         }
                         sLPop(s);
                     }
-                    sLPop(s);   // pop shift char s
-                    sLPush(s, "E", 0);   // push E element into stack
-                    (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
+                    sLPop(s);   						// pop shift char s
+	                   
 
+					sLPush(s, "E", 15);   				// push E element into stack
+                   
                     if(ruleGet == ADD_RULE){        // E+E
                        // genADD(psaCntr, Ecount, ESecond, EFirst);
                         printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
@@ -217,6 +226,12 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
                         printf("Generuji ID s E%d\n", Ecount);
                     }
 
+				    (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
+					printf("Stack po reduce: ");
+					printStack(s);
+					toDo = lookInPrecedenceTable( highestTerminal(s), get );
+					if(toReduce != NULL)
+						free(toReduce);
                 }
                 else{
                     sLDelete(s);
@@ -227,31 +242,46 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
                 break;
 
 
+
             // shift
             case 's':
+                printf("shiftuji\n");
                 sPlaceShiftChar( s );
-                sLPush(s, get.data.s, get.type);
-                get = getToken(stdout, STL);
+				printStack(s);
+				sLPush(s, sTokToStr(get), get.type);
+				printStack(s);
+                get = getToken(f, STG);
+				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
+
 
 
             // equal
             case 'e':
-                sLPush(s, get.data.s, get.type);
-                get = getToken(stdout, STL);
+                printf("ekvivalence\n");
+                sLPush(s, sTokToStr(get), get.type);
+                get = getToken(f, STG);
+				printStack(s);
+				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
             
 
+
             // nothing
             case 'X':
+                printf("nic\n");
                 if( (get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then")) || (!strcmp(get.data.s, "eol")) ) ){   // end of expression was found
                     sLDelete(s);
+					if(toReduce != NULL)
+						free(toReduce);
                     returnToken(get);
                     return Ecount;                      
                 }
                 else{          // an error was found
                     sLDelete(s);
+					if(toReduce != NULL)
+					free(toReduce);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
                     return NO_E_NONTERM;                    
@@ -260,6 +290,7 @@ unsigned int processExpression(FILE * f, string followingToken, TsymItem *STG, T
         }
        
     }
+	printf("Ecount = %d\n", Ecount);
     return Ecount;
 }
 

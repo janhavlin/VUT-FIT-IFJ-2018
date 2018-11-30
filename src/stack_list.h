@@ -11,6 +11,7 @@
 #include "dyn_arr.h"
 #include "ifj_error.h"
 #include "dyn_arr.h"
+#include "scanner.h"
 
 
 typedef struct tStackItem{	// struct for item in stack
@@ -41,5 +42,6 @@ bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
 void sLPush( tStackLPtr stack, char *name, int type); //char *type
 void sPlaceShiftChar( tStackLPtr s );
-
+string sTokToStr( TToken tok );
+void printStack( tStackLPtr s);
 #endif // STACK_PR
