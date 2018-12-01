@@ -161,21 +161,25 @@ int findRule( string readRule ){
 TAdr idValGet(TToken get){
 	TAdr result;
 
-	result.type = get.type;
-	if( result.type == TOK_ID ){
+	//result.type = get.type;
+	if( get.type == TOK_ID ){
 		result.val.s = get.data.s;
+		result.type = ADRTYPE_VAR;
 	}
 
-	else if( result.type == TOK_INT ){
+	else if( get.type == TOK_INT ){
 		result.val.i = get.data.i;
+		result.type = ADRTYPE_INT;
 	}
 
-	else if( result.type == TOK_FLOAT ){
+	else if( get.type == TOK_FLOAT ){
 		result.val.f = get.data.f;
+		result.type = ADRTYPE_FLOAT;
 	}
 
-	else if( result.type == TOK_STRING ){
+	else if( get.type == TOK_STRING ){
 		result.val.s = get.data.s;
+		result.type = ADRTYPE_STRING;
 	}
 
 	return result;
@@ -254,7 +258,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     
                     switch(ruleGet){
                         case ADD_RULE:          // +
-                                // genADD(psaCntr, Ecount, ESecond, EFirst);
+                                genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 					    	    printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
                             break;
 
@@ -274,23 +278,23 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
 
                         case ID_RULE:           // id
-                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                                 printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         case INT_RULE:          // int
                                 printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
-                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         case FLOAT_RULE:        // float
                                 printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
-                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         case STRING_RULE:       // string
 	                          	printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
-	                    		//genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+	                    		genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
                     }
 
