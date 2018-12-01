@@ -16,10 +16,51 @@ void ILInit (TInstrList *L){
     L->First = NULL;
 	L->Last = NULL;
 	L->Act = NULL;
+	L->ActFun = NULL;
 }
 
 void ILSetActLast (TInstrList *L) {
 	L->Act = L->Last;
+}
+
+void ILSetActFunFirst (TInstrList *L) {
+	L->ActFun = L->First;
+}
+
+void disposeAdr(TAdr *adr){
+    if (adr->type == ADRTYPE_VAR || adr->type == ADRTYPE_VAR_TMP || adr->type == ADRTYPE_STRING || adr->type == ADRTYPE_LABEL || adr->type == ADRTYPE_BOOL)
+        free(adr->val.s);
+}
+
+void disposeInstr(TInst *inst){
+    switch (inst->op){
+        case OP_DEFVAR:
+        case OP_LABEL:
+        case OP_EXIT:
+        case OP_JUMP:
+        case OP_CALL:
+            disposeAdr(&(inst->adr1));
+        return;
+        
+        case OP_MOVE:
+        case OP_TYPE:
+        case OP_INT2FLOAT:
+            disposeAdr(&(inst->adr1));
+            disposeAdr(&(inst->adr2));
+        return;
+        
+        case OP_JUMPIFEQ:
+        case OP_JUMPIFNEQ:
+        case OP_CONCAT:
+        case OP_ADD:
+            disposeAdr(&(inst->adr1));
+            disposeAdr(&(inst->adr2));
+            disposeAdr(&(inst->adr3));
+        return;
+        
+        default:
+        return;
+    }
 }
 
 void ILDisposeList (TInstrList *L){
@@ -31,9 +72,11 @@ void ILDisposeList (TInstrList *L){
 	{
 		tmp = tmp->rptr;
         //free(tmp->lptr->inst);
+        disposeInstr(&(tmp->lptr->inst));
 		free(tmp->lptr);
 	}
 	
+    disposeInstr(&(tmp->inst));
     //free(tmp->inst);
 	free(tmp);
 	L->First = NULL;
@@ -66,8 +109,33 @@ void ILInsertLast(TInstrList *L, TInst inst, bool inWhile){
 	}
 
     if (!inWhile){
-        DLLast(L);
+        ILSetActLast(L);
     }
+}
+
+void ILInsertFirst (TInstrList *L, TInst inst) {
+	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));
+	if (new == NULL){
+		errflg = ERR_RUNTIME;
+		return;
+	}
+
+	new->inst = inst;
+
+	if (L->First == NULL)
+	{	
+		new->lptr = NULL;
+		new->rptr = NULL;
+		L->First = new;
+		L->Last = new;
+	}
+	else
+	{	
+		new->lptr = NULL;
+		new->rptr = L->First;
+		L->First->lptr = new;
+		L->First = new;	
+	}
 }
 
 void ILPostActInsert (TInstrList *L, TInst inst) {
@@ -91,18 +159,45 @@ void ILPostActInsert (TInstrList *L, TInst inst) {
 	L->Act->rptr = new;	
 }
 
+void ILPreActFunInsert (TInstrList *L, TInst inst) {
+	if (L->ActFun == NULL)
+		return;
+	
+	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
+    //TODO: If new == NULL
+	
+	if (L->First == L->ActFun)
+		L->First = new;
+	
+	new->inst = inst;
+	
+	new->lptr = L->ActFun->lptr;
+	new->rptr = L->ActFun;
+
+	if (L->ActFun->lptr != NULL)
+		L->ActFun->lptr->rptr = new;
+	
+	L->ActFun->lptr = new;
+}
+
 void printAdr(TAdr adr){
     switch (adr.type){
         case ADRTYPE_VAR:
             printf("LF@&%s", adr.val.s);
         return;
+        case ADRTYPE_VAR_TMP:
+            printf("TF@&%s", adr.val.s);
+        return;
         case ADRTYPE_INT:
             printf("int@%d", adr.val.i);
         return;
         case ADRTYPE_FLOAT:
-            printf("float@%e", adr.val.f);
+            printf("float@%a", adr.val.f);
         return;
         case ADRTYPE_STRING:
+            printf("string@%s", adr.val.s);
+        return;
+        case ADRTYPE_BOOL:
             printf("string@%s", adr.val.s);
         return;
         case ADRTYPE_NIL:
@@ -166,8 +261,9 @@ void printInst(TInst inst){
     }
 }
 
-void printAllInst(TInstrList L){
+void ILPrintAllInst(TInstrList L){
     TInstrList tmpList = L;
+    printf(".IFJcode18\n");
 	while (tmpList.First != NULL){
         printInst(tmpList.First->inst);
         if ((tmpList.First == tmpList.Act) && (tmpList.Act != NULL))
@@ -209,6 +305,7 @@ TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3){
         case OP_LABEL:
         case OP_EXIT:
         case OP_JUMP:
+        case OP_CALL:
             inst.adr1 = adr1;
         return inst;
         

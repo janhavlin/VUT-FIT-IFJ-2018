@@ -27,6 +27,7 @@
  */
 void genPrgBegin(TInstrList *L);
 
+void genPrgEnd(TInstrList *L);
 /**
  * @brief Creates a frame for a new function call
  * 
@@ -39,10 +40,11 @@ void genFunCallBegin(TInstrList *L, bool inWhile);
  * @brief Defines a parameter of the function and moves it to temporary frame
  * 
  * @param L Pointer to a list of instructions
- * @param var Name of the parameter
+ * @param parNum Number of the parameter passed in this function call
+ * @param var Structure that holds data (either name of a variable or a constant)
  * @param inWhile Flag whether it's called from inside a while
  */
-void genFunCallPar(TInstrList *L, char *var, bool inWhile);
+void genFunCallPar(TInstrList *L, unsigned parNum, TAdr var, bool inWhile);
 
 /**
  * @brief Pushes the temporary frame and calls the function
@@ -112,6 +114,7 @@ void genDefVar(TInstrList *L, char *var, bool inWhile);
  * @param inWhile Flag whether it's called from inside a while
  */
 void genAssign(TInstrList *L, char *var, unsigned psa, unsigned E, bool inWhile);
+
 /**
  * @brief Function for evaluating PSA 'E -> E + E' rule
  * 
