@@ -1,5 +1,4 @@
 #include "stack_list.h"
-#include "scanner.h"
 
 /*
  *	sLInit()
@@ -38,7 +37,7 @@ tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string b
 			stack->first->IdName = strcpy(stack->first->IdName, bottomStakTokName);	
 			stack->first->type   = bottomStakTokType;	//strcpy(stack->first->type, bottomStakTokType);		//EOS End Of Stack
 			stack->top 		 	 = stack->first;
-
+			
 			stack->top->next = NULL;
 			stack->top->pred = NULL;	
 			return stack;	
@@ -67,6 +66,9 @@ bool sLDelete( tStackLPtr stack ){
 		tStackIPtr help = stack->first;
 		tStackIPtr delete = NULL;
 		
+		if(help == NULL)
+			return false;
+			
 		while(help->next != NULL)	// the most right item of list
 			help = help->next;
 		
@@ -76,18 +78,12 @@ bool sLDelete( tStackLPtr stack ){
 			
 			if(delete->IdName != NULL)
 				free(delete->IdName);
-
-			/*if(stack->top->type != NULL)
-				free(delete->type);*/
-			
+				
 			free(delete);	
 		}
 
 		if(stack->first->IdName != NULL)
 			free(stack->first->IdName);
-		
-		/*if(stack->first->type != NULL)
-			free(stack->first->type);*/
 
 		free(stack->first);
 
@@ -95,10 +91,10 @@ bool sLDelete( tStackLPtr stack ){
 		stack->top = NULL;
 		
 		free(stack);	
-		return 1;
+		return true;
 	}
 	else
-		return 0;
+		return false;
 }
 
 
@@ -168,15 +164,16 @@ string sGetExprToReduce( tStackLPtr stack ){	// for example sE+E
 				return NULL;
 		}
 
-		if((item = item->next) == NULL)	// move one item next to shift char 's'
+		if((item = item->next) == NULL){	// move one item next to shift char 's'
 			return NULL;
-
+		}
+		
 		string exp = (string) calloc(amount+1, sizeof(char));
 		
 		if(exp == NULL){
 			ifjErrorPrint("stack_list ERROR in sGetExprToReduce: Can't allocate item 'exp' in stack. ERROR %d\n", ERR_RUNTIME);
 			errflg = ERR_RUNTIME;
-			return;		
+			return NULL;		
 		}
 		
 		while ( item != stack->top->next ){
@@ -310,6 +307,7 @@ void sPlaceShiftChar( tStackLPtr s ){
 
 	New->IdName = (string) calloc(3, sizeof(char));
 	if(New->IdName == NULL){
+		free(New);
 		ifjErrorPrint("stack_list ERROR in sPlaceShiftChar: Can't allocate item 'New' in stack. ERROR %d\n", ERR_RUNTIME);
 		errflg = ERR_RUNTIME;
 		return;

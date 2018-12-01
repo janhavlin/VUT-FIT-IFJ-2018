@@ -88,8 +88,9 @@ TToken highestTerminal( tStackLPtr stack ){
 		
 		if(tmp != NULL){
 		    
-		    while( !strcmp( tmp->IdName, "E") )
+		    while( !strcmp( tmp->IdName, "E") ){
 		        tmp = tmp->pred;
+		    }
 			result.data.s = (string) calloc(strlen(tmp->IdName)+1, sizeof(char));
 			
 			if(result.data.s != NULL){
@@ -168,20 +169,21 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 	while( 1 ){  
        if( get.type == TOK_ID ){
             if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
-                                                                                                                // but exist in Global ST
+                  		                                                                                              // but exist in Global ST
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
+				if(get.data.s != NULL)
+					free(get.data.s);                
+				ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
                 errflg = ERR_SEM_DEFINE;
 				return 0;	// 0 means error == 0 E chars was found
             }
         }
+        
 		sPrintStack(s);
-        switch(toDo){           
-
+        switch(toDo){  
+                 
 			// reduce
             case 'r':
-				
-
 				toReduce = sGetExprToReduce(s);       
 			 	if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
 					EFirst  = -1;
@@ -207,7 +209,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 					   
 
 					sLPush(s, "E", 15);   				// push E element into stack
-
+				
 					if(ruleGet == ADD_RULE){        // E+E
 					   // genADD(psaCntr, Ecount, ESecond, EFirst);
 						printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
@@ -237,6 +239,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 					if(toReduce != NULL)
 						free(toReduce);
+					
 				}
                 else{
                     sLDelete(s);
@@ -254,6 +257,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 's':
                 sPlaceShiftChar( s );
 				sLPush(s, tokToStr(get), get.type);
+
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
@@ -263,6 +267,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // equal
             case 'e':
                 sLPush(s, tokToStr(get), get.type);
+
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
@@ -273,7 +278,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 'X':
                 if( (get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then")) || (!strcmp(get.data.s, "eol")) ) ){   // end of expression was found
-                    sLDelete(s);
+					sLDelete(s);
                     returnToken(get);
                     return Ecount;                      
                 }

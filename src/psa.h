@@ -17,6 +17,7 @@
 #include "scanner.h"
 #include "stack_list.h"
 #include "s_table.h"
+#include "type_conv.h"
 
 #define MAX_RULE_LENGTH	17
 #define AMOUNT_OF_RULES	15
