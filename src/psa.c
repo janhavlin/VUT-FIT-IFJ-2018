@@ -172,7 +172,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     int ruleGet = 0;    // number
 
 	
-	while( 1 ){  
+	while( strcmp(get.data.s, "eol") ){  
        if( get.type == TOK_ID ){
             if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
                   		                                                                                              // but exist in Global ST
