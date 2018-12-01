@@ -99,7 +99,7 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT, TInstrList *instructions) {
 	if (!symTabCheckIfAllFunctionsWereDefined(globalInfo->GT)) {
 		errflg = ERR_SEM_OTHER;
 		ifjErrorPrint("ERROR %d SEMANTIC: calling undefined function in program!\n", errflg); 
-		result = errlfg;
+		result = errflg;
 	}
 
 	free(globalInfo);
