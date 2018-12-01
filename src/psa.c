@@ -82,23 +82,31 @@ int getIndex(TToken token) {
  * 		Find highest terminal in stack. Return string with its name.
  */
 TToken highestTerminal( tStackLPtr stack ){
-	tStackIPtr tmp = stack->top;
-    TToken result;
-	result.data.s = (string) calloc(strlen(tmp->IdName), sizeof(char));
+	TToken result;	
+	if(stack != NULL){
+		tStackIPtr tmp = stack->top;	
+		
+		if(tmp != NULL){
+		    
+		    while( !strcmp( tmp->IdName, "E") )
+		        tmp = tmp->pred;
+			result.data.s = (string) calloc(strlen(tmp->IdName)+1, sizeof(char));
+			
+			if(result.data.s != NULL){
+				memcpy(result.data.s, tmp->IdName, strlen(tmp->IdName));
+				result.type = tmp->type;
+				return result;
+			}
+			else{
+				ifjErrorPrint("psa ERROR in highestTerminal: Can't allocate 'result.data.s'. ERROR %d\n", ERR_RUNTIME);
+				errflg = ERR_RUNTIME;
+			}
+		}
 
-    if(stack != NULL){
-        
-        while( !strcmp( tmp->IdName, "E") ){
-            tmp=tmp->pred;
-        }
-
-        memcpy(result.data.s, tmp->IdName, strlen(tmp->IdName));
-        result.type = tmp->type;
-        return result;
+    	result.type = 0;
+    	return result;
     }
-    
-    result.data.s = "ERROR\0";
-    result.type = 0;
+	result.type = 0;
     return result;
 }
 
@@ -164,10 +172,10 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
                 errflg = ERR_SEM_DEFINE;
-                return NO_E_NONTERM;
+				return 0;	// 0 means error == 0 E chars was found
             }
         }
-
+		sPrintStack(s);
         switch(toDo){           
 
 			// reduce
@@ -175,69 +183,68 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 				
 
 				toReduce = sGetExprToReduce(s);       
-				printf("redukuji = %s\n", toReduce);         
-               
-				 if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
-                    EFirst  = -1;
-                    ESecond = -1;
-                   
+			 	if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
+					EFirst  = -1;
+					ESecond = -1;
+
 					if( (s == NULL) || (sLEmpty(s)) || (s->top == NULL) ){
 						sLDelete(s);
-                		ifjErrorPrint("psa ERROR in processExpression: Stack is empty. ERROR %d\n", ERR_RUNTIME);
-                		errflg = ERR_RUNTIME;
-                		return ERR_RUNTIME;
+						ifjErrorPrint("psa ERROR in processExpression: Stack is empty. ERROR %d\n", ERR_RUNTIME);
+						errflg = ERR_RUNTIME;
+						return 0;	// 0 means error == 0 E chars was found
 					}
 
-                    while( strcmp(s->top->IdName, "s") ){
-                        if(!strcmp(s->top->IdName, "E")){
-                            if( EFirst == -1 )
-                                EFirst = s->top->numberOfE;
-                            else   
-                                ESecond = s->top->numberOfE;
-                        }
-                        sLPop(s);
-                    }
-                    sLPop(s);   						// pop shift char s
-	                   
+					while( strcmp(s->top->IdName, "s") ){
+						if(!strcmp(s->top->IdName, "E")){
+							if( EFirst == -1 )
+								EFirst = s->top->numberOfE;
+							else   
+								ESecond = s->top->numberOfE;
+						}
+						sLPop(s);
+					}
+					sLPop(s);   						// pop shift char s
+					   
 
 					sLPush(s, "E", 15);   				// push E element into stack
-                   
-                    if(ruleGet == ADD_RULE){        // E+E
-                       // genADD(psaCntr, Ecount, ESecond, EFirst);
-                        printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
-                    }
 
-                    else if(ruleGet == SUB_RULE){   // E-E
-                       // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji SUB s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
-                    }
+					if(ruleGet == ADD_RULE){        // E+E
+					   // genADD(psaCntr, Ecount, ESecond, EFirst);
+						printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                    else if(ruleGet == MUL_RULE){   // E*E
-                       // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji MUL s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
-                    }
+					else if(ruleGet == SUB_RULE){   // E-E
+					   // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji SUB s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                    else if(ruleGet == DIV_RULE){   // E/E
-                       // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
-                        printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
-                    }
+					else if(ruleGet == MUL_RULE){   // E*E
+					   // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji MUL s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                    else if(ruleGet == ID_RULE){   // E from ID
-                        printf("Generuji ID s E%d\n", Ecount);
-                    }
+					else if(ruleGet == DIV_RULE){   // E/E
+					   // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
+					}
 
-				    (s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
-					printf("Stack po reduce: ");
-					sPrintStack(s);
+					else if(ruleGet == ID_RULE){   // E from ID
+						printf("Generuji ID s E%d\n", Ecount);
+					}
+
+					(s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
+
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 					if(toReduce != NULL)
 						free(toReduce);
-                }
+				}
                 else{
                     sLDelete(s);
-                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for %s. ERROR %d\n",toReduce, ERR_SYNTAX);
+                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_SYNTAX);
+					if(toReduce != NULL)
+						free(toReduce);
 				    errflg = ERR_SYNTAX;
-                    return NO_E_NONTERM;
+					return 0;	// 0 means error == 0 E chars was found
                 }
                 break;
 
@@ -245,11 +252,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
             // shift
             case 's':
-                printf("shiftuji\n");
                 sPlaceShiftChar( s );
-				sPintStack(s);
 				sLPush(s, tokToStr(get), get.type);
-				sPintStack(s);
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
@@ -258,10 +262,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
             // equal
             case 'e':
-                printf("ekvivalence\n");
                 sLPush(s, tokToStr(get), get.type);
                 get = getToken(f, STG);
-				sPrintStack(s);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
             
@@ -269,19 +271,14 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
             // nothing
             case 'X':
-                printf("nic\n");
                 if( (get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then")) || (!strcmp(get.data.s, "eol")) ) ){   // end of expression was found
                     sLDelete(s);
-					if(toReduce != NULL)
-						free(toReduce);
                     returnToken(get);
                     return Ecount;                      
                 }
                 else{          // an error was found
                     sLDelete(s);
-					if(toReduce != NULL)
-					free(toReduce);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
                     return NO_E_NONTERM;                    
@@ -290,7 +287,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
         }
        
     }
-	printf("Ecount = %d\n", Ecount);
     return Ecount;
 }
 
