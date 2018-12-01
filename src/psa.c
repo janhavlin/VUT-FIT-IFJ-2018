@@ -42,7 +42,7 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
         return precedenceTable[row][col];
     else {
         //index out of bounds
-        return '-';
+        return NULL;
     }
 }
 
@@ -152,34 +152,6 @@ int findRule( string readRule ){
     return RULE_NOT_FOUND;
 }
 
-/*
- * idValGet
- *  Store name of id or const value into union, that needs generator.
- */
-
-TAdr idValGet(TToken get){
-	TAdr result;
-
-	result.type = get.type;
-	if( result.type == TOK_ID ){
-		result.val.s = get.data.s;
-	}
-
-	else if( result.type == TOK_INT ){
-		result.val.i = get.data.i;
-	}
-
-	else if( result.type == TOK_FLOAT ){
-		result.val.f = get.data.f;
-	}
-
-	else if( result.type == TOK_STRING ){
-		result.val.s = get.data.s;
-	}
-
-	return result;
-}
-
 
 /*
  *  processExpression
@@ -199,9 +171,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     string toReduce;    // string that has to be reduced
     int ruleGet = 0;    // number
 
-    TAdr IDKonst;
-
-	while( strcmp(get.data.s, "eol") ){  
+	
+	while( 1 ){  
        if( get.type == TOK_ID ){
             if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
                   		                                                                                              // but exist in Global ST
@@ -244,47 +215,30 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 					   
 
 					sLPush(s, "E", 15);   				// push E element into stack
-                    
-                    switch(ruleGet){
-                        case ADD_RULE:
-                                // genADD(psaCntr, Ecount, ESecond, EFirst);
-					    	    printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
-                            break;
+				
+					if(ruleGet == ADD_RULE){        // E+E
+					   // genADD(psaCntr, Ecount, ESecond, EFirst);
+						printf("Generuji ADD s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                        case SUB_RULE:
-                                // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
-						        printf("Generuji SUB s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
-                            break;
+					else if(ruleGet == SUB_RULE){   // E-E
+					   // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji SUB s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                        case MUL_RULE:
-                                // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
-						        printf("Generuji MUL s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
-                            break;
-                            
-                        case DIV_RULE:
-                                // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
-						        printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
-                            break;
+					else if(ruleGet == MUL_RULE){   // E*E
+					   // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji MUL s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                        case ID_RULE:
-                                printf("Generuji ID s E%d\n", Ecount);
-                            break;
+					else if(ruleGet == DIV_RULE){   // E/E
+					   // genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
+						printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
+					}
 
-                        case INT_RULE:
-                                printf("Generuji ID s E%d\n", Ecount);
-                                genE(psaCntr, Ecount, IDKonst,  );
-                            break;
-
-                        case FLOAT_RULE:
-                                printf("Generuji ID s E%d\n", Ecount);
-                                genE(psaCntr, Ecount, IDKonst,  );
-                            break;
-
-                        case STRING_RULE:
-                                printf("Generuji ID s E%d\n", Ecount);
-                                genE(psaCntr, Ecount, ,  );
-                            break;
-                    }
+					else if(ruleGet == ID_RULE){   // E from ID
+						printf("Generuji ID s E%d\n", Ecount);
+					}
 
 					(s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
 
@@ -308,7 +262,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // shift
             case 's':
                 sPlaceShiftChar( s );
-                IDKonst = idValGet(get);
 				sLPush(s, tokToStr(get), get.type);
 
                 get = getToken(f, STG);
@@ -319,7 +272,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
             // equal
             case 'e':
-                IDKonst = idValGet(get);
                 sLPush(s, tokToStr(get), get.type);
 
                 get = getToken(f, STG);
@@ -343,12 +295,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     return NO_E_NONTERM;                    
                 }
                 break;
-
-            default:
-                sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
-                errflg = ERR_SYNTAX;
-                return NO_E_NONTERM; 
         }
        
     }
