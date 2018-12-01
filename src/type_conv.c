@@ -105,7 +105,17 @@ char *convIntToStr(int numb){
 		}
 		numb /= 10;
 	}
-
+	
+	if( strlen(res) == 0){
+		charPut(&res, '0');
+		if (errflg){
+			free(res);
+			return NULL;
+		}
+		return res;
+	}
+		
+	
 	if(sign){
 		charPut(&res, '-');
 		if (errflg){
@@ -113,6 +123,7 @@ char *convIntToStr(int numb){
 			return NULL;
 		}
 	}
+
 	for(unsigned int i = 0; i < strlen(res)/2; i++){
 		tmp = res[i];
 		res[i] = res[strlen(res)-i-1];
