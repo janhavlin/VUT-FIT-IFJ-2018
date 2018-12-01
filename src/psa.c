@@ -42,7 +42,7 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
         return precedenceTable[row][col];
     else {
         //index out of bounds
-        return NULL;
+        return '-';
     }
 }
 
@@ -295,6 +295,12 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     return NO_E_NONTERM;                    
                 }
                 break;
+
+            default:
+                sLDelete(s);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
+                errflg = ERR_SYNTAX;
+                return NO_E_NONTERM; 
         }
        
     }
