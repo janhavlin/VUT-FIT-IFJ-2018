@@ -64,6 +64,9 @@ int getIndex(TToken token) {
         case TOK_LBR:   return 10;
         case TOK_RBR:   return 11;
         case TOK_ID:    return 12;
+        case TOK_INT:   return 12;
+        case TOK_FLOAT: return 12;
+        case TOK_STRING:return 12;
         case TOK_KEY:   if(strcmp(token.data.s, "then") == 0 || strcmp(token.data.s, "do") == 0) {
                            return 13;//continue to case $
                         } else 
@@ -125,7 +128,10 @@ char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH] = {
 	{"ETOK_EQE"},		// rule 10
 	{"ETOK_NEQE"},		// rule 11
 	{"TOK_LBRETOK_RBR"},// rule 12
-	{"TOK_ID"}			// rule 13
+	{"TOK_ID"},			// rule 13
+	{"TOK_INT"},		// rule 14
+	{"TOK_FLOAT"},		// rule 15
+	{"TOK_STRING"}		// rule 16
 };
 
 /*

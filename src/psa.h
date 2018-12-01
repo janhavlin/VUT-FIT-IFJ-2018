@@ -20,7 +20,7 @@
 #include "type_conv.h"
 
 #define MAX_RULE_LENGTH	17
-#define AMOUNT_OF_RULES	15
+#define AMOUNT_OF_RULES	18
 #define RULE_NOT_FOUND	-1
 #define NO_E_NONTERM	0
 

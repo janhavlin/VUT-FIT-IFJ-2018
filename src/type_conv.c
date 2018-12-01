@@ -223,6 +223,15 @@ string tokToStr(TToken tok){
 		case TOK_EOF:
 			return "TOK_EOF";
 		
+		case TOK_INT:
+			return "TOK_INT";
+
+		case TOK_FLOAT:
+			return "TOK_FLOAT";
+
+		case TOK_STRING:
+			return "TOK_STRING";
+
 		default:
 			return tok.data.s;
 	}
