@@ -2,7 +2,7 @@
 	file name:		scanner.c
 	project:		VUT-FIT-IFJ-2018
 	created:		24.10.2018
-	last modified:	24.11.2018
+	last modified:	1.12.2018
 	
 	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
 	modifications:	
@@ -27,7 +27,7 @@
         }                                   \
     } while(0)
 
-// Skips chars until it founds '\n'
+// Skips chars until it finds '\n'
 #define SKIPLINE(c, f)                      \
     do{                                     \
         while ((c = getc(f)) != EOF){       \
@@ -150,6 +150,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 else if (isspace(c)){
                     continue;
                 }
+                else{
+                    TOKERR(c, f, errflg, buff, tok);                    
+                }
+
                 break;
             
             case S_ID:
@@ -172,8 +176,8 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     ungetc(c, f);
                     state = S_START;
                      /*DEBUG*///printf("Token read: %s\n", buff);
-                    TsymData *data = NULL;
-                    if (symTabSearch(symTableP, buff, data) && data->type == TYPE_KWD)
+                    TsymData data;
+                    if (symTabSearch(symTableP, buff, &data) && data.type == TYPE_KWD)
                         tok.type = TOK_KEY;
                     else
                         tok.type = TOK_ID;
@@ -439,11 +443,12 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                         conv_esc += c - '0';
                     else
                         conv_esc += toupper(c) - 'A' + 10;
+
                     charPut(&buff, conv_esc);
                     CHECKERR(errflg, buff, tok);
                     state = S_STR;
                 }
-                else {
+                else {  //TODO: c must be within allowed ASCII range (32-127) to correctly return to STR state
                     charPut(&buff, conv_esc);
                     CHECKERR(errflg, buff, tok);
                     ungetc(c, f);

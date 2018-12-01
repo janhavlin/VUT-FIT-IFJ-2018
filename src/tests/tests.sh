@@ -41,3 +41,4 @@ done < $1
 }
 
 test_file test_scanner
+test_file test_parser
