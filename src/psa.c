@@ -94,6 +94,7 @@ TToken highestTerminal( tStackLPtr stack ){
 		    while( !strcmp( tmp->IdName, "E") ){
 		        tmp = tmp->pred;
 		    }
+            
 			result.data.s = (string) calloc(strlen(tmp->IdName)+1, sizeof(char));
 			
 			if(result.data.s != NULL){
@@ -192,7 +193,14 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     int EFirst = -1;   // number of first E for generator
     int ESecond = -1;  // number of second E for gennerator
     static unsigned int psaCntr = 0;    // total amount of psa calls
-    tStackLPtr s    = sLInit(TOK_KEY,followingToken);  // followingToken == bottom of stack
+
+    tStackLPtr s;
+	
+	if(strcmp(followingToken, "eol"))
+		s = sLInit(TOK_KEY, followingToken);  // followingToken == bottom of stack
+	else
+		s = sLInit(TOK_EOL, followingToken);  // followingToken == bottom of stack
+
     TToken get      = getToken(f, STG);                // token got from scanner 
     TToken ter      = highestTerminal(s);   // highest terminal in stack
     char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
@@ -266,23 +274,23 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
 
                         case ID_RULE:           // id
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                                 printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         case INT_RULE:          // int
                                 printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         case FLOAT_RULE:        // float
                                 printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                               // genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         case STRING_RULE:       // string
 	                          	printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
-	                    		genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+	                    		//genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
                     }
 
@@ -329,13 +337,14 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // nothing
             case 'X':
 				printf("nic\n");
-                if( (get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
-                    (!strcmp(get.data.s, "then")) || (!strcmp(get.data.s, "eol")) ) ){   // end of expression was found
+                if( ((get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
+                    (!strcmp(get.data.s, "then")) )) || (get.type == TOK_EOL) ){   // end of expression was found
 					sLDelete(s);
                     returnToken(get);
                     return Ecount;                      
                 }
                 else{          // an error was found
+                    printf("non Existing rule\n");
                     sLDelete(s);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
@@ -344,6 +353,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 break;
 
             default:
+                printf("default\n");
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
                 errflg = ERR_SYNTAX;
