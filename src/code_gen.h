@@ -13,165 +13,115 @@
 #ifndef CODE_GEN_H
 #define CODE_GEN_H
 
+#include <stdio.h>
+#include <stdarg.h>
 #include <stdbool.h>
+#include "code_gen_list.h"
+#include "ifj_error.h"
+#include "type_conv.h"
 
-
-
-#define ADRCAT(adr, var1, var2) (adr.val.s = getStr(2, var1, var2), adr)
-
-#define ADRNIL(adr)      (adr.type = ADRTYPE_NIL, adr)
-
-                                // Usage of comma operator like this: (A,(B,C)) => A, B - execution of commands; C - parameter to a function
-#define ADRINT(adr, var) (  (   adr.val.i = var,                        \
-                                (adr.type = ADRTYPE_INT, adr)   )  )
-
-#define ADRFLT(adr, var) (  (   adr.val.f = var,                        \
-                                (adr.type = ADRTYPE_FLOAT, adr)   )  )
-
-#define ADRSTR(adr, var) (  (   adr.val.s = getStr(1, var),             \
-                                (adr.type = ADRTYPE_STRING, adr)   )  )
-
-#define ADRBOOL(adr, var) (  (   adr.val.s = getStr(1, var),             \
-                                (adr.type = ADRTYPE_BOOL, adr)   )  )
-
-#define ADRVAR(adr, var) (  (   adr.val.s = getStr(1, var),             \
-                                (adr.type = ADRTYPE_VAR, adr)   )  )
-
-#define ADRLAB(adr, var1, var2) (  (   adr.val.s = getStr(2, var1, var2),             \
-                                      (adr.type = ADRTYPE_LABEL, adr)   )  )
-
-typedef enum {      // Adresses
-    OP_DEFVAR,      // 1
-    OP_MOVE,        // 2
-    OP_TYPE,        // 2
-    OP_JUMPIFEQ,    // 3
-    OP_LABEL,       // 1
-    OP_EXIT,        // 1
-    OP_JUMPIFNEQ,   // 3
-    OP_INT2FLOAT,   // 2
-    OP_JUMP,        // 1
-    OP_CONCAT,      // 3
-    OP_ADD,         // 3
-    OP_PUSHFRAME,   // 0
-    OP_CREATEFRAME, // 0
-    OP_CALL         // 1
-} TOperation;
-
-typedef enum {
-    ADRTYPE_VAR,
-    ADRTYPE_INT,
-    ADRTYPE_FLOAT,
-    ADRTYPE_STRING,
-    ADRTYPE_BOOL,
-    ADRTYPE_NIL,
-    ADRTYPE_LABEL
-} TAdrVal;
-
-typedef struct {
-    TAdrVal type;
-    union {
-        int i;
-        double f;
-        char *s;
-    } val;
-} TAdr;
-
-typedef struct {
-    TOperation op;
-    TAdr adr1;
-    TAdr adr2;
-    TAdr adr3;
-} TInst;
-
-typedef struct tDLElem {
-    TInst inst;
-    struct tDLElem *lptr;
-    struct tDLElem *rptr;
-} *tDLElemPtr;
-
-typedef struct {
-    tDLElemPtr First;
-    tDLElemPtr Act;
-    tDLElemPtr Last;
-} tDLList;
+/**
+ * @brief Creates label for main body of the program
+ * 
+ * @param L Pointer to a list of instructions 
+ */
+void genPrgBegin(TInstrList *L);
 
 /**
  * @brief Creates a frame for a new function call
  * 
+ * @param L Pointer to a list of instructions
  * @param inWhile Flag whether it's called from inside a while
  */
-void genFunCallBegin(bool inWhile);
+void genFunCallBegin(TInstrList *L, bool inWhile);
 
 /**
  * @brief Defines a parameter of the function and moves it to temporary frame
  * 
+ * @param L Pointer to a list of instructions
  * @param var Name of the parameter
  * @param inWhile Flag whether it's called from inside a while
  */
-void genFunCallPar(char *var, bool inWhile);
+void genFunCallPar(TInstrList *L, char *var, bool inWhile);
 
 /**
  * @brief Pushes the temporary frame and calls the function
  * 
+ * @param L Pointer to a list of instructions
  * @param fun Name of the function
  * @param inWhile Flag whether it's called from inside a while
  */
-void genFunCallEnd(char *fun, bool inWhile);
+void genFunCallEnd(TInstrList *L, char *fun, bool inWhile);
 
 /**
  * @brief Creates 'begin' label of a while
  * 
+ * @param L Pointer to a list of instructions
  * @param whileCnt Index of current while
  * @param inWhile Flag whether it's called from inside a while
  */
-void genWhileBegin(unsigned whileCnt, bool inWhile);
+void genWhileBegin(TInstrList *L, unsigned whileCnt, bool inWhile);
 
 /**
  * @brief Decides whether to skip body of the while or not
  * 
+ * @param L Pointer to a list of instructions
  * @param whileCnt Index of current while
  * @param psa Index of PSA that evaluated condition 
  * @param res Index of temporary variable of PSA containing result of the PSA
  * @param inWhile Flag whether it's called from inside a while
  */
-void genWhileCond(unsigned whileCnt, unsigned psa, unsigned res, bool inWhile);
+void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned res, bool inWhile);
 
 /**
  * @brief Jumps to the beginning of the while and creates label for ending
  * 
+ * @param L Pointer to a list of instructions
  * @param whileCnt  Index of current while
  * @param inWhile Flag whether it's called from inside a while
  */
-void genWhileEnd(unsigned whileCnt, bool inWhile);
+void genWhileEnd(TInstrList *L, unsigned whileCnt, bool inWhile);
 
 /**
  * @brief Function for evaluating PSA 'E -> i' rule
  * 
+ * @param L Pointer to a list of instructions
  * @param psa Index of current PSA
  * @param res Index of 'E' to store the result
- * @TODO: support constants (needs union)
- * @param var Name of the variable to be converted to E
+ * @param var Structure that holds data (either name of a variable or a constant)
  * @param inWhile Flag whether it's called from inside a while
  */
-void genE(unsigned psa, unsigned res, char *var, bool inWhile);
+void genE(TInstrList *L, unsigned psa, unsigned res, TAdr var, bool inWhile);
 
+/**
+ * @brief Defines a new variable and assigns nil to it
+ * 
+ * @param L Pointer to a list of instructions
+ * @param var Name of the variable
+ * @param inWhile Flag whether it's called from inside a while
+ */
+void genDefVar(TInstrList *L, char *var, bool inWhile);
+
+/**
+ * @brief 
+ * 
+ * @param L Pointer to a list of instructions
+ * @param var Name of a variable to which will be assigned
+ * @param psa Index of PSA that evaluated the expression
+ * @param E Index of the E variable that holds the value we want to assign
+ * @param inWhile Flag whether it's called from inside a while
+ */
+void genAssign(TInstrList *L, char *var, unsigned psa, unsigned E, bool inWhile);
 /**
  * @brief Function for evaluating PSA 'E -> E + E' rule
  * 
+ * @param L Pointer to a list of instructions
  * @param psa Index of current PSA
  * @param res Index of 'E' to store the result
  * @param var1 Index of the first 'E' operand
  * @param var2 Index of the second 'E' operand
  * @param inWhile Flag whether it's called from inside a while
  */
-void genAdd(unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
-
-/**
- * @brief Defines a new variable and assigns nil to it
- * 
- * @param var Name of the variable
- * @param inWhile Flag whether it's called from inside a while
- */
-void genDefVar(char *var, bool inWhile);
+void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
 
 #endif  // CODE_GEN_H
