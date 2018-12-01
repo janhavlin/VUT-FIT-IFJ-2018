@@ -10,6 +10,7 @@
 
 #ifndef IFJ_ERROR
 #define IFJ_ERROR
+#define DEBUG 0
 
 extern int errflg;
 

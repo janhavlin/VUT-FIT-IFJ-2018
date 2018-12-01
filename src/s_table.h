@@ -54,9 +54,8 @@ typedef struct symItem {
 
 void symTabInit(TsymItem **rootPP);
 bool symTabSearch(TsymItem *rootPtr, string key, TsymData *data);
-void symTabInsert(TsymItem **rootPP, string key, TsymData data);
+TsymData *symTabInsert(TsymItem **rootPP, string key, TsymData data);
 void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP);
-void symTabDelete (TsymItem **rootPP, string key);
 void symTabDispose(TsymItem **rootPP);
 void symTabFillKwds(TsymItem **tablePP);
 void symTabFillFuns(TsymItem **tablePP);

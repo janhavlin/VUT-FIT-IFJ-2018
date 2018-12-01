@@ -28,16 +28,17 @@ bool symTabSearch (TsymItem *rootPtr, string key, TsymData *data)	{
 	else if (strcmp(rootPtr->key, key) == 0) {
 		*data = rootPtr->data;
 		return true;
-	} else if (strcmp(rootPtr->key, key) > 0) 
+	} else if (strcmp(rootPtr->key, key) > 0) {
 		return symTabSearch(rootPtr->lPtr, key, data);
-	else
+	} else {
 		return symTabSearch(rootPtr->rPtr, key, data);
+	}
 } 
 
 /**
  * Inserts one node into the symbol table tree
  */ 
-void symTabInsert (TsymItem **rootPP, string key, TsymData data)	{
+TsymData *symTabInsert (TsymItem **rootPP, string key, TsymData data)	{
 	if (DEBUG) printf("Function:%s key:%s\n", __func__, key);	
 	if (*rootPP == NULL) {	//pointer points to an empty tree
 		TsymItem *newItemPtr = (TsymItem *) malloc(sizeof(TsymItem));
@@ -49,23 +50,26 @@ void symTabInsert (TsymItem **rootPP, string key, TsymData data)	{
 				newItemPtr->lPtr = NULL;
 				newItemPtr->rPtr = NULL;
 				*rootPP = newItemPtr;
+				return &(newItemPtr->data);
 			} else {	//INTERNAL ALLOCATION ERROR
 				free(newItemPtr);
 				ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", ERR_RUNTIME);
 				errflg = ERR_RUNTIME;
-				return;
+				return NULL;
 			}
 		} else {	//INTERNAL ALLOCATION ERROR
 			ifjErrorPrint("ERROR %d in s_table.c in func. symTabInsert: allocation failed!\n", ERR_RUNTIME);
 			errflg = ERR_RUNTIME;
-			return;
+			return NULL;
 		}
 	} else if (strcmp((*rootPP)->key, key) == 0) {
 		(*rootPP)->data = data;
+		return &((*rootPP)->data);
 	} else if (strcmp((*rootPP)->key, key) > 0) {
-		symTabInsert(&((*rootPP)->lPtr), key, data);	//I send pointer to a pointer to a tree
+		return symTabInsert(&((*rootPP)->lPtr), key, data);	//I send pointer to a pointer to a tree
 	} else 
-		symTabInsert(&((*rootPP)->rPtr), key, data);
+		return symTabInsert(&((*rootPP)->rPtr), key, data);
+	
 }
 
 /**
