@@ -182,7 +182,7 @@ void symTabToString(TsymItem *rootPtr, int depth) {
  * @returns true if undefined function is in node
  */ 
 bool nodeContainsUndefinedFunction(TsymItem *node) {
-	if (node->type == TYPE_FUN)
+	if (node->data.type == TYPE_FUN)
 		return (node->data.defined == false);
 	return false;
 }
