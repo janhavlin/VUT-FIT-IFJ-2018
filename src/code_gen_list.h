@@ -39,6 +39,9 @@
 #define ADRVAR(adr, var) (  (   adr.val.s = getStr(1, var),             \
                                 (adr.type = ADRTYPE_VAR, adr)   )  )
 
+#define ADRVARTMP(adr, var) (  (   adr.val.s = getStr(1, var),             \
+                                (adr.type = ADRTYPE_VAR_TMP, adr)   )  )
+
 #define ADRLAB(adr, var1, var2) (  (   adr.val.s = getStr(2, var1, var2),             \
                                       (adr.type = ADRTYPE_LABEL, adr)   )  )
 
@@ -61,6 +64,7 @@ typedef enum {      // Adresses
 
 typedef enum {
     ADRTYPE_VAR,
+    ADRTYPE_VAR_TMP,
     ADRTYPE_INT,
     ADRTYPE_FLOAT,
     ADRTYPE_STRING,
@@ -94,18 +98,20 @@ typedef struct TILElem {
 typedef struct {
     TILElemPtr First;
     TILElemPtr Act;
+    TILElemPtr ActFun;
     TILElemPtr Last;
 } TInstrList;
 
 
 void ILInit (TInstrList *L);
 void ILSetActLast (TInstrList *L);
+void ILSetActFunFirst (TInstrList *L);
 void ILDisposeList(TInstrList *L);
 void ILInsertLast(TInstrList *L, TInst inst, bool inWhile);
+void ILInsertFirst (TInstrList *L, TInst inst);
 void ILPostActInsert (TInstrList *L, TInst inst);
-void printAdr(TAdr adr);
-void printInst(TInst inst);
-void printAllInst(TInstrList L);
+void ILPreActFunInsert (TInstrList *L, TInst inst);
+void ILPrintAllInst(TInstrList L);
 char *getStr(int n, ...);
 TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3);
 

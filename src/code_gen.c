@@ -19,8 +19,16 @@ int errflg;
 void genPrgBegin(TInstrList *L){
     TInst inst;
     TAdr adr1, undef;
-    inst = getInst(OP_LABEL, ADRLAB(adr1, "main", ""), undef, undef); ILInsertLast(&L, inst, false);
+    inst = getInst(OP_LABEL, ADRLAB(adr1, "main", ""), undef, undef); ILInsertLast(L, inst, false);
+    ILSetActFunFirst(L);
 }
+
+void genPrgEnd(TInstrList *L){
+    TInst inst;
+    TAdr adr1, undef;
+    inst = getInst(OP_JUMP, ADRLAB(adr1, "main", ""), undef, undef); ILInsertFirst(L, inst);
+}
+
 void genFunCallBegin(TInstrList *L, bool inWhile){
     TInst inst;
     TAdr undef;
@@ -28,12 +36,20 @@ void genFunCallBegin(TInstrList *L, bool inWhile){
     inst = getInst(OP_CREATEFRAME, undef, undef, undef); ILInsertLast(L, inst, inWhile);
 }
 
-void genFunCallPar(TInstrList *L, char *var, bool inWhile){
+void genFunCallPar(TInstrList *L, unsigned parNum, TAdr var, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, undef;
-    char *conv = convIntToStr(++funPara);
-    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, conv), undef,              undef); ILPostActInsert(L, inst);
-    inst = getInst(OP_MOVE,     ADRVAR(adr1, conv), ADRVAR(adr2, var),  undef); ILInsertLast(L, inst, inWhile);
+    char *conv = convIntToStr(parNum);
+   
+    inst = getInst(OP_DEFVAR,   ADRVARTMP(adr1, conv), undef, undef); ILPostActInsert(L, inst);
+    switch (var.type){
+        case ADRTYPE_VAR:    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRVAR(adr2, var.val.s), undef); break;
+        case ADRTYPE_INT:    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRINT(adr2, var.val.i), undef); break;
+        case ADRTYPE_FLOAT:  inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRFLT(adr2, var.val.f), undef); break;
+        case ADRTYPE_STRING: inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRSTR(adr2, var.val.s), undef); break;
+        case ADRTYPE_NIL:    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRNIL(adr2),            undef); break;
+    }
+    ILInsertLast(L, inst, inWhile);
     free(conv);
 }
 
@@ -49,9 +65,9 @@ void genWhileBegin(TInstrList *L, unsigned whileCnt, bool inWhile){
     TAdr adr1, undef;
     char *whileStr = convIntToStr(whileCnt);
     char *lab = getStr(2, "while", whileStr);
-    //inst = getStr(3, "DEFVAR LF@&while", whileStr, "cond\n");ILInsertLast(&L, inst); // TODO: Insert it after/before active
     inst = getInst(OP_LABEL, ADRLAB(adr1, lab, "begin"), undef, undef); ILInsertLast(L, inst, inWhile);
     free(whileStr);
+    free(lab);
 }
 
 void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned res, bool inWhile){
@@ -62,15 +78,23 @@ void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned res, 
     char *resStr = convIntToStr(res);
     char *EStr = getStr(4, "psa", psaStr, "E", resStr);
     char *lab = getStr(2, "while", whileStr);
+    char *condStr = getStr(3, "while", whileStr, "condtype");
 
-    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "end"), ADRVAR(adr2, EStr), ADRBOOL(adr3, "false")); ILInsertLast(L, inst, inWhile);
-    //inst = getStr(7, "JUMPIFEQ $while", whileStr, "end LF@&psa", psaStr, "E", resStr, " bool@false\n");
-    ILInsertLast(L, inst, inWhile);
+    // Result of the PSA must be bool so we'll check that first
+    inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_EXIT,     ADRINT(adr1, 4),            undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    // While condition
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "end"),   ADRVAR(adr2, EStr),     ADRBOOL(adr3, "false"));ILInsertLast(L, inst, inWhile);
+
     free(whileStr);
     free(psaStr);
     free(resStr);
     free(EStr);
     free(lab);
+    free(condStr);
 }
 
 void genWhileEnd(TInstrList *L, unsigned whileCnt, bool inWhile){
@@ -93,7 +117,7 @@ void genE(TInstrList *L, unsigned psa, unsigned res, TAdr var, bool inWhile){
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, resVarStr), undef, undef); ILPostActInsert(L, inst);
 
     switch (var.type){
-        case ADRTYPE_VAR:    inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, var), undef); break;
+        case ADRTYPE_VAR:    inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, var.val.s), undef); break;
         case ADRTYPE_INT:    inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRINT(adr2, var.val.i), undef); break;
         case ADRTYPE_FLOAT:  inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRFLT(adr2, var.val.f), undef); break;
         case ADRTYPE_STRING: inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRSTR(adr2, var.val.s), undef); break;
@@ -108,7 +132,7 @@ void genE(TInstrList *L, unsigned psa, unsigned res, TAdr var, bool inWhile){
 void genDefVar(TInstrList *L, char *var, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, adr3;
-    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, var),   adr2,           adr3);   ILInsertLast(L, inst, inWhile);   
+    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, var),   adr2,           adr3);   ILPostActInsert(L, inst);   
     inst = getInst(OP_MOVE,     ADRVAR(adr1, var),   ADRNIL(adr2),   adr3);   ILInsertLast(L, inst, inWhile);
 }
 
@@ -117,9 +141,9 @@ void genAssign(TInstrList *L, char *var, unsigned psa, unsigned E, bool inWhile)
     TAdr adr1, adr2, undef;
     char *psaStr = convIntToStr(psa);
     char *EStr = convIntToStr(E);
-    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, EStr), undef);
-    free(EStr);
+    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, EStr), undef); ILInsertLast(L, inst, inWhile);
     free(psaStr);
+    free(EStr);
 }
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
     TInst inst;
@@ -152,12 +176,12 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
 
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatfirst"),    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E2type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
-    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E2),                   ADRVAR(adr1, E2),       undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E2),                   ADRVAR(adr2, E2),       undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "add"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatsecond"),   undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E1type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
-    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E1),                   ADRVAR(adr1, E1),       undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E1),                   ADRVAR(adr2, E1),       undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "add"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "typeeq"),        undef,                  undef);                 ILInsertLast(L, inst, inWhile);
@@ -186,3 +210,42 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
     free(E2type);
     free(lab);
 }
+/*
+int main(){
+    TInstrList L;
+    ILInit(&L);
+    genPrgBegin(&L);
+    genAdd(&L, 5, 3, 1, 2, true);
+    genDefVar(&L, "yoo", true);
+    genFunCallBegin(&L, true);
+    
+    TAdr var;
+    var.type = ADRTYPE_INT;
+    var.val.i = 2;
+    genFunCallPar(&L, 1, var, true);
+    
+    var.type = ADRTYPE_STRING;
+    var.val.s = "asd";
+    genFunCallPar(&L, 2, var, true);
+    
+    var.type = ADRTYPE_FLOAT;
+    var.val.f = 3.14;
+    genFunCallPar(&L, 3, var, true);
+    
+    var.type = ADRTYPE_VAR;
+    var.val.s = "variable";
+    genFunCallPar(&L, 4, var, true);
+    
+    genFunCallEnd(&L, "foo", true);
+    genWhileBegin(&L, 6, false);
+    genWhileCond(&L, 6, 5, 8, false);
+    genWhileEnd(&L, 6, false);
+
+    genE(&L, 10, 1, var, true);
+    genDefVar(&L, "abc", true); 
+    genAssign(&L, "bca", 11, 60, true);
+
+    genPrgEnd(&L);
+    ILPrintAllInst(L);
+    ILDisposeList(&L);
+}*/
