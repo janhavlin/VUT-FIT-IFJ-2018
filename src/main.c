@@ -15,7 +15,8 @@ int main() {
     errflg = PROGRAM_OK;    //extern from ifj_error.h
     FILE *f = stdin;
     TsymItem *GT = NULL;    //global symbol table
-    TsymItem *LT = NULL;    // local symbol table
+    TsymItem *LT = NULL;    //local symbol table
+    TInstrList instructions;//instructions in 3AC interstep
     symTabInit(&GT); 
     symTabFillKwds(&GT); 
     symTabFillFuns(&GT); 
@@ -24,9 +25,10 @@ int main() {
         return errflg;
     }
     symTabInit(&LT);
+    ILInit(&instructions);
     tokBuffInit();
     //TODO: initialize generator LIST
-    int result = parse(f, GT, LT);
+    int result = parse(f, GT, LT, &instructions);
     if (result == PROGRAM_OK)
         //TODO: generator print IFJcode18 from list
     //TODO: dispose generator LIST

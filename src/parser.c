@@ -25,6 +25,7 @@ typedef struct {
 	TsymItem *mainLT;
 	TsymItem *currLT;
 	TsymItem *GT;
+	TInstrList *instructions;
 	unsigned whileCounter;
 	unsigned ifCounter;
 	unsigned psaCounter;
@@ -68,7 +69,7 @@ TsymData createDataForNewVar(unsigned order);
 
 //--------------PARSE-------------------------------------
 
-int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
+int parse(FILE *input, TsymItem *GT, TsymItem *LT, TInstrList *instructions) {
 	if (DEBUG) printf("Function: %s\n", __func__);
 	int result = PROGRAM_OK;
 	TWrapper *globalInfo = (TWrapper *) malloc(sizeof(TWrapper));
@@ -80,6 +81,7 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
 	globalInfo->mainLT = LT;
 	globalInfo->currLT = LT;
 	globalInfo->GT = GT;
+	globalInfo->instructions = instructions;
 
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
@@ -93,7 +95,12 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT) {
 	result = start(tokenPP, globalInfo);
 	/*END OF PARSING*/
 
-	//TODO: check if all functions are defined
+	//check if all functions were defined
+	if (!symTabCheckIfAllFunctionsWereDefined(globalInfo->GT)) {
+		errflg = ERR_SEM_OTHER;
+		ifjErrorPrint("ERROR %d SEMANTIC: calling undefined function in program!\n", errflg); 
+		result = errlfg;
+	}
 
 	free(globalInfo);
 	free(token);
@@ -166,7 +173,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//information about if:
 							unsigned ifNumber = (globalInfo->ifCounter)++;
 							//process expr
-							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT);
+							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 							(globalInfo->psaCounter)++;
 							//genIfCond(ifNumber, E);
@@ -204,7 +211,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//genWhileBegin(whileNumber);
 							printf("genWhileBegin(%d)\n", whileNumber);
 							//process expr
-							unsigned E = processExpression(globalInfo->file, "do", globalInfo->GT, globalInfo->currLT);
+							unsigned E = processExpression(globalInfo->file, "do", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 							(globalInfo->psaCounter)++;
 							//genWhileCond(E);
@@ -416,7 +423,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo) {
 		case TOK_FLOAT: //rule #21 TERM -> const
 						if (globalInfo->inFunCall) {
 							//genFunCallPar(type, (*tokenPP)->data.f, globalInfo->inWhile);
-							printf("genFunCallPar(%d, %s, %d)\n", type, (*tokenPP)->data.s, globalInfo->inWhile);
+							printf("genFunCallPar(%d, %f, %d)\n", type, (*tokenPP)->data.f, globalInfo->inWhile);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -424,7 +431,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo) {
 		case TOK_INT:	//rule #21 TERM -> const
 						if (globalInfo->inFunCall) {
 							//genFunCallPar(type, (*tokenPP)->data.i, globalInfo->inWhile);
-							printf("genFunCallPar(%d, %s, %d)\n", type, (*tokenPP)->data.s, globalInfo->inWhile);
+							printf("genFunCallPar(%d, %i, %d)\n", type, (*tokenPP)->data.i, globalInfo->inWhile);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -552,7 +559,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						//case 1 - found after examining 1 token, therefore return 1 token to scanner
 						returnToken(**tokenPP);
 						//**tokenPP = getToken(globalInfo->file, globalInfo->GT); //expr is present, call next token //DONT CALL NEXT TOKEN
-						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT);
+						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						(globalInfo->psaCounter)++;
 						//genASSIGN(savedIdOne, E);	//assign to savedIdOne
@@ -625,7 +632,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						//case 2 - found after examining 2 tokens, therefore return 2 tokens to scanner
 						returnToken(bufferToken);
 						returnToken(**tokenPP);
-						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT);
+						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						(globalInfo->psaCounter)++;
 						//genASSIGN(savedIdOne, E);	//to savedIdOne
@@ -886,6 +893,7 @@ void initTWrapper(TWrapper *info) {
 	info->mainLT = NULL;
 	info->currLT = NULL;
 	info->GT = NULL;
+	info->instructions = NULL;
 	info->whileCounter = 0;
 	info->ifCounter = 0;
 	info->psaCounter = 0;

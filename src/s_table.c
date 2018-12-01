@@ -178,4 +178,25 @@ void symTabToString(TsymItem *rootPtr, int depth) {
 	if (depth == 0) printf("end of tree\n");
 }
 
+/**
+ * @returns true if undefined function is in node
+ */ 
+bool nodeContainsUndefinedFunction(TsymItem *node) {
+	if (node->type == TYPE_FUN)
+		return (node->data.defined == false);
+	return false;
+}
+
+/**
+ * @returns true if every function saved in sym table was defined
+ */ 
+bool symTabCheckIfAllFunctionsWereDefined(TsymItem *rootPtr) {
+	if (rootPtr != NULL) {
+		if (nodeContainsUndefinedFunction(rootPtr)) return false;
+		if (!symTabCheckIfAllFunctionsWereDefined(rootPtr->lPtr)) return false;
+		if (!symTabCheckIfAllFunctionsWereDefined(rootPtr->rPtr)) return false;
+	}
+	return true;
+}
+
 /** end of s_table.c */

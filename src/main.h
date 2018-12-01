@@ -14,5 +14,6 @@
 #include "ifj_error.h"
 #include "scanner.h"
 #include "parser.h"
+#include "code_gen_list.h"
 
 /* end of main.h */

@@ -20,8 +20,10 @@
 #include "dyn_arr.h"
 #include "psa.h"
 #include "s_table.h"
+#include "code_gen.h"
+#include "code_gen_list.h"
 
-int parse(FILE *, TsymItem *GT, TsymItem *LT);
+int parse(FILE *, TsymItem *GT, TsymItem *LT, TInstrList *instructions);
 
 #endif //IFJ18_PARSER_H
 /* end of parser.h */
