@@ -342,66 +342,6 @@ void sPlaceShiftChar( tStackLPtr s ){
 
 }
 
-string sTokToStr(TToken tok){
-	
-	switch(tok.type){
-		case TOK_ID:
-			return "TOK_ID";
-
-		case TOK_ADD:
-			return "TOK_ADD";
-			
-		case TOK_SUB:
-			return "TOK_SUB";
-
-		case TOK_MUL:
-			return "TOK_MUL";
-
-		case TOK_DIV:
-			return "TOK_DIV";
-
-		case TOK_LT:
-			return "TOK_LT";
-
-		case TOK_GT:
-			return "TOK_GT";
-
-		case TOK_LEQ:
-			return "TOK_LEQ";
-	
-		case TOK_GEQ:
-			return "TOK_GEQ";
-
-		case TOK_EQ:
-			return "TOK_EQ";
-
-		case TOK_NEQ:
-			return "TOK_NEQ";
-
-		case TOK_ASSIGN:
-			return "TOK_ASSIGN";
-
-		case TOK_LBR:
-			return "TOK_LBR";
-
-		case TOK_RBR:
-			return "TOK_RBR";
-
-		case TOK_COMMA:
-			return "TOK_COMMA";
-
-		case TOK_EOL:
-			return "TOK_EOL";
-
-		case TOK_EOF:
-			return "TOK_EOF";
-		
-		default:
-			return tok.data.s;
-	}
-
-}
-
 void sPrintStack( tStackLPtr s){
 	if(s != NULL){	
 		tStackIPtr item = s->first;

@@ -42,6 +42,5 @@ bool sLEmpty( tStackLPtr stack );
 bool sLFull( tStackLPtr stack );
 void sLPush( tStackLPtr stack, char *name, int type); //char *type
 void sPlaceShiftChar( tStackLPtr s );
-string sTokToStr( TToken tok );
 void sPrintStack( tStackLPtr s);
 #endif // STACK_PR
