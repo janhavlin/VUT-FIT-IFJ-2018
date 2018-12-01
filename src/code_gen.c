@@ -28,7 +28,7 @@ void print_elements_of_list(tDLList TL)	{
 	while ((TempList.First!=NULL))	{
 		printf("---\n%s",TempList.First->inst);
 		if ((TempList.First==TL.Act) && (TL.Act!=NULL))
-			printf("\t <= toto je aktivní prvek ");
+			printf("\t <= toto je aktivní prvek\n");
 		TempList.First=TempList.First->rptr;
 		CurrListLength++;
 	}
@@ -108,7 +108,6 @@ void DLPostInsert (tDLList *L, char *inst) {
 	new->rptr = L->Act->rptr;
 	new->lptr = L->Act;
 	
-	// pokud neni aktivni prvek posledni, tak staremu nasledujicimu prvku nastavime na levy ukazatel na novy prvek
 	if (L->Act->rptr != NULL)
 		L->Act->rptr->lptr = new;
 	
@@ -139,6 +138,13 @@ void DLItemShiftLeft(tDLList *L, tDLElemPtr item){
         L->Last = item_left;
 }
 
+void printAllInst(tDLList L){
+    tDLList tmpList = L;
+	while (tmpList.First != NULL){
+		printf("%s", tmpList.First->inst);
+		tmpList.First=tmpList.First->rptr;
+	}      
+}
 
 char *getInst(int n, ...){
     va_list vl, vs;
@@ -161,6 +167,7 @@ char *getInst(int n, ...){
     va_end(vs);
     return p;
 }
+
 void genFunCallBegin(bool inWhile){
     char *inst;
     funPara = 0;
@@ -240,50 +247,59 @@ void genAdd(unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhi
     char *E3 = getInst(4, "LF@&psa", psaStr, "E", resStr);  
     char *E1type = getInst(5, "LF@&psa", psaStr, "E", var1Str, "type");  
     char *E2type = getInst(5, "LF@&psa", psaStr, "E", var2Str, "type");  
-
+    char *labelPrefix = getInst(4, "$psa", psaStr, "E", resStr);
     inst = getInst(9,  "DEFVAR ", E3, "\n",
                        "DEFVAR ", E1type, "\n",
                        "DEFVAR ", E2type, "\n");
     DLPostInsert(&L, inst);
 
-    inst = getInst(5, "TYPE ", E1type, " ", E1,"\n");
-    inst = getInst(6, inst, "TYPE ", E2type, " ", E2, "\n");
+    //               |--OPERATION----|--ADR1-------------------------|--ADR2-----|--ADR3-------------|                    
+    inst = getInst(5, "TYPE ",        E1type, " ",                    E1,"\n");                       DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "TYPE ",        E2type, " ",                    E2, "\n");                      DLInsertLast(&L, inst, inWhile);
+                    
+    inst = getInst(7, "JUMPIFEQ ",    labelPrefix, "typeeq ",         E1type,     " ", E2type, "\n"); DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFEQ ",    labelPrefix, "floatfirst ",     E1type,     " string@float\n"); DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFEQ ",    labelPrefix, "floatsecond ",    E2type,     " string@float\n"); DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "typeeq ", E1type, " ", E2type, "\n");
-    inst = getInst(8, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "floatfirst ", E1type, " string@float\n");
-    inst = getInst(8, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "floatsecond ", E2type, " string@float\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "exit\n");                                         DLInsertLast(&L, inst, inWhile);
+    inst = getInst(1, "EXIT "         "int@4\n");                                                     DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "exit:\n");
-    inst = getInst(2, inst, "EXIT int@4\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "floatfirst\n");                                   DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFNEQ ",   labelPrefix, "exit ",           E2type,     " string@int\n");   DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "INT2FLOAT ",   E2, " ",                        E2, "\n");                      DLInsertLast(&L, inst, inWhile);
+    inst = getInst(3, "JUMP ",        labelPrefix, "add\n");                                          DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "floatfirst:\n");
-    inst = getInst(10, inst, "JUMPIFNEQ $psa", psaStr, "E", resStr, "exit LF@&psa", psaStr, "E", var2Str, "&type string@int\n");
-    inst = getInst(6, inst, "INT2FLOAT LF@&psa", psaStr, "E", var2Str, "\n");
-    inst = getInst(6, inst, "JUMP $psa", psaStr, "E", resStr, "add\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "floatsecond\n");                                  DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFNEQ ",   labelPrefix, "exit ",           E1type,     " string@int\n");   DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "INT2FLOAT ",   E1, " ",                        E1, "\n");                      DLInsertLast(&L, inst, inWhile);
+    inst = getInst(3, "JUMP ",        labelPrefix, "add\n");                                          DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "floatsecond:\n");
-    inst = getInst(10, inst, "JUMPIFNEQ $psa", psaStr, "E", resStr, "exit LF@&psa", psaStr, "E", var1Str, "&type string@int\n");
-    inst = getInst(6, inst, "INT2FLOAT LF@&psa", psaStr, "E", var1Str, "\n");
-    inst = getInst(6, inst, "JUMP $psa", psaStr, "E", resStr, "add\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "typeeq\n");                                       DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFEQ ",    labelPrefix, "add ",            E1type,     " string@int\n");   DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFEQ ",    labelPrefix, "add ",            E1type,     " string@float\n"); DLInsertLast(&L, inst, inWhile);
+    inst = getInst(5, "JUMPIFEQ ",    labelPrefix, "cat ",            E1type,     " string@string\n");DLInsertLast(&L, inst, inWhile);
+    inst = getInst(1, "EXIT "         "int@4\n");                                                     DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "typeeq:\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "add LF@&psa", psaStr, "E", var1Str, "type string@int\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "add LF@&psa", psaStr, "E", var1Str, "type string@float\n");
-    inst = getInst(10, inst, "JUMPIFEQ $psa", psaStr, "E", resStr, "cat LF@&psa", psaStr, "E", var1Str, "type string@string\n");
-    inst = getInst(2, inst, "EXIT int@4\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "cat\n");                                          DLInsertLast(&L, inst, inWhile);
+    inst = getInst(7, "CONCAT ",      E3, " ",                        E1, " ",    E2, "\n");          DLInsertLast(&L, inst, inWhile);
+    inst = getInst(3, "JUMP ",        labelPrefix, "end\n");                                          DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(14, inst, "CONCAT LF@&psa", psaStr, "E", resStr, " LF@&psa", psaStr, "E", var1Str, " LF@&psa", psaStr, "E", var2Str, "\n");
-    inst = getInst(6, inst, "JUMP psa", psaStr, "E", resStr, "end\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "add\n");                                          DLInsertLast(&L, inst, inWhile);
+    inst = getInst(7, "ADD ",         E3, " ",                        E1, " ",    E2, "\n");          DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "add:\n");
-    inst = getInst(14, inst, "ADD LF@&psa", psaStr, "E", resStr, " LF@&psa", psaStr, "E", var1Str, " LF@&psa", psaStr, "E", var2Str, "\n");
+    inst = getInst(3, "LABEL ",       labelPrefix, "end\n");                                          DLInsertLast(&L, inst, inWhile);
 
-    inst = getInst(6, inst, "$psa", psaStr, "E", resStr, "end:\n");
-
-
-
-    //inst = getInst(6, "ADD LF@&", resStr, " LF@&", var1Str, " LF@&", var2Str);
-    DLInsertLast(&L, inst, inWhile);
+    //DLInsertLast(&L, inst, inWhile);
+    free(psaStr);
+    free(resStr);
+    free(var1Str);
+    free(var2Str);
+    free(E1);
+    free(E2);
+    free(E3);
+    free(E1type);
+    free(E2type);
+    free(labelPrefix);
 }
 
 void genDefVar(char *var, bool inWhile){
@@ -295,6 +311,10 @@ void genDefVar(char *var, bool inWhile){
 }
 
 int main(){
+    DLInitList(&L);
+    char *inst;
+    inst = getInst(1, ".IFJcode18\n");
+    DLInsertLast(&L, inst, false);
     /*genDefVar("a", false);
     print_elements_of_list(L);
 
@@ -303,15 +323,16 @@ int main(){
     genFunCallPar("bbb", false);
     genFunCallPar("ccc", false);
     //for(int i = 0; i < 3; i++)
-    //    genFunCallPar("ddd", false);
-    genFunCallEnd("myFunc", false);*/
+    //    genFunCallPar("ddd", false);*/
+    //genFunCallEnd("myFunc", false);
 
-    //genAdd(42, 3, 1, 2);
-    genE(5,3,"i", false);
-    genE(5,3,"i", true);
-    genE(5,3,"i", true);
-    genE(5,3,"i", true);
-    print_elements_of_list(L);
+    genAdd(42, 3, 1, 2, false);
+    //genE(5,3,"i", false);
+    //genE(5,3,"j", true);
+    //genE(5,3,"k", true);
+    //genE(5,3,"l", true);
+    //print_elements_of_list(L);
+    printAllInst(L);
     DLDisposeList(&L);
     return 0;
 }
