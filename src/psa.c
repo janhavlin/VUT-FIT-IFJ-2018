@@ -193,7 +193,7 @@ TAdr idValGet(TToken get){
 	
 	else if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) ){
 		result.val.s = get.data.s;
-		result.type = ADRTYPE_STRING;
+		result.type = ADRTYPE_NIL;
 	}
 	
 	return result;
@@ -278,7 +278,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 1.
                         case SUB_RULE:          // -
-                                genSUB(psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genSub(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '-' s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
                             break;
 
