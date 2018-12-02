@@ -370,7 +370,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
             // nothing
             case 'X':
-				printf("nic\n");
                 if( ((get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then")) )) || (get.type == TOK_EOL) ){   // end of expression was found
 					sLDelete(s);
@@ -379,7 +378,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     return Ecount-1;                      
                 }
                 else{          // an error was found
-                    printf("non Existing rule\n");
                     sLDelete(s);
                     ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
 				    errflg = ERR_SYNTAX;
@@ -388,7 +386,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 break;
 
             default:
-                printf("default\n");
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
                 errflg = ERR_SYNTAX;
