@@ -1,35 +1,35 @@
 id = fun (a, a a, a)
-$ 2
+$ 6
 id = fun a, a a, a
-$ 2
+$ 6
 id = fun (a, a, a, a,)
-$ 2
+$ 6
 id = fun a, a, a, a,
-$ 2
+$ 6
 id = fun (a, a, a, a) +
-$ 2
+$ 6
 id = fun (a, a, a, a) -
-$ 2
+$ 6
 id = fun (a, a, a, a) *
-$ 2
+$ 6
 id = fun (a, a, a, a) /
-$ 2
+$ 6
 id = fun (a, a, a, a) =
-$ 2
+$ 6
 id = fun (a, a, a, a) id
-$ 2
+$ 6
 id = fun (a, a, a, a) 5
-$ 2
+$ 6
 id = fun (a, a, a, a) 0.0
-$ 2
+$ 6
 id = fun (a, a, a, a) "Hello"
-$ 2
+$ 6
 id = fun (a,
 a, a, a)
-$ 2
+$ 6
 id = fun a,
 a, a, a
-$ 2
+$ 6
 if then
 $ 2
 
@@ -119,49 +119,49 @@ a = if
 $ 2
 a = then
 $ 2
-a = E+
+a = e+
 $ 2
-a = E-
+a = e-
 $ 2
 a = +
 $ 2
 a = -
 $ 2
-a = E*
+a = e*
 $ 2
-a = E/
+a = e/
 $ 2
-a = E<
+a = e<
 $ 2
-a = E>
+a = e>
 $ 2
-a = E<=
+a = e<=
 $ 2
-a = E>=
+a = e>=
 $ 2
-a = E==
+a = e==
 $ 2
-a = E!=
+a = e!=
 $ 2
-a = (E
+a = (e
 $ 2
-a = *E
+a = *e
 $ 2
-a = /E
+a = /e
 $ 2
-a = <E
+a = <e
 $ 2
-a = >E
+a = >e
 $ 2
-a = <=E
+a = <=e
 $ 2
-a = >=E
+a = >=e
 $ 2
-a = ==E
+a = ==e
 $ 2
-a = !=E
+a = !=e
 $ 2
-a = E)
+a = e)
 $ 2
 
 
@@ -193,47 +193,34 @@ def abc(promenna)
 promenna=5
 end
 end
-
-#definice nemuze byt uvnitr jinyho slozenyho prikazu a to myslim ani rozsireni nedovoluje
 $ 42
 
 funkce(chrr reeee)
 funkce nani d fk
-
-#volani funkce kde nejsou parametry oddeleny carkou...
 $ 42
 
 if a >= b then print "lul"
 else
-#myslim ze za then patri EOL (:
 end
 $ 42
 
 print (chr)
-#muze byt osetreno teoreticky az v semanticke (parametrem funkce nemuze byt funkce(bez rozsireni))
-#oproti testu 6 tu jsou zavorky :hahaa:
 $ 42
 
 print def
-#nerekl bych ze muze parametrem byt klicove slovo :hahaa:
 $ 42
 
 print (()
-#debilni zavorky
 $ 42
 
 a= b+(c+d)+(c
-#debilni zavorky
 $ 42
 
 a= b+(c+d))
-#debilni zavorky
 $ 42
 
 a= b+(((c+d))
-#debilni zavorky
 $ 42
 
 a= b+(((c+d)
-#debilni zavorky
 $ 42
