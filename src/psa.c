@@ -261,10 +261,10 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 						}
 						sLPop(s);
 					}
-					sLPop(s);   						// pop shift char s
+					sLPop(s);  // pop shift char s
 					   
 
-					sLPush(s, "E", 15);   				// push E element into stack
+					sLPush(s, "E", 15); // push E element into stack
                     switch(ruleGet){
                         // rule 0.
                         case ADD_RULE:          // +
@@ -274,7 +274,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 1.
                         case SUB_RULE:          // -
-                                // genSUB(psaCntr, Ecount, Ecount-1, Ecount-2);
+                                // genSUB(psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '-' s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
                             break;
 
@@ -292,13 +292,13 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         
                         // rule 4.
                         case MUL_RULE:          // *
-                                // genMUL(psaCntr, Ecount, Ecount-1, Ecount-2);
+                                // genMUL(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '*' s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 5.    
                         case DIV_RULE:          // :
-                                //genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
+                                //genDIV(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji ':' s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                             break;
 
