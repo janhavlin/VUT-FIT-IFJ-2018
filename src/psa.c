@@ -213,7 +213,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     int ruleGet = 0;    // number
 
     TAdr IDKonst;
-	while( 1 ){  
+	while( !sLEmpty(s) ){  
        if( get.type == TOK_ID ){
             if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
                   		                                                                                              // but exist in Global ST
@@ -259,7 +259,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     switch(ruleGet){
                         // rule 0.
                         case ADD_RULE:          // +
-                                genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                              //  genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 					    	    printf("Generuji '+' s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
                             break;
 
@@ -276,7 +276,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
 
                         // rule 3.
-                        case NEG_RULE:        // -E
+                        case NEG_RULE:         // -E
                                 //genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile);
                                 printf("Generuji '-E' %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
@@ -295,62 +295,62 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 6.    
                         case LT_RULE:          // <
-                                genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                             //   genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '<' s E%d = E%d < E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 7. 
                         case GT_RULE:          // >
-                                genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                            //    genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '>' s E%d = E%d > E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 8.
                         case LEQ_RULE:          // <=
-                                genLEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                             //   genLEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '<=' s E%d = E%d <= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 9.
                         case GEQ_RULE:          // >=
-                                genGEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                          //      genGEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '>=' s E%d = E%d >= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 10.
                         case EQ_RULE:          // ==
-                                genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                              //  genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '==' s E%d = E%d == E%d \n",Ecount, ESecond, EFirst);
                             break;                  
 
                         // rule 11.
                         case NEQ_RULE:          // !=
-                                genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                             //   genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '!=' s E%d = E%d != E%d \n",Ecount, ESecond, EFirst);
                             break; 
 
                         // rule 12.
                         case ID_RULE:           // ID
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                            //    genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                                 printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         // rule 13.                    
                         case INT_RULE:          // int
                                 printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                            //    genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         // rule 14.
                         case FLOAT_RULE:        // float
                                 printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                             //   genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         // rule 15.
                         case STRING_RULE:       // string
 	                          	printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
-	                    		genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+	                    	//	genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
                     }
 
@@ -397,19 +397,23 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // nothing
             case 'X':
                 if( ((get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
-                    (!strcmp(get.data.s, "then")) )) || (get.type == TOK_EOL) ){   // end of expression was found
-					sLDelete(s);
-                    returnToken(get);
-                    psaCntr++;
-                    return Ecount-1;                      
+                    (!strcmp(get.data.s, "then"))) ) || (get.type == TOK_EOL) ){   // end of expression was found
+					
+					if(s->top == s->first->next){
+						sLDelete(s);
+		                returnToken(get);
+		                psaCntr++;
+		                sLPop(s);
+		                sLPop(s);
+		                break;             
+                	}
                 }
-                else{          // an error was found
-                    sLDelete(s);
-                    ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
-				    errflg = ERR_SYNTAX;
-                    return NO_E_NONTERM;                    
-                }
-                break;
+                          
+                sLDelete(s);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
+			    errflg = ERR_SYNTAX;
+                return NO_E_NONTERM;  // // an error was found                   
+                
 
             default:
                 sLDelete(s);
@@ -419,7 +423,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
         }
        
     }
-    return Ecount;
+	return Ecount-1;
 }
 
 
