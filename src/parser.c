@@ -176,7 +176,8 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-							genIfCond(&globalInfo->instructions, ifNumber, globalInfo->psaCounter, E, globalInfo->inWhile);
+																		//TODO: E-1 looks suspicious!
+							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
 							printf("genIfCond(%d,%u)\n", ifNumber, E);
 							(globalInfo->psaCounter)++;
 							//process then
@@ -190,7 +191,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process else
 							if (telse(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							genIfElse(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							genIfElse(globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							printf("genIfElse(%d)\n", ifNumber);
 							//process eol
 							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
@@ -198,7 +199,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							genIfEnd(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							genIfEnd(globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							printf("genIfEnd(%d)\n", ifNumber);
 							return PROGRAM_OK;
 						} else if (strcmp(keyW, "while") == 0) {
@@ -395,13 +396,14 @@ int term(TToken **tokenPP, TWrapper *globalInfo) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	TsymData idData;
+	TAdr var;
 	switch (type) {
 		case TOK_ID:	//rule #20 TERM -> id 
 						if (globalInfo->inFunCall) {	//passing parameter to function
 							if (!symTabSearch(globalInfo->currLT, keyW, &idData)) {	//try to pass undefined variable to funcall
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
-								//genFunCallPar(type, (*tokenPP)->data.s, globalInfo->inWhile);
+								genFunCallPar(globalInfo->instructions, (*tokenPP)->data.s, 0, var, globalInfo->inWhile);
 								printf("genFunCallPar(%d, %s, %d)\n", type, (*tokenPP)->data.s, globalInfo->inWhile);
 							}
 						} else { //define variable in new function's LT
@@ -506,7 +508,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
-						//genFunCallBegin(globalInfo->inWhile);
+						genFunCallBegin(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
 						printf("genFunCallBegin(%d)\n", globalInfo->inWhile);
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
@@ -527,7 +529,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							funcData->called = true;
 						}
 						//function call
-						//genFunCallEnd(savedIdOne, globalInfo->inWhile);
+						genFunCallEnd(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
 						printf("genFunCallEnd(%s, %d)\n", savedIdOne, globalInfo->inWhile);
 						globalInfo->inFunCall = false;
 						return PROGRAM_OK;
@@ -548,7 +550,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	switch (type) {
 		case TOK_EOL:	//rule #23 ASSIGN -> eps
 						return PROGRAM_OK;
-		case TOK_KEY:	if (strcmp(keyW, "nil")) {
+		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//continue to rule#17
 						} else 
 							break;
