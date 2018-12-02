@@ -303,7 +303,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;                  
 
                         case NEQ_RULE:          // !=
-                                genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '!=' s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                             break; 
 
