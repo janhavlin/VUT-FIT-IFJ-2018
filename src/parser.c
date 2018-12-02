@@ -177,7 +177,13 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
+<<<<<<< HEAD
 							genIfCond(&globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
+=======
+																		//TODO: E-1 looks suspicious!
+							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
+							printf("genIfCond(%d,%u)\n", ifNumber, E);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
@@ -190,16 +196,26 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process else
 							if (telse(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
+<<<<<<< HEAD
 							genIfElse(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
+=======
+							genIfElse(globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							printf("genIfElse(%d)\n", ifNumber);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 							//process eol
 							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process ST-LIST
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
+<<<<<<< HEAD
 							genIfEnd(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							//inWhile = false, but only if this if is not nested in another while or if
 							globalInfo->inWhile = !topLevelIf;
+=======
+							genIfEnd(globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							printf("genIfEnd(%d)\n", ifNumber);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 							return PROGRAM_OK;
 						} else if (strcmp(keyW, "while") == 0) {
 							//rule #12 STAT -> while expr do eol ST-LIST end
@@ -397,9 +413,14 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							if (!symTabSearch(globalInfo->currLT, keyW, &idData)) {	//try to pass undefined variable to funcall
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
+<<<<<<< HEAD
 								var.type = ADRTYPE_VAR;
 								var.val.s = keyW;
 								genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+=======
+								genFunCallPar(globalInfo->instructions, (*tokenPP)->data.s, 0, var, globalInfo->inWhile);
+								printf("genFunCallPar(%d, %s, %d)\n", type, (*tokenPP)->data.s, globalInfo->inWhile);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 							}
 						} else { //define variable in new function's LT
 							if (symTabSearch(globalInfo->GT, keyW, &idData)) {
@@ -506,7 +527,12 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
+<<<<<<< HEAD
 						genFunCallBegin(globalInfo->instructions, globalInfo->inWhile);
+=======
+						genFunCallBegin(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
+						printf("genFunCallBegin(%d)\n", globalInfo->inWhile);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
 						if (pbody(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg; 
@@ -527,6 +553,10 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						}
 						//function call
 						genFunCallEnd(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
+<<<<<<< HEAD
+=======
+						printf("genFunCallEnd(%s, %d)\n", savedIdOne, globalInfo->inWhile);
+>>>>>>> 655a8e99fd29a2f8aaee9474b4ba456e57044517
 						globalInfo->inFunCall = false;
 						return PROGRAM_OK;
 		default:		break;
