@@ -205,7 +205,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 	else
 		s = sLInit(TOK_EOL, followingToken);  // followingToken == bottom of stack
 
-    TToken get      = getToken(f, STG);                // token got from scanner 
+    TToken get      = getToken(f, STG);                // token got from scanner
+    //printf("First token read in psa: %d\n", get.type); 
     TToken ter      = highestTerminal(s);   // highest terminal in stack
     char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
     string toReduce;    // string that has to be reduced
@@ -255,7 +256,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 					   
 
 					sLPush(s, "E", 15);   				// push E element into stack
-                    
                     switch(ruleGet){
                         case ADD_RULE:          // +
                                 genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
@@ -274,6 +274,11 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             
                         case DIV_RULE:          // :
                                 //genDIV(psaCntr, Ecount, Ecount-1, Ecount-2);
+						        printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
+                            break;
+                            
+                        case LT_RULE:          // :
+                                genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji DIV s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                             break;
 
@@ -345,7 +350,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     (!strcmp(get.data.s, "then")) )) || (get.type == TOK_EOL) ){   // end of expression was found
 					sLDelete(s);
                     returnToken(get);
-                    return Ecount;                      
+                    psaCntr++;
+                    return Ecount-1;                      
                 }
                 else{          // an error was found
                     printf("non Existing rule\n");

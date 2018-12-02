@@ -28,8 +28,11 @@ int main() {
     ILInit(&instructions);
     tokBuffInit();
     //TODO: initialize generator LIST
+    genPrgBegin(&instructions);
+    //processExpression(f, "eol", GT, LT, &instructions, false);
     int result = parse(f, GT, LT, &instructions);
     if (result == PROGRAM_OK)
+    ILPrintAllInst(instructions);
         //TODO: generator print IFJcode18 from list
     //TODO: dispose generator LIST
     symTabDispose(&LT);

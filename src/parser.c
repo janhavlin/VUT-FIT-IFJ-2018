@@ -144,6 +144,7 @@ int start(TToken **tokenPP, TWrapper *globalInfo) {
 		case TOK_EOF:	//rule #3 START -> eof
 						//genSTOP();
 						printf("genSTOP()\n");
+						genPrgEnd(globalInfo->instructions);
 						return PROGRAM_OK;
 		default:		break;						
 	}
@@ -210,12 +211,14 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							globalInfo->inWhile = true;
 							//genWhileBegin(whileNumber);
 							printf("genWhileBegin(%d)\n", whileNumber);
+							genWhileBegin(globalInfo->instructions, whileNumber, globalInfo->inWhile);
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "do", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-							(globalInfo->psaCounter)++;
-							//genWhileCond(E);
+																						// TODO: Figure out why is E-1 needed!!
+							genWhileCond(globalInfo->instructions, whileNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
 							printf("genWhileCond(%u)\n", E);
+							(globalInfo->psaCounter)++;
 							//process do
 							//must load token after calling PSA
 							**tokenPP = getToken(globalInfo->file, globalInfo->GT);
@@ -228,7 +231,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							
-							//genWhileEnd(whileNumber);
+							genWhileEnd(globalInfo->instructions, whileNumber, globalInfo->inWhile);
 							printf("genWhileEnd(%d)\n", whileNumber);
 							//inWhile = false, but only if this while is not nested in another while
 							globalInfo->inWhile = !topLevelWhile;
@@ -469,7 +472,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						//process Lvalue Var ID
 						if (!symTabSearch(globalInfo->currLT, savedIdOne, &varData)) {	//ID not present in current LT
 							if (!symTabSearch(globalInfo->GT, savedIdOne, &varData)) {	//ID not defined as function
-								//genDEFVAR(savedIdOne);
+								genDefVar(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
 								printf("genDefVar(%s)\n", savedIdOne);
 								varData = createDataForNewVar(0);	//0 means not parameter, just variable
 								symTabInsert(&(globalInfo->currLT), savedIdOne, varData);
@@ -561,9 +564,9 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						//**tokenPP = getToken(globalInfo->file, globalInfo->GT); //expr is present, call next token //DONT CALL NEXT TOKEN
 						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-						(globalInfo->psaCounter)++;
-						//genASSIGN(savedIdOne, E);	//assign to savedIdOne
+						genAssign(globalInfo->instructions, savedIdOne, globalInfo->psaCounter, E, globalInfo->inWhile);	//assign to savedIdOne
 						printf("genAssign(%s, %s)\n", savedIdOne, "E");
+						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
@@ -630,13 +633,13 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 		case TOK_NEQ:   		  // !=		
 						//rule #17 ASSIGN -> expr 
 						//case 2 - found after examining 2 tokens, therefore return 2 tokens to scanner
-						returnToken(bufferToken);
 						returnToken(**tokenPP);
+						returnToken(bufferToken);
 						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-						(globalInfo->psaCounter)++;
-						//genASSIGN(savedIdOne, E);	//to savedIdOne
+						genAssign(globalInfo->instructions, savedIdOne, globalInfo->psaCounter, E, globalInfo->inWhile);	//to savedIdOne
 						printf("genAssign(%s, %s)\n", savedIdOne, "E");
+						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner

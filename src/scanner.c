@@ -78,7 +78,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
          /*DEBUG*///printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
-                if (c >= 'a' && c <= 'z' || c == '_'){
+                if ((c >= 'a' && c <= 'z') || c == '_'){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_ID;
@@ -425,7 +425,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_STR_XH:
-                if (isdigit(c) || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F'){
+                if (isdigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')){
                     if (isdigit(c))
                         conv_esc = c - '0';
                     else
@@ -526,7 +526,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
             
             case S_COMMENT_E:           // Read: "\n="
                  /*DEBUG*///printf("%d %c\n", state, c);
-                if (c = 'b')
+                if (c == 'b')
                     state = S_COMMENT_EB;
                 else
                     TOKERR(c, f, errflg, buff, tok);
@@ -534,7 +534,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
             
             case S_COMMENT_EB:          // Read: "\n=b"
                  /*DEBUG*///printf("%d %c\n", state, c);
-                if (c = 'e')
+                if (c == 'e')
                     state = S_COMMENT_EBE;
                 else
                     TOKERR(c, f, errflg, buff, tok);
@@ -542,7 +542,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
             
             case S_COMMENT_EBE:         // Read: "\n=be"
                  /*DEBUG*///printf("%d %c\n", state, c);
-                if (c = 'g')
+                if (c == 'g')
                     state = S_COMMENT_EBEG;
                 else
                     TOKERR(c, f, errflg, buff, tok);
@@ -550,7 +550,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
             
             case S_COMMENT_EBEG:        // Read: "\n=beg"
                  /*DEBUG*///printf("%d %c\n", state, c);
-                if (c = 'i')
+                if (c == 'i')
                     state = S_COMMENT_EBEGI;
                 else
                     TOKERR(c, f, errflg, buff, tok);
@@ -558,7 +558,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
             
             case S_COMMENT_EBEGI:       // Read: "\n=begi"
                  /*DEBUG*///printf("%d %c\n", state, c);
-                if (c = 'n')
+                if (c == 'n')
                     state = S_COMMENT_EBEGIN;
                 else
                     TOKERR(c, f, errflg, buff, tok);

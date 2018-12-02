@@ -6,7 +6,7 @@ NORMAL="\e[39m"
 
 TSTCNT=0
 BUFF=
-PRG=true
+PRG=../../ifj18
 
 check_output()
 {

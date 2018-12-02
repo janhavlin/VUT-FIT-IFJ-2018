@@ -126,5 +126,5 @@ void genAssign(TInstrList *L, char *var, unsigned psa, unsigned E, bool inWhile)
  * @param inWhile Flag whether it's called from inside a while
  */
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
-
+void genLT(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
 #endif  // CODE_GEN_H

@@ -56,10 +56,11 @@ typedef enum {      // Adresses
     OP_INT2FLOAT,   // 2
     OP_JUMP,        // 1
     OP_CONCAT,      // 3
-    OP_ADD,         // 3
     OP_PUSHFRAME,   // 0
     OP_CREATEFRAME, // 0
-    OP_CALL         // 1
+    OP_CALL,        // 1
+    OP_ADD,         // 3
+    OP_LT           // 3
 } TOperation;
 
 typedef enum {

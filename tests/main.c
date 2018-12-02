@@ -7,6 +7,7 @@
 #include "../src/ifj_error.h"
 #include "../src/s_table.h"
 #include "../src/parser.h"
+#include "../src/code_gen.h"
 
 int errflg;
 
@@ -21,7 +22,7 @@ void test_scanner(char *grp_name, int mode)
 
     TsymItem *GST = NULL;
     symTabInit(&GST);
-    fillTabWithKwds(&GST);
+    symTabFillKwds(&GST);
 
     TEST_SET_GROUP(grp_name);
     TToken tok = getToken(scanner_file, GST);
@@ -119,22 +120,42 @@ void test_conv(char *grp_name, int mode)
 
 void test_parser(char *grp_name, int mode)
 {
-    errflg = 0;
-    TEST_SET_GROUP(grp_name);
-    FILE *f = fopen("tests/test_parser", "r");
-    if (f == NULL)
-    {
+    errflg = PROGRAM_OK;    //extern from ifj_error.h
+    FILE *f = fopen("tests/test_parser_simple", "r");
+    if (f == NULL){
         fprintf(stderr, "Error opening test_parser\n");
         exit(1);
     }
+    TsymItem *GT = NULL;    //global symbol table
+    TsymItem *LT = NULL;    //local symbol table
+    TInstrList instructions;//instructions in 3AC interstep
+    symTabInit(&GT); 
+    symTabFillKwds(&GT); 
+    symTabFillFuns(&GT); 
+    if (errflg == ERR_RUNTIME) {    //allocation error in table
+        symTabDispose(&GT);
+    }
+    symTabInit(&LT);
+    ILInit(&instructions);
+    tokBuffInit();
+    //TODO: initialize generator LIST
+    int result = parse(f, GT, LT, &instructions);
+    if (result == PROGRAM_OK)
+        //TODO: generator print IFJcode18 from list
+    //TODO: dispose generator LIST
+    symTabDispose(&LT);
+    symTabDispose(&GT);
+    //TEST_EQ_INT(errflg, 0, "Parsing test_parser file", mode);        
+}
 
-    TsymItem *globalSymTable = NULL;
-    TsymItem *localSymTable = NULL;
-    symTabInit(&globalSymTable); //TODO: can throw error
-    fillTabWithKwds(&globalSymTable); //TODO: can throw error
-    symTabInit(&localSymTable); //TODO: can throw error
-    parserStart(globalSymTable, localSymTable, f); //TODO: can throw error
-    TEST_EQ_INT(errflg, 0, "Parsing test_parser file", mode);        
+void test_psa(char *grp_name, int mode)
+{
+    errflg = PROGRAM_OK;    //extern from ifj_error.h
+    FILE *f = fopen("tests/test_psa", "r");
+    if (f == NULL){
+        fprintf(stderr, "Error opening test_psa\n");
+        exit(1);
+    }
 }
 
 int main()
@@ -144,5 +165,6 @@ int main()
     test_string("dyn_arr.c tests", !COMPACT);
     test_conv("type_conv.c tests", !COMPACT);
     test_parser("parser.c tests", !COMPACT);
+    //test_psa("psa.c tests", !COMPACT);
     TEST_PRINT_STATS();
 }

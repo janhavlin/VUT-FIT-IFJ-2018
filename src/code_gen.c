@@ -20,6 +20,8 @@ void genPrgBegin(TInstrList *L){
     TInst inst;
     TAdr adr1, undef;
     inst = getInst(OP_LABEL, ADRLAB(adr1, "main", ""), undef, undef); ILInsertLast(L, inst, false);
+    inst = getInst(OP_CREATEFRAME, undef, undef, undef); ILInsertLast(L, inst, false);
+    inst = getInst(OP_PUSHFRAME, undef, undef, undef); ILInsertLast(L, inst, false);
     ILSetActFunFirst(L);
 }
 
@@ -81,6 +83,7 @@ void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned res, 
     char *condStr = getStr(3, "while", whileStr, "condtype");
 
     // Result of the PSA must be bool so we'll check that first
+    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 ILPostActInsert(L, inst);
     inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_EXIT,     ADRINT(adr1, 4),            undef,                  undef);                 ILInsertLast(L, inst, inWhile);
@@ -139,11 +142,14 @@ void genDefVar(TInstrList *L, char *var, bool inWhile){
 void genAssign(TInstrList *L, char *var, unsigned psa, unsigned E, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, undef;
+    printf("psa: %d, E: %d\n", psa, E);
     char *psaStr = convIntToStr(psa);
     char *EStr = convIntToStr(E);
-    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, EStr), undef); ILInsertLast(L, inst, inWhile);
+    char *varStr = getStr(4, "psa", psaStr, "E", EStr);
+    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, varStr), undef); ILInsertLast(L, inst, inWhile);
     free(psaStr);
     free(EStr);
+    free(varStr);
 }
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
     TInst inst;
@@ -199,6 +205,36 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
 
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "end"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    free(psaStr);
+    free(resStr);
+    free(var1Str);
+    free(var2Str);
+    free(E1);
+    free(E2);
+    free(E3);
+    free(E1type);
+    free(E2type);
+    free(lab);
+}
+
+void genLT(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
+    TInst inst;
+    TAdr adr1, adr2, adr3, undef;
+    
+    char *psaStr = convIntToStr(psa);
+    char *resStr = convIntToStr(res);
+    char *var1Str = convIntToStr(var1);
+    char *var2Str = convIntToStr(var2);
+    char *E1 = getStr(4, "psa", psaStr, "E", var1Str);  
+    char *E2 = getStr(4, "psa", psaStr, "E", var2Str);  
+    char *E3 = getStr(4, "psa", psaStr, "E", resStr);  
+    char *E1type = getStr(5, "psa", psaStr, "E", var1Str, "type");  
+    char *E2type = getStr(5, "psa", psaStr, "E", var2Str, "type");  
+    char *lab = getStr(4, "psa", psaStr, "E", resStr);
+
+    inst = getInst(OP_DEFVAR, ADRVAR(adr1, E3), undef, undef); ILPostActInsert(L, inst);
+    inst = getInst(OP_LT, ADRVAR(adr1, E3), ADRVAR(adr2, E1), ADRVAR(adr3, E2)); ILInsertLast(L, inst, inWhile);
+    
     free(psaStr);
     free(resStr);
     free(var1Str);

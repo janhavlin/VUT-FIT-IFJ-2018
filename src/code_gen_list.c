@@ -53,6 +53,7 @@ void disposeInstr(TInst *inst){
         case OP_JUMPIFNEQ:
         case OP_CONCAT:
         case OP_ADD:
+        case OP_LT:
             disposeAdr(&(inst->adr1));
             disposeAdr(&(inst->adr2));
             disposeAdr(&(inst->adr3));
@@ -198,7 +199,7 @@ void printAdr(TAdr adr){
             printf("string@%s", adr.val.s);
         return;
         case ADRTYPE_BOOL:
-            printf("string@%s", adr.val.s);
+            printf("bool@%s", adr.val.s);
         return;
         case ADRTYPE_NIL:
             printf("nil@nil");
@@ -222,6 +223,7 @@ void printInst(TInst inst){
         case OP_JUMP: printf("JUMP "); break;
         case OP_CONCAT: printf("CONCAT "); break;
         case OP_ADD: printf("ADD "); break;
+        case OP_LT: printf("LT "); break;
         case OP_CREATEFRAME: printf("CREATEFRAME "); break;
         case OP_PUSHFRAME: printf("PUSHFRAME "); break;
         case OP_CALL: printf("CALL "); break;
@@ -249,6 +251,7 @@ void printInst(TInst inst){
         case OP_JUMPIFNEQ:
         case OP_CONCAT:
         case OP_ADD:
+        case OP_LT:
             printAdr(inst.adr1);
             printf(" ");
             printAdr(inst.adr2);
@@ -320,6 +323,7 @@ TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3){
         case OP_JUMPIFNEQ:
         case OP_CONCAT:
         case OP_ADD:
+        case OP_LT:
             inst.adr1 = adr1;
             inst.adr2 = adr2;
             inst.adr3 = adr3;
