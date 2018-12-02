@@ -28,7 +28,7 @@
 #define ADD_RULE			0
 #define SUB_RULE			1
 #define PLUSE_RULE			2
-#define MINUSE_RULE			3
+#define NEG_RULE			3
 #define MUL_RULE			4
 #define DIV_RULE			5
 #define LT_RULE				6
@@ -37,7 +37,7 @@
 #define GEQ_RULE			9
 #define EQ_RULE				10
 #define NEQ_RULE			11
-#define LBR_E_RBR_TOK		12
+#define LBR_E_RBR_RULE		12
 #define ID_RULE				13
 #define INT_RULE			14
 #define FLOAT_RULE			15
