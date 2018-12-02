@@ -335,9 +335,15 @@ void sPlaceShiftChar( tStackLPtr s ){
 	}
 
 	else{
+		help = tmp->next;
+
 		tmp->next = New;
-		New->pred = s->top;
+		New->pred = tmp;
 		s->top = New;
+
+		New->next = help;
+		if(help != NULL)
+			help->pred = New;
 	}
 
 }

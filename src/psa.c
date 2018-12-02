@@ -39,9 +39,14 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
    // printf("ROW: %d, COL: %d\n\n", row, col);
-    if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS)
-        return precedenceTable[row][col];
+    if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS){
+    	if(stackTopTok.data.s != NULL)
+    		free(stackTopTok.data.s);    
+		return precedenceTable[row][col];
+	}
     else {
+    	if(stackTopTok.data.s != NULL)
+    		free(stackTopTok.data.s); 
         //index out of bounds
         return '-';
     }
@@ -215,7 +220,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 		s = sLInit(TOK_EOL, followingToken);  // followingToken == bottom of stack
 
     TToken get      = getToken(f, STG);                // token got from scanner
-    //printf("First token read in psa: %d\n", get.type); 
     TToken ter      = highestTerminal(s);   // highest terminal in stack
     char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
     string toReduce;    // string that has to be reduced
@@ -234,7 +238,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 				return 0;	// 0 means error == 0 E chars was found
             }
         }
-        
+               	
 		sPrintStack(s);
         switch(toDo){  
                  
