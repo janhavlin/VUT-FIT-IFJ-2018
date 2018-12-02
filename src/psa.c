@@ -400,7 +400,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     (!strcmp(get.data.s, "then"))) ) || (get.type == TOK_EOL) ){   // end of expression was found
 					
 					if(s->top == s->first->next){
-						sLDelete(s);
+						
 		                returnToken(get);
 		                psaCntr++;
 		                sLPop(s);
@@ -423,6 +423,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
         }
        
     }
+    sLDelete(s);
 	return Ecount-1;
 }
 
