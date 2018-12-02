@@ -272,13 +272,13 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     switch(ruleGet){
                         // rule 0.
                         case ADD_RULE:          // +
-                              //  genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 					    	    printf("Generuji '+' s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 1.
                         case SUB_RULE:          // -
-                                // genSUB(psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genSUB(psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '-' s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
                             break;
 
@@ -296,74 +296,74 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         
                         // rule 4.
                         case MUL_RULE:          // *
-                                // genMUL(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genMul(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '*' s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 5.    
                         case DIV_RULE:          // :
-                                //genDIV(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genDiv(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji ':' s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 6.    
                         case LT_RULE:          // <
-                             //   genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '<' s E%d = E%d < E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 7. 
                         case GT_RULE:          // >
-                            //    genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '>' s E%d = E%d > E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 8.
                         case LEQ_RULE:          // <=
-                             //   genLEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genLEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '<=' s E%d = E%d <= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 9.
                         case GEQ_RULE:          // >=
-                          //      genGEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genGEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '>=' s E%d = E%d >= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 10.
                         case EQ_RULE:          // ==
-                              //  genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '==' s E%d = E%d == E%d \n",Ecount, ESecond, EFirst);
                             break;                  
 
                         // rule 11.
                         case NEQ_RULE:          // !=
-                             //   genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
+                                genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile);
 						        printf("Generuji '!=' s E%d = E%d != E%d \n",Ecount, ESecond, EFirst);
                             break; 
 
                         // rule 12.
                         case ID_RULE:           // ID
-                            //    genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                                 printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         // rule 13.                    
                         case INT_RULE:          // int
                                 printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
-                            //    genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         // rule 14.
                         case FLOAT_RULE:        // float
                                 printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
-                             //   genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
 
                         // rule 15.
                         case STRING_RULE:       // string
 	                          	printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
-	                    	//	genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
+	                    	    genE(instrList, psaCntr, Ecount, IDKonst, inWhile);
                             break;
                     }
 
