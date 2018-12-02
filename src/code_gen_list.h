@@ -19,6 +19,15 @@
 #include <stdbool.h>
 #include "ifj_error.h"
 
+#define FUN_LENGTH "LABEL $$length\n\
+DEFVAR LF@&1type\n\
+TYPE LF@&1type LF@&1\n\
+JUMPIFEQ $$lengthcmp LF@&1type string@string\n\
+EXIT int@4\n\
+LABEL $$lengthcmp\n\
+STRLEN LF@&RETVAL LF@&1\n\
+RETURN\n"
+
 #define ADRCAT(adr, var1, var2) (adr.val.s = getStr(2, var1, var2), adr)
 
 #define ADRNIL(adr)      (adr.type = ADRTYPE_NIL, adr)
@@ -30,7 +39,7 @@
 #define ADRFLT(adr, var) (  (   adr.val.f = var,                        \
                                 (adr.type = ADRTYPE_FLOAT, adr)   )  )
 
-#define ADRSTR(adr, var) (  (   adr.val.s = getStr(1, var),             \
+#define ADRSTR(adr, var) (  (   adr.val.s = getIfjCodeStr(var),             \
                                 (adr.type = ADRTYPE_STRING, adr)   )  )
 
 #define ADRBOOL(adr, var) (  (   adr.val.s = getStr(1, var),             \
@@ -58,6 +67,7 @@ typedef enum {      // Adresses
     OP_CONCAT,      // 3
     OP_PUSHFRAME,   // 0
     OP_CREATEFRAME, // 0
+    OP_POPFRAME,    // 0
     OP_CALL,        // 1
     OP_ADD,         // 3
     OP_SUB,         // 3
@@ -65,11 +75,13 @@ typedef enum {      // Adresses
     OP_DIV,         // 3
     OP_LT,          // 3
     OP_GT,          // 3
-    OP_LE,          // 3
-    OP_GE,          // 3
+    OP_LEQ,         // 3
+    OP_GEQ,         // 3
     OP_EQ,          // 3
     OP_NEQ,         // 3
-    OP_NOT          // 2 TODO: Add NOT to .c
+    OP_NOT,         // 2 TODO: Add NOT to .c
+    OP_WRITE,       // 1
+    OP_READ         // 1
 } TOperation;
 
 typedef enum {
@@ -123,6 +135,7 @@ void ILPostActInsert (TInstrList *L, TInst inst);
 void ILPreActFunInsert (TInstrList *L, TInst inst);
 void ILPrintAllInst(TInstrList L);
 char *getStr(int n, ...);
+char *getIfjCodeStr(char *s);
 TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3);
 
 #endif
