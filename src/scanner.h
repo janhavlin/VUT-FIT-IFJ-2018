@@ -80,7 +80,6 @@ typedef enum {
     S_GREATER,
     S_NOT,
     S_ASSIGN,
-    S_EOL,
     S_COMMENT,
     S_COMMENT_E,
     S_COMMENT_EB,
@@ -94,8 +93,7 @@ typedef enum {
     S_COMMENT_BLOCK_EE,
     S_COMMENT_BLOCK_EEN,
     S_COMMENT_BLOCK_EEND,
-    S_COMMENT_END_SPACE,
-    S_COMMENT_EOL_CHECK
+    S_COMMENT_END_SPACE
 } state_type;
 
 // TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
