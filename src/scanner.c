@@ -78,7 +78,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
     CHECKERR(errflg, buff, tok);
 
     while(c = getc(f)){
-         /*DEBUG*/printf("CHAR READ: %c\n", c);
+         /*DEBUG*///printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
                 if ((c >= 'a' && c <= 'z') || c == '_'){
@@ -116,7 +116,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     notFirstChar = true;
                 }
                 else if (c == '=' && notFirstChar == false){
-                    printf("GOING TO BLOCK COMMENT\n");
                     state = S_COMMENT_E;
                     notFirstChar = true;
                 }
@@ -435,7 +434,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_STR_ESC:
-                printf("INSIDE STR ESC c: %c\n",c);
                 if (c == 'x'){
                     state = S_STR_XH;
                 }
@@ -456,7 +454,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_STR_XH:
-            printf("INSIDE STR ESC X c: %c\n",c);
                 if (isdigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')){
                     if (isdigit(c))
                         conv_esc = c - '0';
