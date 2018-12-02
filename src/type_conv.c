@@ -27,8 +27,8 @@ int convStrToInt(string str){
 	int dec = 1;
 	int shifter = 0;
 	int type = 0;	// 0- decimal
-			// 1- hexadecimal
-			// 2- octal
+					// 1- hexadecimal
+					// 2- octal
 	
 	// decimal
 	if(str[0] != '0' )

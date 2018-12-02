@@ -113,6 +113,18 @@ void isCorrect(char *item1, char *op, char *item2){
 				return;
 			}
 		}
+		
+		if((!strcmp(item1, "\"text\"")) || (!strcmp(item1, "vs"))){
+			if(!strcmp(op, "-") || !strcmp(op, "*") || !strcmp(op, "/")){
+				printf("$ 4\n\n");
+				return;
+			}
+			else{
+				printf("$ 0\n\n");
+				return;
+			}
+		}
+			
 		else{
 			printf("$ 0\n\n");
 			return;
@@ -120,8 +132,9 @@ void isCorrect(char *item1, char *op, char *item2){
 	}
 
 }
-									
+						
 int main(){
+int cntr = 0;
 	for(int i = 0; i < ITEM_AMOUNT; i++){
 		for(int x = 0; x < OP_AMOUNT; x++ ){
 			for(int y = 0; y < ITEM_AMOUNT; y++){
