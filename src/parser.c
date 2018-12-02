@@ -176,9 +176,9 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-							(globalInfo->psaCounter)++;
-							//genIfCond(ifNumber, E);
+							genIfCond(&globalInfo->instructions, ifNumber, globalInfo->psaCounter, E, globalInfo->inWhile);
 							printf("genIfCond(%d,%u)\n", ifNumber, E);
+							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
 							**tokenPP = getToken(globalInfo->file, globalInfo->GT);
@@ -190,7 +190,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process else
 							if (telse(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							//genIfElse(ifNumber);
+							genIfElse(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							printf("genIfElse(%d)\n", ifNumber);
 							//process eol
 							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
@@ -198,7 +198,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							//genIfEnd(ifNumber);
+							genIfEnd(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							printf("genIfEnd(%d)\n", ifNumber);
 							return PROGRAM_OK;
 						} else if (strcmp(keyW, "while") == 0) {
@@ -209,9 +209,8 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							unsigned whileNumber = (globalInfo->whileCounter)++;
 							bool topLevelWhile = !globalInfo->inWhile;
 							globalInfo->inWhile = true;
-							//genWhileBegin(whileNumber);
-							printf("genWhileBegin(%d)\n", whileNumber);
 							genWhileBegin(globalInfo->instructions, whileNumber, globalInfo->inWhile);
+							printf("genWhileBegin(%d)\n", whileNumber);
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "do", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
