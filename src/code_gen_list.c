@@ -53,7 +53,15 @@ void disposeInstr(TInst *inst){
         case OP_JUMPIFNEQ:
         case OP_CONCAT:
         case OP_ADD:
+        case OP_SUB:
+        case OP_MUL:
+        case OP_DIV:
         case OP_LT:
+        case OP_GT:
+        case OP_LE:
+        case OP_GE:
+        case OP_EQ:
+        case OP_NEQ:
             disposeAdr(&(inst->adr1));
             disposeAdr(&(inst->adr2));
             disposeAdr(&(inst->adr3));
@@ -222,11 +230,19 @@ void printInst(TInst inst){
         case OP_INT2FLOAT: printf("INT2FLOAT "); break;
         case OP_JUMP: printf("JUMP "); break;
         case OP_CONCAT: printf("CONCAT "); break;
-        case OP_ADD: printf("ADD "); break;
-        case OP_LT: printf("LT "); break;
         case OP_CREATEFRAME: printf("CREATEFRAME "); break;
         case OP_PUSHFRAME: printf("PUSHFRAME "); break;
         case OP_CALL: printf("CALL "); break;
+        case OP_ADD: printf("ADD "); break;
+        case OP_SUB: printf("SUB "); break;
+        case OP_MUL: printf("MUL "); break;
+        case OP_DIV: printf("DIV "); break;
+        case OP_LT: printf("LT "); break;
+        case OP_GT: printf("GT "); break;
+        case OP_LE: printf("LE "); break;
+        case OP_GE: printf("GE "); break;
+        case OP_EQ: printf("EQ "); break;
+        case OP_NEQ: printf("NEQ "); break;
         break;
     }
 
@@ -323,7 +339,15 @@ TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3){
         case OP_JUMPIFNEQ:
         case OP_CONCAT:
         case OP_ADD:
+        case OP_SUB:
+        case OP_MUL:
+        case OP_DIV:
         case OP_LT:
+        case OP_GT:
+        case OP_LE:
+        case OP_GE:
+        case OP_EQ:
+        case OP_NEQ:
             inst.adr1 = adr1;
             inst.adr2 = adr2;
             inst.adr3 = adr3;

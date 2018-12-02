@@ -89,7 +89,7 @@ void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned res, 
     inst = getInst(OP_EXIT,     ADRINT(adr1, 4),            undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
-    // While condition
+    // Condition
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "end"),   ADRVAR(adr2, EStr),     ADRBOOL(adr3, "false"));ILInsertLast(L, inst, inWhile);
 
     free(whileStr);
@@ -166,42 +166,135 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
     char *E2type = getStr(5, "psa", psaStr, "E", var2Str, "type");  
     char *lab = getStr(4, "psa", psaStr, "E", resStr);
 
+    // Define result variable, operand1 type and operand2 type variable
     inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E3),                   undef,                  undef);                 ILPostActInsert(L, inst);
     inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E1type),               undef,                  undef);                 ILPostActInsert(L, inst);
     inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E2type),               undef,                  undef);                 ILPostActInsert(L, inst);
 
+    // Get types of operands
     inst = getInst(OP_TYPE,         ADRVAR(adr1, E1type),               ADRVAR(adr2, E1),       undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_TYPE,         ADRVAR(adr1, E2type),               ADRVAR(adr2, E2),       undef);                 ILInsertLast(L, inst, inWhile);
-   
+    
+    // If types are equal, skip to typeeq; if one of them is float, skip to conversion; else exit
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "typeeq"),        ADRVAR(adr2, E1type),   ADRVAR(adr3, E2type));  ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "floatfirst"),    ADRVAR(adr2, E1type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "floatsecond"),   ADRVAR(adr2, E2type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
 
+    // Exit 4
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "exit"),          undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_EXIT,         ADRINT(adr1, 4),                    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    // First operand is float, if second is integer, convert it to float and skip to addition, else exit
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatfirst"),    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E2type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E2),                   ADRVAR(adr2, E2),       undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "add"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    // Second operand is float, if first is integer, convert it to float and skip to addition, else exit
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatsecond"),   undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E1type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E1),                   ADRVAR(adr2, E1),       undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "add"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    // Types are equal: if they are both float or integer, add them; if they are strings, cat them; else exit
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "typeeq"),        undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "add"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "add"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "cat"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "string"));ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_EXIT,         ADRINT(adr1, 4),                    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    // Concatenates strings and finishes
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "cat"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_CONCAT,       ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "end"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
+    // Adds variables and finishes
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "add"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
     inst = getInst(OP_ADD,          ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "end"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    free(psaStr);
+    free(resStr);
+    free(var1Str);
+    free(var2Str);
+    free(E1);
+    free(E2);
+    free(E3);
+    free(E1type);
+    free(E2type);
+    free(lab);
+}
+
+void genCmp(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
+    TInst inst;
+    TAdr adr1, adr2, adr3, undef;
+    
+    char *psaStr = convIntToStr(psa);
+    char *resStr = convIntToStr(res);
+    char *var1Str = convIntToStr(var1);
+    char *var2Str = convIntToStr(var2);
+    char *E1 = getStr(4, "psa", psaStr, "E", var1Str);  
+    char *E2 = getStr(4, "psa", psaStr, "E", var2Str);  
+    char *E3 = getStr(4, "psa", psaStr, "E", resStr);  
+    char *E1type = getStr(5, "psa", psaStr, "E", var1Str, "type");  
+    char *E2type = getStr(5, "psa", psaStr, "E", var2Str, "type");  
+    char *lab = getStr(4, "psa", psaStr, "E", resStr);
+
+     // Define result variable, operand1 type and operand2 type variable
+    inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E3),                   undef,                  undef);                 ILPostActInsert(L, inst);
+    inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E1type),               undef,                  undef);                 ILPostActInsert(L, inst);
+    inst = getInst(OP_DEFVAR,       ADRVAR(adr1, E2type),               undef,                  undef);                 ILPostActInsert(L, inst);
+
+    // Get types of operands
+    inst = getInst(OP_TYPE,         ADRVAR(adr1, E1type),               ADRVAR(adr2, E1),       undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_TYPE,         ADRVAR(adr1, E2type),               ADRVAR(adr2, E2),       undef);                 ILInsertLast(L, inst, inWhile);
+    
+    // If types are equal, skip to typeeq; if one of them is float, skip to conversion; else exit
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "typeeq"),        ADRVAR(adr2, E1type),   ADRVAR(adr3, E2type));  ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "floatfirst"),    ADRVAR(adr2, E1type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "floatsecond"),   ADRVAR(adr2, E2type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
+
+    // Exit 4
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "exit"),          undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_EXIT,         ADRINT(adr1, 4),                    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    // First operand is float, if second is integer, convert it to float and skip to addition, else exit
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatfirst"),    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E2type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E2),                   ADRVAR(adr2, E2),       undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "cmp"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    // Second operand is float, if first is integer, convert it to float and skip to addition, else exit
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "floatsecond"),   undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFNEQ,    ADRLAB(adr1, lab, "exit"),          ADRVAR(adr2, E1type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_INT2FLOAT,    ADRVAR(adr1, E1),                   ADRVAR(adr2, E1),       undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "cmp"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    // Types are equal: if they are both float or integer or strings, cmp them; else exit
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "typeeq"),        undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "cmp"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "int"));   ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "cmp"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "float")); ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_JUMPIFEQ,     ADRLAB(adr1, lab, "cmp"),           ADRVAR(adr2, E1type),   ADRSTR(adr3, "string"));ILInsertLast(L, inst, inWhile);
+    inst = getInst(OP_EXIT,         ADRINT(adr1, 4),                    undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+
+    // Compares variables and finishes
+    inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "cmp"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
+    switch (op){
+        case OP_LT:
+            inst = getInst(OP_LT,   ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
+            break;
+        case OP_GT:
+            inst = getInst(OP_GT,   ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
+            break;
+        case OP_LE:
+            inst = getInst(OP_GT,   ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
+            inst = getInst(OP_NOT,  ADRVAR(adr1, E3),                   ADRVAR(adr1, E3),       undef);                 ILInsertLast(L, inst, inWhile);
+            break;
+        case OP_GE:
+            inst = getInst(OP_LT,   ADRVAR(adr1, E3),                   ADRVAR(adr2, E1),       ADRVAR(adr3, E2));      ILInsertLast(L, inst, inWhile);
+            inst = getInst(OP_NOT,  ADRVAR(adr1, E3),                   ADRVAR(adr1, E3),       undef);                 ILInsertLast(L, inst, inWhile);
+            break;
+    }
 
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "end"),           undef,                  undef);                 ILInsertLast(L, inst, inWhile);
 
@@ -218,34 +311,18 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
 }
 
 void genLT(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
-    TInst inst;
-    TAdr adr1, adr2, adr3, undef;
-    
-    char *psaStr = convIntToStr(psa);
-    char *resStr = convIntToStr(res);
-    char *var1Str = convIntToStr(var1);
-    char *var2Str = convIntToStr(var2);
-    char *E1 = getStr(4, "psa", psaStr, "E", var1Str);  
-    char *E2 = getStr(4, "psa", psaStr, "E", var2Str);  
-    char *E3 = getStr(4, "psa", psaStr, "E", resStr);  
-    char *E1type = getStr(5, "psa", psaStr, "E", var1Str, "type");  
-    char *E2type = getStr(5, "psa", psaStr, "E", var2Str, "type");  
-    char *lab = getStr(4, "psa", psaStr, "E", resStr);
-
-    inst = getInst(OP_DEFVAR, ADRVAR(adr1, E3), undef, undef); ILPostActInsert(L, inst);
-    inst = getInst(OP_LT, ADRVAR(adr1, E3), ADRVAR(adr2, E1), ADRVAR(adr3, E2)); ILInsertLast(L, inst, inWhile);
-    
-    free(psaStr);
-    free(resStr);
-    free(var1Str);
-    free(var2Str);
-    free(E1);
-    free(E2);
-    free(E3);
-    free(E1type);
-    free(E2type);
-    free(lab);
+    genCmp(OP_LT, L, psa, res, var1, var2, inWhile);
 }
+void genGT(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
+    genCmp(OP_GT, L, psa, res, var1, var2, inWhile);
+}
+void genLE(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
+    genCmp(OP_LE, L, psa, res, var1, var2, inWhile);
+}
+void genGE(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
+    genCmp(OP_GE, L, psa, res, var1, var2, inWhile);
+}
+
 /*
 int main(){
     TInstrList L;

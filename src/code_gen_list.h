@@ -60,7 +60,16 @@ typedef enum {      // Adresses
     OP_CREATEFRAME, // 0
     OP_CALL,        // 1
     OP_ADD,         // 3
-    OP_LT           // 3
+    OP_SUB,         // 3
+    OP_MUL,         // 3
+    OP_DIV,         // 3
+    OP_LT,          // 3
+    OP_GT,          // 3
+    OP_LE,          // 3
+    OP_GE,          // 3
+    OP_EQ,          // 3
+    OP_NEQ,         // 3
+    OP_NOT          // 2 TODO: Add NOT to .c
 } TOperation;
 
 typedef enum {
