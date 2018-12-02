@@ -1,3 +1,15 @@
+/**
+	file name:		stack_list.c
+	project:		VUT-FIT-IFJ-2018
+	created:		27.10.2018
+	last modified:	27.10.2018
+	
+	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+	modifications:	
+	
+	description:	Stack based on list, used in precedence syn. analyse 
+*/
+
 #include "stack_list.h"
 
 /*

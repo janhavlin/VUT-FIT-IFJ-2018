@@ -1,3 +1,15 @@
+/**
+	file name:		type_conv.c
+	project:		VUT-FIT-IFJ-2018
+	created:		20.10.2018
+	last modified:	20.10.2018
+	
+	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+	modifications:	
+	
+	description:	Converting types to different types
+*/
+
 #include <stdbool.h>
 #include <math.h>
 #include <ctype.h>
