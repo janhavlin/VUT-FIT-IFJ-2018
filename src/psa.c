@@ -38,6 +38,7 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
 
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
+   // printf("ROW: %d, COL: %d\n\n", row, col);
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS)
         return precedenceTable[row][col];
     else {
@@ -69,7 +70,10 @@ int getIndex(TToken token) {
         case TOK_STRING:return 12;
         case TOK_KEY:   if(strcmp(token.data.s, "then") == 0 || strcmp(token.data.s, "do") == 0) {
                            return 13;//continue to case $
-                        } else 
+                        }
+                        else if(strcmp(token.data.s, "nil") == 0)
+							return 12;
+                        else 
                             break; 
         case TOK_EOL:   //$ symbol
                         return 13;
@@ -181,7 +185,12 @@ TAdr idValGet(TToken get){
 		result.val.s = get.data.s;
 		result.type = ADRTYPE_STRING;
 	}
-
+	
+	else if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) ){
+		result.val.s = get.data.s;
+		result.type = ADRTYPE_STRING;
+	}
+	
 	return result;
 }
 
@@ -377,6 +386,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 's':
                 sPlaceShiftChar( s );
                 IDKonst = idValGet(get);
+                if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) )
+                	get.type = TOK_STRING;
 				sLPush(s, tokToStr(get), get.type);
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
@@ -387,6 +398,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             // equal
             case 'e':
                 IDKonst = idValGet(get);
+                if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) )
+                	get.type = TOK_STRING;
                 sLPush(s, tokToStr(get), get.type);
                 get = getToken(f, STG);
 				toDo = lookInPrecedenceTable( highestTerminal(s), get );
@@ -398,9 +411,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 'X':
                 if( ((get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then"))) ) || (get.type == TOK_EOL) ){   // end of expression was found
-					
+
 					if(s->top == s->first->next){
-						
 		                returnToken(get);
 		                psaCntr++;
 		                sLPop(s);

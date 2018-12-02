@@ -242,6 +242,13 @@ string tokToStr(TToken tok){
 
 		case TOK_STRING:
 			return "TOK_STRING";
+		
+		case TOK_KEY:
+			if(!strcmp(tok.data.s, "nil"))
+				return "TOK_STRING";
+						
+			else
+				return tok.data.s;
 
 		default:
 			return tok.data.s;
