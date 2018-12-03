@@ -2,7 +2,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+3) then
+while(3+3) do
    print vi
 end
 c = 3+3
@@ -29,7 +29,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+1.68) then
+while(3+1.68) do
    print vi
 end
 c = 3+1.68
@@ -56,7 +56,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+nil) then
+while(3+nil) do
    print vi
 end
 c = 3+nil
@@ -83,7 +83,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+vi) then
+while(3+vi) do
    print vi
 end
 c = 3+vi
@@ -110,7 +110,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+vs) then
+while(3+vs) do
    print vi
 end
 c = 3+vs
@@ -137,7 +137,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3+vnil) then
+while(3+vnil) do
    print vi
 end
 c = 3+vnil
@@ -164,7 +164,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3-1.68) then
+while(3-1.68) do
    print vi
 end
 c = 3-1.68
@@ -191,7 +191,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3-"text") then
+while(3-"text") do
    print vi
 end
 c = 3-"text"
@@ -218,7 +218,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3-vi) then
+while(3-vi) do
    print vi
 end
 c = 3-vi
@@ -245,7 +245,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3-vf) then
+while(3-vf) do
    print vi
 end
 c = 3-vf
@@ -272,7 +272,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3-vnil) then
+while(3-vnil) do
    print vi
 end
 c = 3-vnil
@@ -299,7 +299,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3*3) then
+while(3*3) do
    print vi
 end
 c = 3*3
@@ -326,7 +326,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3*"text") then
+while(3*"text") do
    print vi
 end
 c = 3*"text"
@@ -353,7 +353,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3*nil) then
+while(3*nil) do
    print vi
 end
 c = 3*nil
@@ -380,7 +380,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3*vf) then
+while(3*vf) do
    print vi
 end
 c = 3*vf
@@ -407,7 +407,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3*vs) then
+while(3*vs) do
    print vi
 end
 c = 3*vs
@@ -434,7 +434,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/3) then
+while(3/3) do
    print vi
 end
 c = 3/3
@@ -461,7 +461,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/1.68) then
+while(3/1.68) do
    print vi
 end
 c = 3/1.68
@@ -488,7 +488,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/nil) then
+while(3/nil) do
    print vi
 end
 c = 3/nil
@@ -515,7 +515,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/vi) then
+while(3/vi) do
    print vi
 end
 c = 3/vi
@@ -542,7 +542,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/vs) then
+while(3/vs) do
    print vi
 end
 c = 3/vs
@@ -569,7 +569,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3/vnil) then
+while(3/vnil) do
    print vi
 end
 c = 3/vnil
@@ -599,7 +599,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<1.68) then
+while(3<1.68) do
    print vi
 end
 c = 3<1.68
@@ -629,7 +629,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<"text") then
+while(3<"text") do
    print vi
 end
 c = 3<"text"
@@ -656,7 +656,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<vi) then
+while(3<vi) do
    print vi
 end
 c = 3<3
@@ -686,7 +686,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<vf) then
+while(3<vf) do
    print vi
 end
 if(3<1.68) then 
@@ -716,7 +716,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<vnil) then
+while(3<vnil) do
    print vi
 end
 c = 3<vnil
@@ -743,7 +743,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<=3) then
+while(3<=3) do
    print vi
 end
 if(3<=3) then 
@@ -776,7 +776,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<="text") then
+while(3<="text") do
    print vi
 end
 c = 3<="text"
@@ -803,7 +803,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<=nil) then
+while(3<=nil) do
    print vi
 end
 c = 3<=nil
@@ -833,7 +833,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<=vf) then
+while(3<=vf) do
    print vi
 end
 c = 3<=1.68
@@ -863,7 +863,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3<=vs) then
+while(3<=vs) do
    print vi
 end
 c = 3<=vs
@@ -890,7 +890,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>3) then
+while(3>3) do
    print vi
 end
 c = 3>3
@@ -920,7 +920,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>1.68) then
+while(3>1.68) do
    print vi
 end
 if(3>1.68) then 
@@ -950,7 +950,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>nil) then
+while(3>nil) do
    print vi
 end
 c = 3>nil
@@ -977,7 +977,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>vi) then
+while(3>vi) do
    print vi
 end
 if(3>3) then 
@@ -1010,7 +1010,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>vs) then
+while(3>vs) do
    print vi
 end
 c = 3>vs
@@ -1037,7 +1037,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>vnil) then
+while(3>vnil) do
    print vi
 end
 c = 3>vnil
@@ -1067,7 +1067,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>=1.68) then
+while(3>=1.68) do
    print vi
 end
 c = 3>=1.68
@@ -1097,7 +1097,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>="text") then
+while(3>="text") do
    print vi
 end
 c = 3>="text"
@@ -1124,7 +1124,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>=vi) then
+while(3>=vi) do
    print vi
 end
 c = 3>=3
@@ -1154,7 +1154,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>=vf) then
+while(3>=vf) do
    print vi
 end
 if(3>=1.68) then 
@@ -1184,7 +1184,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3>=vnil) then
+while(3>=vnil) do
    print vi
 end
 c = 3>=vnil
@@ -1211,7 +1211,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3==3) then
+while(3==3) do
    print vi
 end
 if(3==3) then 
@@ -1244,7 +1244,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3=="text") then
+while(3=="text") do
    print vi
 end
 c = 3=="text"
@@ -1274,7 +1274,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3==nil) then
+while(3==nil) do
    print vi
 end
 if(3==nil) then 
@@ -1307,7 +1307,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3==vf) then
+while(3==vf) do
    print vi
 end
 c = 3==1.68
@@ -1337,7 +1337,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3==vs) then
+while(3==vs) do
    print vi
 end
 if(3==vs) then 
@@ -1370,7 +1370,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=3) then
+while(3!=3) do
    print vi
 end
 c = 3!=3
@@ -1400,7 +1400,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=1.68) then
+while(3!=1.68) do
    print vi
 end
 if(3!=1.68) then 
@@ -1433,7 +1433,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=nil) then
+while(3!=nil) do
    print vi
 end
 c = 3!=nil
@@ -1463,7 +1463,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=vi) then
+while(3!=vi) do
    print vi
 end
 if(3!=3) then 
@@ -1496,7 +1496,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=vs) then
+while(3!=vs) do
    print vi
 end
 c = 3!=vs
@@ -1526,7 +1526,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(3!=vnil) then
+while(3!=vnil) do
    print vi
 end
 if(3!=vnil) then 
@@ -1556,7 +1556,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68+1.68) then
+while(1.68+1.68) do
    print vi
 end
 c = 1.68+1.68
@@ -1583,7 +1583,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68+"text") then
+while(1.68+"text") do
    print vi
 end
 c = 1.68+"text"
@@ -1610,7 +1610,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68+vi) then
+while(1.68+vi) do
    print vi
 end
 c = 1.68+vi
@@ -1637,7 +1637,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68+vf) then
+while(1.68+vf) do
    print vi
 end
 c = 1.68+vf
@@ -1664,7 +1664,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68+vnil) then
+while(1.68+vnil) do
    print vi
 end
 c = 1.68+vnil
@@ -1691,7 +1691,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68-3) then
+while(1.68-3) do
    print vi
 end
 c = 1.68-3
@@ -1718,7 +1718,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68-"text") then
+while(1.68-"text") do
    print vi
 end
 c = 1.68-"text"
@@ -1745,7 +1745,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68-nil) then
+while(1.68-nil) do
    print vi
 end
 c = 1.68-nil
@@ -1772,7 +1772,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68-vf) then
+while(1.68-vf) do
    print vi
 end
 c = 1.68-vf
@@ -1799,7 +1799,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68-vs) then
+while(1.68-vs) do
    print vi
 end
 c = 1.68-vs
@@ -1826,7 +1826,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*3) then
+while(1.68*3) do
    print vi
 end
 c = 1.68*3
@@ -1853,7 +1853,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*1.68) then
+while(1.68*1.68) do
    print vi
 end
 c = 1.68*1.68
@@ -1880,7 +1880,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*nil) then
+while(1.68*nil) do
    print vi
 end
 c = 1.68*nil
@@ -1907,7 +1907,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*vi) then
+while(1.68*vi) do
    print vi
 end
 c = 1.68*vi
@@ -1934,7 +1934,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*vs) then
+while(1.68*vs) do
    print vi
 end
 c = 1.68*vs
@@ -1961,7 +1961,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68*vnil) then
+while(1.68*vnil) do
    print vi
 end
 c = 1.68*vnil
@@ -1988,7 +1988,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68/1.68) then
+while(1.68/1.68) do
    print vi
 end
 c = 1.68/1.68
@@ -2015,7 +2015,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68/"text") then
+while(1.68/"text") do
    print vi
 end
 c = 1.68/"text"
@@ -2042,7 +2042,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68/vi) then
+while(1.68/vi) do
    print vi
 end
 c = 1.68/vi
@@ -2069,7 +2069,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68/vf) then
+while(1.68/vf) do
    print vi
 end
 c = 1.68/vf
@@ -2096,7 +2096,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68/vnil) then
+while(1.68/vnil) do
    print vi
 end
 c = 1.68/vnil
@@ -2123,7 +2123,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<3) then
+while(1.68<3) do
    print vi
 end
 if(1.68<3) then 
@@ -2156,7 +2156,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<"text") then
+while(1.68<"text") do
    print vi
 end
 c = 1.68<"text"
@@ -2183,7 +2183,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<nil) then
+while(1.68<nil) do
    print vi
 end
 c = 1.68<nil
@@ -2213,7 +2213,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<vf) then
+while(1.68<vf) do
    print vi
 end
 c = 1.68<1.68
@@ -2243,7 +2243,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<vs) then
+while(1.68<vs) do
    print vi
 end
 c = 1.68<vs
@@ -2270,7 +2270,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=3) then
+while(1.68<=3) do
    print vi
 end
 c = 1.68<=3
@@ -2300,7 +2300,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=1.68) then
+while(1.68<=1.68) do
    print vi
 end
 if(1.68<=1.68) then 
@@ -2330,7 +2330,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=nil) then
+while(1.68<=nil) do
    print vi
 end
 c = 1.68<=nil
@@ -2357,7 +2357,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=vi) then
+while(1.68<=vi) do
    print vi
 end
 if(1.68<=3) then 
@@ -2390,7 +2390,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=vs) then
+while(1.68<=vs) do
    print vi
 end
 c = 1.68<=vs
@@ -2417,7 +2417,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68<=vnil) then
+while(1.68<=vnil) do
    print vi
 end
 c = 1.68<=vnil
@@ -2447,7 +2447,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>1.68) then
+while(1.68>1.68) do
    print vi
 end
 c = 1.68>1.68
@@ -2477,7 +2477,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>"text") then
+while(1.68>"text") do
    print vi
 end
 c = 1.68>"text"
@@ -2504,7 +2504,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>vi) then
+while(1.68>vi) do
    print vi
 end
 c = 1.68>3
@@ -2534,7 +2534,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>vf) then
+while(1.68>vf) do
    print vi
 end
 if(1.68>1.68) then 
@@ -2564,7 +2564,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>vnil) then
+while(1.68>vnil) do
    print vi
 end
 c = 1.68>vnil
@@ -2591,7 +2591,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>=3) then
+while(1.68>=3) do
    print vi
 end
 if(1.68>=3) then 
@@ -2624,7 +2624,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>="text") then
+while(1.68>="text") do
    print vi
 end
 c = 1.68>="text"
@@ -2651,7 +2651,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>=nil) then
+while(1.68>=nil) do
    print vi
 end
 c = 1.68>=nil
@@ -2681,7 +2681,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>=vf) then
+while(1.68>=vf) do
    print vi
 end
 c = 1.68>=1.68
@@ -2711,7 +2711,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68>=vs) then
+while(1.68>=vs) do
    print vi
 end
 c = 1.68>=vs
@@ -2738,7 +2738,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==3) then
+while(1.68==3) do
    print vi
 end
 c = 1.68==3
@@ -2768,7 +2768,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==1.68) then
+while(1.68==1.68) do
    print vi
 end
 if(1.68==1.68) then 
@@ -2801,7 +2801,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==nil) then
+while(1.68==nil) do
    print vi
 end
 c = 1.68==nil
@@ -2831,7 +2831,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==vi) then
+while(1.68==vi) do
    print vi
 end
 if(1.68==3) then 
@@ -2864,7 +2864,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==vs) then
+while(1.68==vs) do
    print vi
 end
 c = 1.68==vs
@@ -2894,7 +2894,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68==vnil) then
+while(1.68==vnil) do
    print vi
 end
 if(1.68==vnil) then 
@@ -2927,7 +2927,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68!=1.68) then
+while(1.68!=1.68) do
    print vi
 end
 c = 1.68!=1.68
@@ -2957,7 +2957,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68!="text") then
+while(1.68!="text") do
    print vi
 end
 if(1.68!="text") then 
@@ -2990,7 +2990,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68!=vi) then
+while(1.68!=vi) do
    print vi
 end
 c = 1.68!=3
@@ -3020,7 +3020,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68!=vf) then
+while(1.68!=vf) do
    print vi
 end
 if(1.68!=1.68) then 
@@ -3053,7 +3053,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(1.68!=vnil) then
+while(1.68!=vnil) do
    print vi
 end
 c = 1.68!=vnil
@@ -3083,7 +3083,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"+3) then
+while("text"+3) do
    print vi
 end
 c = "text"+3
@@ -3110,7 +3110,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"+"text") then
+while("text"+"text") do
    print vi
 end
 c = "text"+"text"
@@ -3137,7 +3137,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"+nil) then
+while("text"+nil) do
    print vi
 end
 c = "text"+nil
@@ -3164,7 +3164,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"+vf) then
+while("text"+vf) do
    print vi
 end
 c = "text"+vf
@@ -3191,7 +3191,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"+vs) then
+while("text"+vs) do
    print vi
 end
 c = "text"+"text"
@@ -3218,7 +3218,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-3) then
+while("text"-3) do
    print vi
 end
 c = "text"-3
@@ -3245,7 +3245,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-1.68) then
+while("text"-1.68) do
    print vi
 end
 c = "text"-1.68
@@ -3272,7 +3272,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-nil) then
+while("text"-nil) do
    print vi
 end
 c = "text"-nil
@@ -3299,7 +3299,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-vi) then
+while("text"-vi) do
    print vi
 end
 c = "text"-vi
@@ -3326,7 +3326,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-vs) then
+while("text"-vs) do
    print vi
 end
 c = "text"-vs
@@ -3353,7 +3353,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"-vnil) then
+while("text"-vnil) do
    print vi
 end
 c = "text"-vnil
@@ -3380,7 +3380,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"*1.68) then
+while("text"*1.68) do
    print vi
 end
 c = "text"*1.68
@@ -3407,7 +3407,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"*"text") then
+while("text"*"text") do
    print vi
 end
 c = "text"*"text"
@@ -3434,7 +3434,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"*vi) then
+while("text"*vi) do
    print vi
 end
 c = "text"*vi
@@ -3461,7 +3461,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"*vf) then
+while("text"*vf) do
    print vi
 end
 c = "text"*vf
@@ -3488,7 +3488,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"*vnil) then
+while("text"*vnil) do
    print vi
 end
 c = "text"*vnil
@@ -3515,7 +3515,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"/3) then
+while("text"/3) do
    print vi
 end
 c = "text"/3
@@ -3542,7 +3542,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"/"text") then
+while("text"/"text") do
    print vi
 end
 c = "text"/"text"
@@ -3569,7 +3569,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"/nil) then
+while("text"/nil) do
    print vi
 end
 c = "text"/nil
@@ -3596,7 +3596,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"/vf) then
+while("text"/vf) do
    print vi
 end
 c = "text"/vf
@@ -3623,7 +3623,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"/vs) then
+while("text"/vs) do
    print vi
 end
 c = "text"/vs
@@ -3650,7 +3650,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<3) then
+while("text"<3) do
    print vi
 end
 c = "text"<3
@@ -3677,7 +3677,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<1.68) then
+while("text"<1.68) do
    print vi
 end
 c = "text"<1.68
@@ -3707,7 +3707,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<nil) then
+while("text"<nil) do
    print vi
 end
 c = "text"<nil
@@ -3734,7 +3734,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<vi) then
+while("text"<vi) do
    print vi
 end
 c = "text"<vi
@@ -3761,7 +3761,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<vs) then
+while("text"<vs) do
    print vi
 end
 c = "text"<"text"
@@ -3791,7 +3791,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<vnil) then
+while("text"<vnil) do
    print vi
 end
 c = "text"<vnil
@@ -3818,7 +3818,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<=1.68) then
+while("text"<=1.68) do
    print vi
 end
 c = "text"<=1.68
@@ -3845,7 +3845,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<="text") then
+while("text"<="text") do
    print vi
 end
 if("text"<="text") then 
@@ -3875,7 +3875,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<=vi) then
+while("text"<=vi) do
    print vi
 end
 c = "text"<=vi
@@ -3902,7 +3902,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<=vf) then
+while("text"<=vf) do
    print vi
 end
 c = "text"<=vf
@@ -3932,7 +3932,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"<=vnil) then
+while("text"<=vnil) do
    print vi
 end
 c = "text"<=vnil
@@ -3959,7 +3959,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">3) then
+while("text">3) do
    print vi
 end
 c = "text">3
@@ -3986,7 +3986,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">"text") then
+while("text">"text") do
    print vi
 end
 c = "text">"text"
@@ -4016,7 +4016,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">nil) then
+while("text">nil) do
    print vi
 end
 c = "text">nil
@@ -4043,7 +4043,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">vf) then
+while("text">vf) do
    print vi
 end
 c = "text">vf
@@ -4070,7 +4070,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">vs) then
+while("text">vs) do
    print vi
 end
 if("text">"text") then 
@@ -4100,7 +4100,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=3) then
+while("text">=3) do
    print vi
 end
 c = "text">=3
@@ -4127,7 +4127,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=1.68) then
+while("text">=1.68) do
    print vi
 end
 c = "text">=1.68
@@ -4157,7 +4157,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=nil) then
+while("text">=nil) do
    print vi
 end
 c = "text">=nil
@@ -4184,7 +4184,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=vi) then
+while("text">=vi) do
    print vi
 end
 c = "text">=vi
@@ -4211,7 +4211,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=vs) then
+while("text">=vs) do
    print vi
 end
 c = "text">="text"
@@ -4241,7 +4241,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text">=vnil) then
+while("text">=vnil) do
    print vi
 end
 c = "text">=vnil
@@ -4271,7 +4271,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"==1.68) then
+while("text"==1.68) do
    print vi
 end
 c = "text"==1.68
@@ -4301,7 +4301,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"=="text") then
+while("text"=="text") do
    print vi
 end
 if("text"=="text") then 
@@ -4334,7 +4334,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"==vi) then
+while("text"==vi) do
    print vi
 end
 c = "text"==vi
@@ -4364,7 +4364,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"==vf) then
+while("text"==vf) do
    print vi
 end
 if("text"==vf) then 
@@ -4397,7 +4397,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"==vnil) then
+while("text"==vnil) do
    print vi
 end
 c = "text"==vnil
@@ -4427,7 +4427,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"!=3) then
+while("text"!=3) do
    print vi
 end
 if("text"!=3) then 
@@ -4460,7 +4460,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"!="text") then
+while("text"!="text") do
    print vi
 end
 c = "text"!="text"
@@ -4490,7 +4490,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"!=nil) then
+while("text"!=nil) do
    print vi
 end
 if("text"!=nil) then 
@@ -4523,7 +4523,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"!=vf) then
+while("text"!=vf) do
    print vi
 end
 c = "text"!=vf
@@ -4553,7 +4553,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while("text"!=vs) then
+while("text"!=vs) do
    print vi
 end
 if("text"!="text") then 
@@ -4586,7 +4586,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+3) then
+while(nil+3) do
    print vi
 end
 c = nil+3
@@ -4613,7 +4613,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+1.68) then
+while(nil+1.68) do
    print vi
 end
 c = nil+1.68
@@ -4640,7 +4640,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+nil) then
+while(nil+nil) do
    print vi
 end
 c = nil+nil
@@ -4667,7 +4667,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+vi) then
+while(nil+vi) do
    print vi
 end
 c = nil+vi
@@ -4694,7 +4694,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+vs) then
+while(nil+vs) do
    print vi
 end
 c = nil+vs
@@ -4721,7 +4721,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil+vnil) then
+while(nil+vnil) do
    print vi
 end
 c = nil+vnil
@@ -4748,7 +4748,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil-1.68) then
+while(nil-1.68) do
    print vi
 end
 c = nil-1.68
@@ -4775,7 +4775,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil-"text") then
+while(nil-"text") do
    print vi
 end
 c = nil-"text"
@@ -4802,7 +4802,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil-vi) then
+while(nil-vi) do
    print vi
 end
 c = nil-vi
@@ -4829,7 +4829,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil-vf) then
+while(nil-vf) do
    print vi
 end
 c = nil-vf
@@ -4856,7 +4856,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil-vnil) then
+while(nil-vnil) do
    print vi
 end
 c = nil-vnil
@@ -4883,7 +4883,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil*3) then
+while(nil*3) do
    print vi
 end
 c = nil*3
@@ -4910,7 +4910,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil*"text") then
+while(nil*"text") do
    print vi
 end
 c = nil*"text"
@@ -4937,7 +4937,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil*nil) then
+while(nil*nil) do
    print vi
 end
 c = nil*nil
@@ -4964,7 +4964,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil*vf) then
+while(nil*vf) do
    print vi
 end
 c = nil*vf
@@ -4991,7 +4991,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil*vs) then
+while(nil*vs) do
    print vi
 end
 c = nil*vs
@@ -5018,7 +5018,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/3) then
+while(nil/3) do
    print vi
 end
 c = nil/3
@@ -5045,7 +5045,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/1.68) then
+while(nil/1.68) do
    print vi
 end
 c = nil/1.68
@@ -5072,7 +5072,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/nil) then
+while(nil/nil) do
    print vi
 end
 c = nil/nil
@@ -5099,7 +5099,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/vi) then
+while(nil/vi) do
    print vi
 end
 c = nil/vi
@@ -5126,7 +5126,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/vs) then
+while(nil/vs) do
    print vi
 end
 c = nil/vs
@@ -5153,7 +5153,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil/vnil) then
+while(nil/vnil) do
    print vi
 end
 c = nil/vnil
@@ -5180,7 +5180,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<1.68) then
+while(nil<1.68) do
    print vi
 end
 c = nil<1.68
@@ -5207,7 +5207,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<"text") then
+while(nil<"text") do
    print vi
 end
 c = nil<"text"
@@ -5234,7 +5234,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<vi) then
+while(nil<vi) do
    print vi
 end
 c = nil<vi
@@ -5261,7 +5261,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<vf) then
+while(nil<vf) do
    print vi
 end
 c = nil<vf
@@ -5288,7 +5288,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<vnil) then
+while(nil<vnil) do
    print vi
 end
 c = nil<vnil
@@ -5315,7 +5315,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<=3) then
+while(nil<=3) do
    print vi
 end
 c = nil<=3
@@ -5342,7 +5342,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<="text") then
+while(nil<="text") do
    print vi
 end
 c = nil<="text"
@@ -5369,7 +5369,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<=nil) then
+while(nil<=nil) do
    print vi
 end
 c = nil<=nil
@@ -5396,7 +5396,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<=vf) then
+while(nil<=vf) do
    print vi
 end
 c = nil<=vf
@@ -5423,7 +5423,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil<=vs) then
+while(nil<=vs) do
    print vi
 end
 c = nil<=vs
@@ -5450,7 +5450,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>3) then
+while(nil>3) do
    print vi
 end
 c = nil>3
@@ -5477,7 +5477,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>1.68) then
+while(nil>1.68) do
    print vi
 end
 c = nil>1.68
@@ -5504,7 +5504,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>nil) then
+while(nil>nil) do
    print vi
 end
 c = nil>nil
@@ -5531,7 +5531,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>vi) then
+while(nil>vi) do
    print vi
 end
 c = nil>vi
@@ -5558,7 +5558,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>vs) then
+while(nil>vs) do
    print vi
 end
 c = nil>vs
@@ -5585,7 +5585,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>vnil) then
+while(nil>vnil) do
    print vi
 end
 c = nil>vnil
@@ -5612,7 +5612,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>=1.68) then
+while(nil>=1.68) do
    print vi
 end
 c = nil>=1.68
@@ -5639,7 +5639,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>="text") then
+while(nil>="text") do
    print vi
 end
 c = nil>="text"
@@ -5666,7 +5666,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>=vi) then
+while(nil>=vi) do
    print vi
 end
 c = nil>=vi
@@ -5693,7 +5693,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>=vf) then
+while(nil>=vf) do
    print vi
 end
 c = nil>=vf
@@ -5720,7 +5720,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil>=vnil) then
+while(nil>=vnil) do
    print vi
 end
 c = nil>=vnil
@@ -5747,7 +5747,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil==3) then
+while(nil==3) do
    print vi
 end
 if(nil==3) then 
@@ -5780,7 +5780,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil=="text") then
+while(nil=="text") do
    print vi
 end
 c = nil=="text"
@@ -5810,7 +5810,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil==nil) then
+while(nil==nil) do
    print vi
 end
 if(nil==nil) then 
@@ -5843,7 +5843,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil==vf) then
+while(nil==vf) do
    print vi
 end
 c = nil==vf
@@ -5873,7 +5873,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil==vs) then
+while(nil==vs) do
    print vi
 end
 if(nil==vs) then 
@@ -5906,7 +5906,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=3) then
+while(nil!=3) do
    print vi
 end
 c = nil!=3
@@ -5936,7 +5936,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=1.68) then
+while(nil!=1.68) do
    print vi
 end
 if(nil!=1.68) then 
@@ -5969,7 +5969,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=nil) then
+while(nil!=nil) do
    print vi
 end
 c = nil!=nil
@@ -5999,7 +5999,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=vi) then
+while(nil!=vi) do
    print vi
 end
 if(nil!=vi) then 
@@ -6032,7 +6032,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=vs) then
+while(nil!=vs) do
    print vi
 end
 c = nil!=vs
@@ -6062,7 +6062,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(nil!=vnil) then
+while(nil!=vnil) do
    print vi
 end
 if(nil!=vnil) then 
@@ -6092,7 +6092,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi+1.68) then
+while(vi+1.68) do
    print vi
 end
 c = vi+1.68
@@ -6119,7 +6119,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi+"text") then
+while(vi+"text") do
    print vi
 end
 c = vi+"text"
@@ -6146,7 +6146,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi+vi) then
+while(vi+vi) do
    print vi
 end
 c = vi+vi
@@ -6173,7 +6173,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi+vf) then
+while(vi+vf) do
    print vi
 end
 c = vi+vf
@@ -6200,7 +6200,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi+vnil) then
+while(vi+vnil) do
    print vi
 end
 c = vi+vnil
@@ -6227,7 +6227,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi-3) then
+while(vi-3) do
    print vi
 end
 c = vi-3
@@ -6254,7 +6254,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi-"text") then
+while(vi-"text") do
    print vi
 end
 c = vi-"text"
@@ -6281,7 +6281,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi-nil) then
+while(vi-nil) do
    print vi
 end
 c = vi-nil
@@ -6308,7 +6308,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi-vf) then
+while(vi-vf) do
    print vi
 end
 c = vi-vf
@@ -6335,7 +6335,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi-vs) then
+while(vi-vs) do
    print vi
 end
 c = vi-vs
@@ -6362,7 +6362,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*3) then
+while(vi*3) do
    print vi
 end
 c = vi*3
@@ -6389,7 +6389,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*1.68) then
+while(vi*1.68) do
    print vi
 end
 c = vi*1.68
@@ -6416,7 +6416,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*nil) then
+while(vi*nil) do
    print vi
 end
 c = vi*nil
@@ -6443,7 +6443,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*vi) then
+while(vi*vi) do
    print vi
 end
 c = vi*vi
@@ -6470,7 +6470,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*vs) then
+while(vi*vs) do
    print vi
 end
 c = vi*vs
@@ -6497,7 +6497,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi*vnil) then
+while(vi*vnil) do
    print vi
 end
 c = vi*vnil
@@ -6524,7 +6524,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi/1.68) then
+while(vi/1.68) do
    print vi
 end
 c = vi/1.68
@@ -6551,7 +6551,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi/"text") then
+while(vi/"text") do
    print vi
 end
 c = vi/"text"
@@ -6578,7 +6578,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi/vi) then
+while(vi/vi) do
    print vi
 end
 c = vi/vi
@@ -6605,7 +6605,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi/vf) then
+while(vi/vf) do
    print vi
 end
 c = vi/vf
@@ -6632,7 +6632,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi/vnil) then
+while(vi/vnil) do
    print vi
 end
 c = vi/vnil
@@ -6659,7 +6659,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<3) then
+while(vi<3) do
    print vi
 end
 if(3<3) then 
@@ -6692,7 +6692,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<"text") then
+while(vi<"text") do
    print vi
 end
 c = vi<"text"
@@ -6719,7 +6719,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<nil) then
+while(vi<nil) do
    print vi
 end
 c = vi<nil
@@ -6749,7 +6749,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<vf) then
+while(vi<vf) do
    print vi
 end
 c = 3<1.68
@@ -6779,7 +6779,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<vs) then
+while(vi<vs) do
    print vi
 end
 c = vi<vs
@@ -6806,7 +6806,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=3) then
+while(vi<=3) do
    print vi
 end
 c = 3<=3
@@ -6836,7 +6836,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=1.68) then
+while(vi<=1.68) do
    print vi
 end
 if(3<=1.68) then 
@@ -6866,7 +6866,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=nil) then
+while(vi<=nil) do
    print vi
 end
 c = vi<=nil
@@ -6893,7 +6893,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=vi) then
+while(vi<=vi) do
    print vi
 end
 if(3<=3) then 
@@ -6926,7 +6926,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=vs) then
+while(vi<=vs) do
    print vi
 end
 c = vi<=vs
@@ -6953,7 +6953,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi<=vnil) then
+while(vi<=vnil) do
    print vi
 end
 c = vi<=vnil
@@ -6983,7 +6983,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>1.68) then
+while(vi>1.68) do
    print vi
 end
 c = 3>1.68
@@ -7013,7 +7013,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>"text") then
+while(vi>"text") do
    print vi
 end
 c = vi>"text"
@@ -7040,7 +7040,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>vi) then
+while(vi>vi) do
    print vi
 end
 c = 3>3
@@ -7070,7 +7070,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>vf) then
+while(vi>vf) do
    print vi
 end
 if(3>1.68) then 
@@ -7100,7 +7100,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>vnil) then
+while(vi>vnil) do
    print vi
 end
 c = vi>vnil
@@ -7127,7 +7127,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>=3) then
+while(vi>=3) do
    print vi
 end
 if(3>=3) then 
@@ -7160,7 +7160,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>="text") then
+while(vi>="text") do
    print vi
 end
 c = vi>="text"
@@ -7187,7 +7187,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>=nil) then
+while(vi>=nil) do
    print vi
 end
 c = vi>=nil
@@ -7217,7 +7217,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>=vf) then
+while(vi>=vf) do
    print vi
 end
 c = 3>=1.68
@@ -7247,7 +7247,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi>=vs) then
+while(vi>=vs) do
    print vi
 end
 c = vi>=vs
@@ -7274,7 +7274,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==3) then
+while(vi==3) do
    print vi
 end
 c = 3==3
@@ -7304,7 +7304,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==1.68) then
+while(vi==1.68) do
    print vi
 end
 if(3==1.68) then 
@@ -7337,7 +7337,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==nil) then
+while(vi==nil) do
    print vi
 end
 c = vi==nil
@@ -7367,7 +7367,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==vi) then
+while(vi==vi) do
    print vi
 end
 if(3==3) then 
@@ -7400,7 +7400,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==vs) then
+while(vi==vs) do
    print vi
 end
 c = vi==vs
@@ -7430,7 +7430,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi==vnil) then
+while(vi==vnil) do
    print vi
 end
 if(vi==vnil) then 
@@ -7463,7 +7463,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi!=1.68) then
+while(vi!=1.68) do
    print vi
 end
 c = 3!=1.68
@@ -7493,7 +7493,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi!="text") then
+while(vi!="text") do
    print vi
 end
 if(vi!="text") then 
@@ -7526,7 +7526,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi!=vi) then
+while(vi!=vi) do
    print vi
 end
 c = 3!=3
@@ -7556,7 +7556,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi!=vf) then
+while(vi!=vf) do
    print vi
 end
 if(3!=1.68) then 
@@ -7589,7 +7589,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vi!=vnil) then
+while(vi!=vnil) do
    print vi
 end
 c = vi!=vnil
@@ -7619,7 +7619,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf+3) then
+while(vf+3) do
    print vi
 end
 c = vf+3
@@ -7646,7 +7646,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf+"text") then
+while(vf+"text") do
    print vi
 end
 c = vf+"text"
@@ -7673,7 +7673,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf+nil) then
+while(vf+nil) do
    print vi
 end
 c = vf+nil
@@ -7700,7 +7700,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf+vf) then
+while(vf+vf) do
    print vi
 end
 c = vf+vf
@@ -7727,7 +7727,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf+vs) then
+while(vf+vs) do
    print vi
 end
 c = vf+vs
@@ -7754,7 +7754,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-3) then
+while(vf-3) do
    print vi
 end
 c = vf-3
@@ -7781,7 +7781,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-1.68) then
+while(vf-1.68) do
    print vi
 end
 c = vf-1.68
@@ -7808,7 +7808,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-nil) then
+while(vf-nil) do
    print vi
 end
 c = vf-nil
@@ -7835,7 +7835,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-vi) then
+while(vf-vi) do
    print vi
 end
 c = vf-vi
@@ -7862,7 +7862,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-vs) then
+while(vf-vs) do
    print vi
 end
 c = vf-vs
@@ -7889,7 +7889,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf-vnil) then
+while(vf-vnil) do
    print vi
 end
 c = vf-vnil
@@ -7916,7 +7916,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf*1.68) then
+while(vf*1.68) do
    print vi
 end
 c = vf*1.68
@@ -7943,7 +7943,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf*"text") then
+while(vf*"text") do
    print vi
 end
 c = vf*"text"
@@ -7970,7 +7970,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf*vi) then
+while(vf*vi) do
    print vi
 end
 c = vf*vi
@@ -7997,7 +7997,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf*vf) then
+while(vf*vf) do
    print vi
 end
 c = vf*vf
@@ -8024,7 +8024,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf*vnil) then
+while(vf*vnil) do
    print vi
 end
 c = vf*vnil
@@ -8051,7 +8051,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf/3) then
+while(vf/3) do
    print vi
 end
 c = vf/3
@@ -8078,7 +8078,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf/"text") then
+while(vf/"text") do
    print vi
 end
 c = vf/"text"
@@ -8105,7 +8105,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf/nil) then
+while(vf/nil) do
    print vi
 end
 c = vf/nil
@@ -8132,7 +8132,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf/vf) then
+while(vf/vf) do
    print vi
 end
 c = vf/vf
@@ -8159,7 +8159,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf/vs) then
+while(vf/vs) do
    print vi
 end
 c = vf/vs
@@ -8186,7 +8186,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<3) then
+while(vf<3) do
    print vi
 end
 c = 1.68<3
@@ -8216,7 +8216,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<1.68) then
+while(vf<1.68) do
    print vi
 end
 if(1.68<1.68) then 
@@ -8246,7 +8246,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<nil) then
+while(vf<nil) do
    print vi
 end
 c = vf<nil
@@ -8273,7 +8273,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<vi) then
+while(vf<vi) do
    print vi
 end
 if(1.68<3) then 
@@ -8306,7 +8306,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<vs) then
+while(vf<vs) do
    print vi
 end
 c = vf<vs
@@ -8333,7 +8333,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<vnil) then
+while(vf<vnil) do
    print vi
 end
 c = vf<vnil
@@ -8363,7 +8363,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<=1.68) then
+while(vf<=1.68) do
    print vi
 end
 c = 1.68<=1.68
@@ -8393,7 +8393,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<="text") then
+while(vf<="text") do
    print vi
 end
 c = vf<="text"
@@ -8420,7 +8420,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<=vi) then
+while(vf<=vi) do
    print vi
 end
 c = 1.68<=3
@@ -8450,7 +8450,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<=vf) then
+while(vf<=vf) do
    print vi
 end
 if(1.68<=1.68) then 
@@ -8480,7 +8480,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf<=vnil) then
+while(vf<=vnil) do
    print vi
 end
 c = vf<=vnil
@@ -8507,7 +8507,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>3) then
+while(vf>3) do
    print vi
 end
 if(1.68>3) then 
@@ -8540,7 +8540,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>"text") then
+while(vf>"text") do
    print vi
 end
 c = vf>"text"
@@ -8567,7 +8567,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>nil) then
+while(vf>nil) do
    print vi
 end
 c = vf>nil
@@ -8597,7 +8597,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>vf) then
+while(vf>vf) do
    print vi
 end
 c = 1.68>1.68
@@ -8627,7 +8627,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>vs) then
+while(vf>vs) do
    print vi
 end
 c = vf>vs
@@ -8654,7 +8654,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=3) then
+while(vf>=3) do
    print vi
 end
 c = 1.68>=3
@@ -8684,7 +8684,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=1.68) then
+while(vf>=1.68) do
    print vi
 end
 if(1.68>=1.68) then 
@@ -8714,7 +8714,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=nil) then
+while(vf>=nil) do
    print vi
 end
 c = vf>=nil
@@ -8741,7 +8741,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=vi) then
+while(vf>=vi) do
    print vi
 end
 if(1.68>=3) then 
@@ -8774,7 +8774,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=vs) then
+while(vf>=vs) do
    print vi
 end
 c = vf>=vs
@@ -8801,7 +8801,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf>=vnil) then
+while(vf>=vnil) do
    print vi
 end
 c = vf>=vnil
@@ -8831,7 +8831,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf==1.68) then
+while(vf==1.68) do
    print vi
 end
 c = 1.68==1.68
@@ -8861,7 +8861,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf=="text") then
+while(vf=="text") do
    print vi
 end
 if(vf=="text") then 
@@ -8894,7 +8894,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf==vi) then
+while(vf==vi) do
    print vi
 end
 c = 1.68==3
@@ -8924,7 +8924,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf==vf) then
+while(vf==vf) do
    print vi
 end
 if(1.68==1.68) then 
@@ -8957,7 +8957,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf==vnil) then
+while(vf==vnil) do
    print vi
 end
 c = vf==vnil
@@ -8987,7 +8987,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf!=3) then
+while(vf!=3) do
    print vi
 end
 if(1.68!=3) then 
@@ -9020,7 +9020,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf!="text") then
+while(vf!="text") do
    print vi
 end
 c = vf!="text"
@@ -9050,7 +9050,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf!=nil) then
+while(vf!=nil) do
    print vi
 end
 if(vf!=nil) then 
@@ -9083,7 +9083,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf!=vf) then
+while(vf!=vf) do
    print vi
 end
 c = 1.68!=1.68
@@ -9113,7 +9113,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vf!=vs) then
+while(vf!=vs) do
    print vi
 end
 if(vf!=vs) then 
@@ -9146,7 +9146,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+3) then
+while(vs+3) do
    print vi
 end
 c = vs+3
@@ -9173,7 +9173,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+1.68) then
+while(vs+1.68) do
    print vi
 end
 c = vs+1.68
@@ -9200,7 +9200,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+nil) then
+while(vs+nil) do
    print vi
 end
 c = vs+nil
@@ -9227,7 +9227,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+vi) then
+while(vs+vi) do
    print vi
 end
 c = vs+vi
@@ -9254,7 +9254,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+vs) then
+while(vs+vs) do
    print vi
 end
 c = "text"+"text"
@@ -9281,7 +9281,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs+vnil) then
+while(vs+vnil) do
    print vi
 end
 c = vs+vnil
@@ -9308,7 +9308,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs-1.68) then
+while(vs-1.68) do
    print vi
 end
 c = vs-1.68
@@ -9335,7 +9335,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs-"text") then
+while(vs-"text") do
    print vi
 end
 c = vs-"text"
@@ -9362,7 +9362,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs-vi) then
+while(vs-vi) do
    print vi
 end
 c = vs-vi
@@ -9389,7 +9389,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs-vf) then
+while(vs-vf) do
    print vi
 end
 c = vs-vf
@@ -9416,7 +9416,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs-vnil) then
+while(vs-vnil) do
    print vi
 end
 c = vs-vnil
@@ -9443,7 +9443,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs*3) then
+while(vs*3) do
    print vi
 end
 c = vs*3
@@ -9470,7 +9470,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs*"text") then
+while(vs*"text") do
    print vi
 end
 c = vs*"text"
@@ -9497,7 +9497,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs*nil) then
+while(vs*nil) do
    print vi
 end
 c = vs*nil
@@ -9524,7 +9524,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs*vf) then
+while(vs*vf) do
    print vi
 end
 c = vs*vf
@@ -9551,7 +9551,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs*vs) then
+while(vs*vs) do
    print vi
 end
 c = vs*vs
@@ -9578,7 +9578,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/3) then
+while(vs/3) do
    print vi
 end
 c = vs/3
@@ -9605,7 +9605,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/1.68) then
+while(vs/1.68) do
    print vi
 end
 c = vs/1.68
@@ -9632,7 +9632,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/nil) then
+while(vs/nil) do
    print vi
 end
 c = vs/nil
@@ -9659,7 +9659,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/vi) then
+while(vs/vi) do
    print vi
 end
 c = vs/vi
@@ -9686,7 +9686,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/vs) then
+while(vs/vs) do
    print vi
 end
 c = vs/vs
@@ -9713,7 +9713,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs/vnil) then
+while(vs/vnil) do
    print vi
 end
 c = vs/vnil
@@ -9740,7 +9740,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<1.68) then
+while(vs<1.68) do
    print vi
 end
 c = vs<1.68
@@ -9767,7 +9767,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<"text") then
+while(vs<"text") do
    print vi
 end
 if("text"<"text") then 
@@ -9797,7 +9797,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<vi) then
+while(vs<vi) do
    print vi
 end
 c = vs<vi
@@ -9824,7 +9824,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<vf) then
+while(vs<vf) do
    print vi
 end
 c = vs<vf
@@ -9854,7 +9854,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<vnil) then
+while(vs<vnil) do
    print vi
 end
 c = vs<vnil
@@ -9881,7 +9881,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<=3) then
+while(vs<=3) do
    print vi
 end
 c = vs<=3
@@ -9908,7 +9908,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<="text") then
+while(vs<="text") do
    print vi
 end
 c = "text"<="text"
@@ -9938,7 +9938,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<=nil) then
+while(vs<=nil) do
    print vi
 end
 c = vs<=nil
@@ -9965,7 +9965,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<=vf) then
+while(vs<=vf) do
    print vi
 end
 c = vs<=vf
@@ -9992,7 +9992,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs<=vs) then
+while(vs<=vs) do
    print vi
 end
 if("text"<="text") then 
@@ -10022,7 +10022,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>3) then
+while(vs>3) do
    print vi
 end
 c = vs>3
@@ -10049,7 +10049,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>1.68) then
+while(vs>1.68) do
    print vi
 end
 c = vs>1.68
@@ -10079,7 +10079,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>nil) then
+while(vs>nil) do
    print vi
 end
 c = vs>nil
@@ -10106,7 +10106,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>vi) then
+while(vs>vi) do
    print vi
 end
 c = vs>vi
@@ -10133,7 +10133,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>vs) then
+while(vs>vs) do
    print vi
 end
 c = "text">"text"
@@ -10163,7 +10163,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>vnil) then
+while(vs>vnil) do
    print vi
 end
 c = vs>vnil
@@ -10190,7 +10190,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>=1.68) then
+while(vs>=1.68) do
    print vi
 end
 c = vs>=1.68
@@ -10217,7 +10217,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>="text") then
+while(vs>="text") do
    print vi
 end
 if("text">="text") then 
@@ -10247,7 +10247,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>=vi) then
+while(vs>=vi) do
    print vi
 end
 c = vs>=vi
@@ -10274,7 +10274,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>=vf) then
+while(vs>=vf) do
    print vi
 end
 c = vs>=vf
@@ -10304,7 +10304,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs>=vnil) then
+while(vs>=vnil) do
    print vi
 end
 c = vs>=vnil
@@ -10331,7 +10331,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs==3) then
+while(vs==3) do
    print vi
 end
 if(vs==3) then 
@@ -10364,7 +10364,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs=="text") then
+while(vs=="text") do
    print vi
 end
 c = "text"=="text"
@@ -10394,7 +10394,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs==nil) then
+while(vs==nil) do
    print vi
 end
 if(vs==nil) then 
@@ -10427,7 +10427,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs==vf) then
+while(vs==vf) do
    print vi
 end
 c = vs==vf
@@ -10457,7 +10457,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs==vs) then
+while(vs==vs) do
    print vi
 end
 if("text"=="text") then 
@@ -10490,7 +10490,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=3) then
+while(vs!=3) do
    print vi
 end
 c = vs!=3
@@ -10520,7 +10520,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=1.68) then
+while(vs!=1.68) do
    print vi
 end
 if(vs!=1.68) then 
@@ -10553,7 +10553,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=nil) then
+while(vs!=nil) do
    print vi
 end
 c = vs!=nil
@@ -10583,7 +10583,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=vi) then
+while(vs!=vi) do
    print vi
 end
 if(vs!=vi) then 
@@ -10616,7 +10616,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=vs) then
+while(vs!=vs) do
    print vi
 end
 c = "text"!="text"
@@ -10646,7 +10646,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vs!=vnil) then
+while(vs!=vnil) do
    print vi
 end
 if(vs!=vnil) then 
@@ -10676,7 +10676,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil+1.68) then
+while(vnil+1.68) do
    print vi
 end
 c = vnil+1.68
@@ -10703,7 +10703,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil+"text") then
+while(vnil+"text") do
    print vi
 end
 c = vnil+"text"
@@ -10730,7 +10730,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil+vi) then
+while(vnil+vi) do
    print vi
 end
 c = vnil+vi
@@ -10757,7 +10757,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil+vf) then
+while(vnil+vf) do
    print vi
 end
 c = vnil+vf
@@ -10784,7 +10784,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil+vnil) then
+while(vnil+vnil) do
    print vi
 end
 c = vnil+vnil
@@ -10811,7 +10811,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil-3) then
+while(vnil-3) do
    print vi
 end
 c = vnil-3
@@ -10838,7 +10838,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil-"text") then
+while(vnil-"text") do
    print vi
 end
 c = vnil-"text"
@@ -10865,7 +10865,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil-nil) then
+while(vnil-nil) do
    print vi
 end
 c = vnil-nil
@@ -10892,7 +10892,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil-vf) then
+while(vnil-vf) do
    print vi
 end
 c = vnil-vf
@@ -10919,7 +10919,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil-vs) then
+while(vnil-vs) do
    print vi
 end
 c = vnil-vs
@@ -10946,7 +10946,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*3) then
+while(vnil*3) do
    print vi
 end
 c = vnil*3
@@ -10973,7 +10973,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*1.68) then
+while(vnil*1.68) do
    print vi
 end
 c = vnil*1.68
@@ -11000,7 +11000,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*nil) then
+while(vnil*nil) do
    print vi
 end
 c = vnil*nil
@@ -11027,7 +11027,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*vi) then
+while(vnil*vi) do
    print vi
 end
 c = vnil*vi
@@ -11054,7 +11054,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*vs) then
+while(vnil*vs) do
    print vi
 end
 c = vnil*vs
@@ -11081,7 +11081,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil*vnil) then
+while(vnil*vnil) do
    print vi
 end
 c = vnil*vnil
@@ -11108,7 +11108,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil/1.68) then
+while(vnil/1.68) do
    print vi
 end
 c = vnil/1.68
@@ -11135,7 +11135,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil/"text") then
+while(vnil/"text") do
    print vi
 end
 c = vnil/"text"
@@ -11162,7 +11162,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil/vi) then
+while(vnil/vi) do
    print vi
 end
 c = vnil/vi
@@ -11189,7 +11189,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil/vf) then
+while(vnil/vf) do
    print vi
 end
 c = vnil/vf
@@ -11216,7 +11216,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil/vnil) then
+while(vnil/vnil) do
    print vi
 end
 c = vnil/vnil
@@ -11243,7 +11243,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<3) then
+while(vnil<3) do
    print vi
 end
 c = vnil<3
@@ -11270,7 +11270,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<"text") then
+while(vnil<"text") do
    print vi
 end
 c = vnil<"text"
@@ -11297,7 +11297,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<nil) then
+while(vnil<nil) do
    print vi
 end
 c = vnil<nil
@@ -11324,7 +11324,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<vf) then
+while(vnil<vf) do
    print vi
 end
 c = vnil<vf
@@ -11351,7 +11351,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<vs) then
+while(vnil<vs) do
    print vi
 end
 c = vnil<vs
@@ -11378,7 +11378,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=3) then
+while(vnil<=3) do
    print vi
 end
 c = vnil<=3
@@ -11405,7 +11405,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=1.68) then
+while(vnil<=1.68) do
    print vi
 end
 c = vnil<=1.68
@@ -11432,7 +11432,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=nil) then
+while(vnil<=nil) do
    print vi
 end
 c = vnil<=nil
@@ -11459,7 +11459,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=vi) then
+while(vnil<=vi) do
    print vi
 end
 c = vnil<=vi
@@ -11486,7 +11486,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=vs) then
+while(vnil<=vs) do
    print vi
 end
 c = vnil<=vs
@@ -11513,7 +11513,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil<=vnil) then
+while(vnil<=vnil) do
    print vi
 end
 c = vnil<=vnil
@@ -11540,7 +11540,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>1.68) then
+while(vnil>1.68) do
    print vi
 end
 c = vnil>1.68
@@ -11567,7 +11567,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>"text") then
+while(vnil>"text") do
    print vi
 end
 c = vnil>"text"
@@ -11594,7 +11594,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>vi) then
+while(vnil>vi) do
    print vi
 end
 c = vnil>vi
@@ -11621,7 +11621,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>vf) then
+while(vnil>vf) do
    print vi
 end
 c = vnil>vf
@@ -11648,7 +11648,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>vnil) then
+while(vnil>vnil) do
    print vi
 end
 c = vnil>vnil
@@ -11675,7 +11675,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>=3) then
+while(vnil>=3) do
    print vi
 end
 c = vnil>=3
@@ -11702,7 +11702,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>="text") then
+while(vnil>="text") do
    print vi
 end
 c = vnil>="text"
@@ -11729,7 +11729,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>=nil) then
+while(vnil>=nil) do
    print vi
 end
 c = vnil>=nil
@@ -11756,7 +11756,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>=vf) then
+while(vnil>=vf) do
    print vi
 end
 c = vnil>=vf
@@ -11783,7 +11783,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil>=vs) then
+while(vnil>=vs) do
    print vi
 end
 c = vnil>=vs
@@ -11810,7 +11810,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==3) then
+while(vnil==3) do
    print vi
 end
 c = vnil==3
@@ -11840,7 +11840,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==1.68) then
+while(vnil==1.68) do
    print vi
 end
 if(vnil==1.68) then 
@@ -11873,7 +11873,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==nil) then
+while(vnil==nil) do
    print vi
 end
 c = vnil==nil
@@ -11903,7 +11903,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==vi) then
+while(vnil==vi) do
    print vi
 end
 if(vnil==vi) then 
@@ -11936,7 +11936,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==vs) then
+while(vnil==vs) do
    print vi
 end
 c = vnil==vs
@@ -11966,7 +11966,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil==vnil) then
+while(vnil==vnil) do
    print vi
 end
 if(vnil==vnil) then 
@@ -11999,7 +11999,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil!=1.68) then
+while(vnil!=1.68) do
    print vi
 end
 c = vnil!=1.68
@@ -12029,7 +12029,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil!="text") then
+while(vnil!="text") do
    print vi
 end
 if(vnil!="text") then 
@@ -12062,7 +12062,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil!=vi) then
+while(vnil!=vi) do
    print vi
 end
 c = vnil!=vi
@@ -12092,7 +12092,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil!=vf) then
+while(vnil!=vf) do
    print vi
 end
 if(vnil!=vf) then 
@@ -12125,7 +12125,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-while(vnil!=vnil) then
+while(vnil!=vnil) do
    print vi
 end
 c = vnil!=vnil
@@ -12142,4 +12142,3 @@ else
    print 0
 end
 $ 0 0
-
