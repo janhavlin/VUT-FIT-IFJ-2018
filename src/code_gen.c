@@ -19,7 +19,7 @@ int errflg;
 void genPrgBegin(TInstrList *L){
     TInst inst;
     TAdr adr1, adr2, undef;
-    inst = getInst(OP_LABEL, ADRLAB(adr1, "$main", ""), undef, undef); ILInsertLast(L, inst, false);
+    inst = getInst(OP_LABEL, ADRLAB(adr1, "$main", "    # Main"), undef, undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_CREATEFRAME, undef, undef, undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_PUSHFRAME, undef, undef, undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, "RETVAL"), undef, undef); ILInsertLast(L, inst, false);
@@ -42,9 +42,18 @@ void genPrgEnd(TInstrList *L){
     inst = getInst(OP_MOVE, ADRVAR(adr1, "RETVAL"), ADRNIL(adr2), undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_RETURN, undef, undef, undef); ILPreActFunInsert(L, inst);
 }*/
-//void genFunDefBegin()
-//void genFunDefPar()
-//void genFunDefEnd()
+void genFunDefBegin(TInstrList *L, char *fun, bool inWhile){
+    TInst inst;
+    TAdr adr1, undef;
+    inst = getInst(OP_LABEL, ADRLAB(adr1, fun,""), undef, undef); ILInsertLast(L, inst, inWhile);
+}
+
+void genFunDefEnd(TInstrList *L, bool inWhile){
+    TInst inst;
+    TAdr undef;
+    inst = getInst(OP_RETURN, undef, undef, undef); ILInsertLast(L, inst, inWhile);
+}
+
 void genFunCallBegin(TInstrList *L, char *fun, bool inWhile){
     if (strcmp(fun, "print") == 0 ||
         strcmp(fun, "inputs") == 0 ||
@@ -247,29 +256,46 @@ void genDefVar(TInstrList *L, char *var, bool inWhile){
     inst = getInst(OP_MOVE,     ADRVAR(adr1, var),   ADRNIL(adr2),   adr3);   ILInsertLast(L, inst, inWhile);
 }
 
-void genAssign(TInstrList *L, char *var, unsigned psa, unsigned psaResultE, bool inWhile){
+void genAssign(TInstrList *L, char *var, unsigned funParOrder, unsigned psa, unsigned psaResultE, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, undef;
     char *psaStr = convIntToStr(psa);
     char *EStr = convIntToStr(psaResultE);
-    char *varStr = getStr(4, "PSA", psaStr, "E", EStr);
-    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, varStr), undef); ILInsertLast(L, inst, inWhile);
+    char *psaVarStr = getStr(4, "PSA", psaStr, "E", EStr);
+    char *funParStr = convIntToStr(funParOrder);
+
+    if (funParOrder > 0){
+        inst = getInst(OP_MOVE, ADRVAR(adr1, funParStr), ADRVAR(adr2, psaVarStr), undef); ILInsertLast(L, inst, inWhile);
+    }
+    else {
+        inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, psaVarStr), undef); ILInsertLast(L, inst, inWhile);
+    }
+    
+    
     free(psaStr);
+    free(psaVarStr);
     free(EStr);
-    free(varStr);
+    free(funParStr);
 }
 
-void genAssignRetval(TInstrList *L, char *var, bool inWhile){
+void genAssignRetval(TInstrList *L, char *var, unsigned funParOrder, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, undef;
-    inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, "RETVAL"), undef); ILInsertLast(L, inst, inWhile);
+    char *funParStr = convIntToStr(funParOrder);
+    if (funParOrder > 0){
+        inst = getInst(OP_MOVE, ADRVAR(adr1, funParStr), ADRVAR(adr2, "RETVAL"), undef); ILInsertLast(L, inst, inWhile);
+    }
+    else {
+        inst = getInst(OP_MOVE, ADRVAR(adr1, var), ADRVAR(adr2, "RETVAL"), undef); ILInsertLast(L, inst, inWhile);
+    }
+    free(funParStr);
 }
 
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile){
     TInst inst;
     TAdr adr1, adr2, adr3, undef;
     
-    char *psaStr = convIntToStr(psa);
+    char *psaStr = convIntToStr(psa);;
     char *resStr = convIntToStr(res);
     char *var1Str = convIntToStr(var1);
     char *var2Str = convIntToStr(var2);

@@ -28,6 +28,8 @@
 void genPrgBegin(TInstrList *L);
 
 void genPrgEnd(TInstrList *L);
+void genFunDefBegin(TInstrList *L, char *fun, bool inWhile);
+void genFunDefEnd(TInstrList *L, bool inWhile);
 /**
  * @brief Creates a frame for a new function call
  * 
@@ -118,7 +120,7 @@ void genDefVar(TInstrList *L, char *var, bool inWhile);
  * @param E Index of the E variable that holds the value we want to assign
  * @param inWhile Flag whether it's called from inside a while
  */
-void genAssign(TInstrList *L, char *var, unsigned psa, unsigned psaResultE, bool inWhile);
+void genAssign(TInstrList *L, char *var, unsigned funParOrder, unsigned psa, unsigned psaResultE, bool inWhile);
 
 /**
  * @brief Function for evaluating PSA 'E -> E + E' rule
@@ -130,7 +132,7 @@ void genAssign(TInstrList *L, char *var, unsigned psa, unsigned psaResultE, bool
  * @param var2 Index of the second 'E' operand
  * @param inWhile Flag whether it's called from inside a while
  */
-void genAssignRetval(TInstrList *L, char *var, bool inWhile);
+void genAssignRetval(TInstrList *L, char *var, unsigned funParOrder, bool inWhile);
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
 void genSub(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);
 void genMul(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile);

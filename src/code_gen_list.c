@@ -238,6 +238,7 @@ void printInst(TInst inst){
         case OP_CREATEFRAME: printf("CREATEFRAME "); break;
         case OP_PUSHFRAME: printf("PUSHFRAME "); break;
         case OP_POPFRAME: printf("POPFRAME "); break;
+        case OP_RETURN: printf("RETURN "); break;
         case OP_CALL: printf("CALL "); break;
         case OP_ADD: printf("ADD "); break;
         case OP_SUB: printf("SUB "); break;

@@ -13,37 +13,42 @@ INTERPRETER=./ic18int
 TSTOUTFILE=tests.out
 OUTSRC=ifjcode18.src
 
+PRINTED=0
+CHECKPRINT=0
+
 print_to_file()
 {
     if [ $1 -eq 1 ]; then
         echo $2 > $TSTOUTFILE
-        #echo $3 >> $TSTOUTFILE
     else
         echo $2 >> $TSTOUTFILE
-        #echo $3 >> $TSTOUTFILE
     fi
 }
 
 check_output()
 {
-    if [ $1 -eq $2 ]; then
+    if [ $2 -eq $3 ] && [ "$4" = "$5" ]; then
         echo "Test $TSTCNT: $GREEN""OK$NORMAL"
         print_to_file $TSTCNT "Test $TSTCNT: OK"
         TSTPASS=$((TSTPASS+1))
     else
-        echo "Test $TSTCNT: $RED""FAIL$NORMAL before line $LINECNT in $3, return value: $1, expected: $2"
-        print_to_file $TSTCNT "Test $TSTCNT: FAIL before line $LINECNT in $3, return value: $1, expected: $2"
+        echo "Test $TSTCNT: $RED""FAIL$NORMAL before line $LINECNT in $1, return value: $2, expected: $3; print: '$4', expected: '$5'"
+        print_to_file $TSTCNT "Test $TSTCNT: FAIL before line $LINECNT in $1, return value: $2, expected: $3; print: '$4', expected: '$5'"
         TSTFAIL=$((TSTFAIL+1))
     fi
+
+    PRINTED=0
+    EXPECTEDPRINT=0
 }
 
 interprete()
 {
     #echo "interpreting"
     sed -n -E -e '/.IFJcode18/,$ p' $OUTSRC.tmp > $OUTSRC
-    $INTERPRETER $OUTSRC
-    check_output $? $1 $2
-
+    PRINTED=$($INTERPRETER $OUTSRC)
+    INTERPRETERRETVAL=$?
+    #echo "INTERPRETER PRINT $PRINTED""-"
+    check_output $1 $INTERPRETERRETVAL $RETVAL $PRINTED $EXPECTEDPRINT
 }
 
 print_stats()
@@ -66,14 +71,17 @@ test_file()
 
         if [ "$FIRSTCHAR" = "$" ] && [ "$BUFF" != "" ]; then
             TSTCNT=$((TSTCNT+1))
-            RETVAL=$(echo $LINE | cut -c 3-)
+            RETVAL=$(echo $LINE | cut -c 3-4)
+            EXPECTEDPRINT=$(echo $LINE | cut -c 5-)
+            #echo "EXPECTED RET $RETVAL""a"
+            #echo "EXPECTED PRINT $EXPECTEDPRINT""b"
             #echo "$GREEN$BUFF$NORMAL"
             echo "$BUFF" | $PRG > $OUTSRC.tmp
-            COMPILERET=$?
-            if [ $COMPILERET -eq 0 ]; then
-                interprete $RETVAL $1
+            COMPILERETVAL=$?
+            if [ $COMPILERETVAL -eq 0 ]; then
+                interprete $1
             else
-                check_output $COMPILERET $RETVAL $1
+                check_output $1
             fi
             BUFF=""
         else
@@ -86,8 +94,8 @@ test_file()
     done < $1
 }
 
-test_file test_scanner
-test_file test_parser
+#test_file test_scanner
+#test_file test_parser
 test_file test_type_comp
 
 print_stats

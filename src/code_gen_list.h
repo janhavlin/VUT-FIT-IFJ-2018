@@ -91,6 +91,7 @@ typedef enum {      // Adresses
     OP_PUSHFRAME,   // 0
     OP_CREATEFRAME, // 0
     OP_POPFRAME,    // 0
+    OP_RETURN,      // 0
     OP_CALL,        // 1
     OP_ADD,         // 3
     OP_SUB,         // 3
@@ -102,7 +103,7 @@ typedef enum {      // Adresses
     OP_GEQ,         // 3
     OP_EQ,          // 3
     OP_NEQ,         // 3
-    OP_NOT,         // 2 TODO: Add NOT to .c
+    OP_NOT,         // 2
     OP_WRITE,       // 1
     OP_READ         // 1
 } TOperation;
