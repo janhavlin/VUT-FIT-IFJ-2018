@@ -32,6 +32,7 @@ typedef struct {
 	int paramCounter;	//set to 0 before every function call and function def
 	bool inWhile;
 	bool inFunCall;			//flag for parameters to determine if we read them for definition or call, false means inFunDef
+	bool inFunDef;
 } TWrapper;
 
 //--------------FUNCTION PROTOTYPES----------------------
@@ -252,16 +253,18 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 		if (strcmp(keyW, "def") == 0) {
 			//rule #6 FUN-DEF -> def id ( P-LIST ) eol ST-LIST end
 			TsymData funcData;
-			TsymData *newFuncData = &funcData;
+			TsymData *newFuncData = NULL;
+			globalInfo->inFunDef = true;
 			//process def
 			**tokenPP = getToken(globalInfo->file, globalInfo->GT); //def is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 			//process id
 			if (id(tokenPP) != PROGRAM_OK) return errflg;
 			string functionId = (*tokenPP)->data.s;		//save name of ID
-			if (symTabSearch(globalInfo->currLT, functionId, newFuncData)) {	//id taken by global variable
+			
+			if ((newFuncData = symTabSearch(globalInfo->currLT, functionId)) != NULL) {	//id taken by global variable
 				return parserError(ERR_SEM_DEFINE, __func__, 0);
-			} else if (symTabSearch(globalInfo->GT, functionId, newFuncData)) {	//func already is in GT
+			} else if ((newFuncData = symTabSearch(globalInfo->GT, functionId)) != NULL) {	//func already is in GT
 				if (!newFuncData->defined) {	
 					//func was not defined, just called, it is OK
 				} else { //redefinition
@@ -272,7 +275,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 				newFuncData = symTabInsert(&(globalInfo->GT), functionId, funcData);
 				if (newFuncData == NULL) return errflg;
 			}
-			genFunDefStart(globalInfo->instructions, functionId, globalInfo->inWhile);
+			genFunDefBegin(globalInfo->instructions, functionId, globalInfo->inWhile);
 			**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;
 			//process (
@@ -280,7 +283,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			//process P-LIST
 			globalInfo->paramCounter = 0;
 			globalInfo->inFunCall = false;	//in function definition here
-			globalInfo->currLT = newFuncData->LT;
+			globalInfo->currLT = newFuncData->LT;	//NULL
 			if (plist(tokenPP, globalInfo, functionId) != PROGRAM_OK) return errflg;
 			if (!newFuncData->defined) {	//fun was called before, it must be defined with same amount of parameters
 				if (newFuncData->params != globalInfo->paramCounter) {
@@ -300,7 +303,9 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 
 			genFunDefEnd(globalInfo->instructions, globalInfo->inWhile);
+			newFuncData->LT = globalInfo->currLT;
 			globalInfo->currLT = globalInfo->mainLT;
+			globalInfo->inFunDef = false;
 			return PROGRAM_OK;
 		} 
 	} else {
@@ -394,7 +399,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 	switch (type) {
 		case TOK_ID:	//rule #20 TERM -> id 
 						if (globalInfo->inFunCall) {	//passing parameter to function
-							if (!symTabSearch(globalInfo->currLT, keyW, &idData)) {	//try to pass undefined variable to funcall
+							if (symTabSearch(globalInfo->currLT, keyW) == NULL) {	//try to pass undefined variable to funcall
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
 								var.type = ADRTYPE_VAR;
@@ -402,7 +407,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 							}
 						} else { //define variable in new function's LT
-							if (symTabSearch(globalInfo->GT, keyW, &idData)) {
+							if (symTabSearch(globalInfo->GT, keyW) != NULL) {
 								//keyword is already used for function
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
@@ -464,14 +469,14 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	string keyW = (*tokenPP)->data.s;
 	TsymData varData;
 	TsymData newFuncData;
-	TsymData *funcData = &newFuncData;
+	TsymData *funcData = NULL;
 	switch (type) {
 		case TOK_ASSIGN: //rule #14 ASS-OR-FUN -> = ASSIGN
 						**tokenPP = getToken(globalInfo->file, globalInfo->GT);	//= is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						//process Lvalue Var ID
-						if (!symTabSearch(globalInfo->currLT, savedIdOne, &varData)) {	//ID not present in current LT
-							if (!symTabSearch(globalInfo->GT, savedIdOne, &varData)) {	//ID not defined as function
+						if (symTabSearch(globalInfo->currLT, savedIdOne) == NULL) {	//ID not present in current LT
+							if (symTabSearch(globalInfo->GT, savedIdOne) == NULL) {	//ID not defined as function
 								genDefVar(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
 								varData = createDataForNewVar(0);	//0 means not parameter, just variable
 								symTabInsert(&(globalInfo->currLT), savedIdOne, varData);
@@ -479,6 +484,8 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							}
 						} //else Variable already defined, which is OK
+						if (globalInfo->mainLT == NULL && !globalInfo->inFunDef)
+							globalInfo->mainLT = globalInfo->currLT;	//mainLT initialization
 						//process assign
 						if (assign(tokenPP, globalInfo, savedIdOne, varData) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
@@ -493,11 +500,11 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 		case TOK_INT:
 		case TOK_ID:
 		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY 
-						if (symTabSearch(globalInfo->currLT, savedIdOne, funcData)) {	//id name is already taken by local variable
+						if ((funcData = symTabSearch(globalInfo->currLT, savedIdOne)) != NULL) {	//id name is already taken by local variable
 							return parserError(ERR_SEM_DEFINE, __func__, 0);
-						} else if (symTabSearch(globalInfo->mainLT, savedIdOne, funcData)) {	//id name is taken by global variable
+						} else if ((funcData = symTabSearch(globalInfo->mainLT, savedIdOne)) != NULL) {	//id name is taken by global variable
 							return parserError(ERR_SEM_DEFINE, __func__, 0);
-						} else if (symTabSearch(globalInfo->GT, savedIdOne, funcData)) {
+						} else if ((funcData = symTabSearch(globalInfo->GT, savedIdOne)) != NULL) {
 							//function is defined
 						} else {
 							//new function
@@ -588,11 +595,11 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 	**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, but I need another token to decide
 	if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 	TsymData newFuncData;
-	TsymData *funcData = &newFuncData;
+	TsymData *funcData = NULL;
 	switch ((*tokenPP)->type) {
 		case TOK_EOL:	//rules #17 and #16 both work, it is a simple function id = fun or id = id expression;
 						returnToken(**tokenPP); //must return the eol though, so stat can read it
-						if (symTabSearch(globalInfo->GT, savedIdTwo, &newFuncData)) {	//ID is function
+						if (symTabSearch(globalInfo->GT, savedIdTwo) != NULL) {	//ID is function
 							if (newFuncData.params == 0) {	
 								// id = fun () // rule #16
 								genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
@@ -603,7 +610,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 							} else {	//0 is wrong amount of parameters
 								return parserError(ERR_SEM_PARAM, __func__, 0);
 							}
-						} else if (symTabSearch(globalInfo->currLT, savedIdTwo, &newFuncData)) {	//ID is variable
+						} else if (symTabSearch(globalInfo->currLT, savedIdTwo) != NULL) {	//ID is variable
 							// id = id // continue to rule #17
 						} else {	//function call before definition
 							newFuncData = createDataForNewFunc(false, 0);
@@ -646,13 +653,13 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 		case TOK_INT:
 		case TOK_ID:	//rule #16 ASSIGN -> id P-BODY
 						//actually no need of returning any tokens to scanner
-						if (symTabSearch(globalInfo->currLT, savedIdTwo, funcData)) { 
+						if ((funcData = symTabSearch(globalInfo->currLT, savedIdTwo)) != NULL) { 
 							//id name is already taken by local variable
 							return parserError(ERR_SEM_DEFINE, __func__, 0);
-						} else if (symTabSearch(globalInfo->mainLT, savedIdTwo, funcData)) { 
+						} else if ((funcData = symTabSearch(globalInfo->mainLT, savedIdTwo)) != NULL) { 
 							//id name is already taken by global variable
 							return parserError(ERR_SEM_DEFINE, __func__, 0);
-						} else if (symTabSearch(globalInfo->GT, savedIdTwo, funcData)) {
+						} else if ((funcData = symTabSearch(globalInfo->GT, savedIdTwo)) != NULL) {
 							//function is defined
 						} else {
 							//new function
@@ -892,6 +899,7 @@ void initTWrapper(TWrapper *info) {
 	info->paramCounter = 0;
 	info->inWhile = false;
 	info->inFunCall = false;
+	info->inFunDef = false;
 }
 
 /**

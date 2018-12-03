@@ -21,17 +21,16 @@ void symTabInit (TsymItem **rootPP) {
  * 
  * @param data will return pointer to found data
  */ 
-bool symTabSearch (TsymItem *rootPtr, string key, TsymData *data)	{
+TsymData *symTabSearch (TsymItem *rootPtr, string key)	{
 	if (DEBUG) printf("Function:%s key:%s\n", __func__, key);
 	if (rootPtr == NULL)
-		return false;	
+		return NULL;	
 	else if (strcmp(rootPtr->key, key) == 0) {
-		*data = rootPtr->data;
-		return true;
+		return &(rootPtr->data);
 	} else if (strcmp(rootPtr->key, key) > 0) {
-		return symTabSearch(rootPtr->lPtr, key, data);
+		return symTabSearch(rootPtr->lPtr, key);
 	} else {
-		return symTabSearch(rootPtr->rPtr, key, data);
+		return symTabSearch(rootPtr->rPtr, key);
 	}
 } 
 
