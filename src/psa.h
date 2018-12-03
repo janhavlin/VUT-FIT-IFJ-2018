@@ -55,7 +55,7 @@
  * (parser is currently based on boolean evaluating, but I don't know if we won't need to return 
  * value for generating condition in the future)
  */
-unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, TsymItem *STL, TInstrList *instrList, bool inWhile);
+unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, TsymItem *STL, TInstrList *instrList, bool inWhile, bool inFunDef);
 
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
 int getIndex(TToken token);
