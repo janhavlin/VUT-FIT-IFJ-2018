@@ -394,17 +394,19 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
+	TsymData *varPtr = NULL;
 	TsymData idData;
 	TAdr var;
+	unsigned order_blank = 0;
 	switch (type) {
 		case TOK_ID:	//rule #20 TERM -> id 
 						if (globalInfo->inFunCall) {	//passing parameter to function
-							if (symTabSearch(globalInfo->currLT, keyW) == NULL) {	//try to pass undefined variable to funcall
+							if ((varPtr = symTabSearch(globalInfo->currLT, keyW)) == NULL) {	//try to pass undefined variable to funcall
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
 								var.type = ADRTYPE_VAR;
 								var.val.s = keyW;
-								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile, globalInfo->inFunDef);
+								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, varPtr->order, globalInfo->inWhile, globalInfo->inFunDef);
 							}
 						} else { //define variable in new function's LT
 							if (symTabSearch(globalInfo->GT, keyW) != NULL) {
@@ -420,7 +422,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_STRING;
 							var.val.s = (*tokenPP)->data.s;
-							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile, globalInfo->inFunDef);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -429,7 +431,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_FLOAT;
 							var.val.f = (*tokenPP)->data.f;
-							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile, globalInfo->inFunDef);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -438,7 +440,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_INT;
 							var.val.i = (*tokenPP)->data.i;
-							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile, globalInfo->inFunDef);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -448,7 +450,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							if (globalInfo->inFunCall) {
 								var.type = ADRTYPE_NIL;
 								var.val.s = (*tokenPP)->data.s;
-								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile, globalInfo->inFunDef);
+								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 							} else {	//cannot define function with constant
 								return parserError(ERR_SEM_OTHER, __func__, 0);
 							}
