@@ -45,8 +45,8 @@ int stlist(TToken **, TWrapper *);
 int plist(TToken **, TWrapper *, string);
 int term(TToken **, TWrapper *, string);
 int assorfun(TToken **, TWrapper *, string);
-int assign(TToken **, TWrapper *, string);
-int decideExprOrFunc(TToken **, TWrapper *, string, string);
+int assign(TToken **, TWrapper *, string, TsymData);
+int decideExprOrFunc(TToken **, TWrapper *, string, string, TsymData);
 int pbody(TToken **, TWrapper *, string);
 
 /* TERMINALS */
@@ -480,7 +480,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							}
 						} //else Variable already defined, which is OK
 						//process assign
-						if (assign(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg;
+						if (assign(tokenPP, globalInfo, savedIdOne, varData) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
 							//continue to rule #15
@@ -538,7 +538,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
  * represents ASSIGN non-terminal
  * @param savedIdOne is the name of the first ID in recently red sequence: id = 
  */
-int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
+int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, TsymData varData) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
@@ -561,14 +561,14 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						//**tokenPP = getToken(globalInfo->file, globalInfo->GT); //expr is present, call next token //DONT CALL NEXT TOKEN
 						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-						genAssign(globalInfo->instructions, savedIdOne, globalInfo->psaCounter, E, globalInfo->inWhile);	//assign to savedIdOne
+						genAssign(globalInfo->instructions, savedIdOne, varData.order, globalInfo->psaCounter, E, globalInfo->inWhile);	//assign to savedIdOne
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 						return PROGRAM_OK;
 		case TOK_ID:	savedIdTwo = (*tokenPP)->data.s;
-						if (decideExprOrFunc(tokenPP, globalInfo, savedIdOne, savedIdTwo) != PROGRAM_OK) return errflg;
+						if (decideExprOrFunc(tokenPP, globalInfo, savedIdOne, savedIdTwo, varData) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		default:		break;						
 	}
@@ -582,7 +582,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
  * @param savedIdOne is the name of the first ID in recently red sequence: id = id
  * @param savedIdTwo is the name of the second ID in recently red sequence: id = id
  */
-int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, string savedIdTwo) {
+int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, string savedIdTwo, TsymData varData) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TToken bufferToken = **tokenPP;
 	**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, but I need another token to decide
@@ -594,22 +594,24 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						returnToken(**tokenPP); //must return the eol though, so stat can read it
 						if (symTabSearch(globalInfo->GT, savedIdTwo, &newFuncData)) {	//ID is function
 							if (newFuncData.params == 0) {	
+								// id = fun () // rule #16
 								genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 								genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
-								genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
+								genAssignRetval(globalInfo->instructions, savedIdOne, varData.order, globalInfo->inWhile);	//to savedIdOne, from funcall
 								//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
+								return PROGRAM_OK;
 							} else {	//0 is wrong amount of parameters
 								return parserError(ERR_SEM_PARAM, __func__, 0);
 							}
 						} else if (symTabSearch(globalInfo->currLT, savedIdTwo, &newFuncData)) {	//ID is variable
-							genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
-							//genASSIGN(savedIdOne, savedIdTwo);	//to savedIdOne, from savedIdTwo
+							// id = id // continue to rule #17
 						} else {	//function call before definition
 							newFuncData = createDataForNewFunc(false, 0);
 							symTabInsert(&(globalInfo->GT), savedIdTwo, newFuncData);
 							genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 							genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
-							genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
+							genAssignRetval(globalInfo->instructions, savedIdOne, varData.order, globalInfo->inWhile);	//to savedIdOne, from funcall
+							return PROGRAM_OK;
 						}
 						return PROGRAM_OK;
 		case TOK_ADD:             // +
@@ -628,7 +630,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						returnToken(bufferToken);
 						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-						genAssign(globalInfo->instructions, savedIdOne, globalInfo->psaCounter, E, globalInfo->inWhile);	//to savedIdOne
+						genAssign(globalInfo->instructions, savedIdOne, varData.order, globalInfo->psaCounter, E, globalInfo->inWhile);	//to savedIdOne
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
