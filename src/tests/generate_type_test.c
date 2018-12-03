@@ -16,167 +16,176 @@
 int convStrToInt(char *str);
 double convStrToDouble(char *str);
 
-#define IS_FLOAT(item)  ( (!strcmp(item, "vf"))   || (!strcmp(item, "1.68")) )
-#define IS_INT(item)    ( (!strcmp(item, "vi"))   || (!strcmp(item, "3")) )
-#define IS_NIL(item)    ( (!strcmp(item, "vnil")) || (!strcmp(item, "nil")) )
-#define IS_STRING(item) ( (!strcmp(item, "vs"))   || (!strcmp(item, "\"text\"")) )
+bool isFloat(char *item){
+	return ( (!strcmp(item, "vf"))   || (!strcmp(item, "1.68")) );
+}
 
-#define ONLY_FLOAT(item1, item2){\
-									( ( (!strcmp(item1, "vf")) || (!strcmp(item1, "1.68")) ) && \
-								 	( (!strcmp(item2,  "vf")) || (!strcmp(item2, "1.68")) ) )  \
-								}	
-								
-#define ONLY_INT(item1, item2){\
-									( ( ( !strcmp(item1, "vi") ) || (!strcmp(item1, "3")) ) && \
-					 				( (!strcmp(item2,  "vi") )   || (!strcmp(item2, "3")) ) )  \
-								}								 	
-	
-#define ONLY_STRING(item1, item2){\
-									( ( ( !strcmp(item1, "vs") ) || (!strcmp(item1, "\"text\"")) ) && \
-				 					( (!strcmp(item2,  "vs") )   || (!strcmp(item2, "\"text\"")) ) )  \
-								}
-								
-#define ONLY_NIL(item1, item2){\
-									( ( (!strcmp(item1, "vnil") ) || (!strcmp(item1, "nil")) ) && \
-				 					( (!strcmp(item2,  "vnil") ) || (!strcmp(item2, "nil")) ) )  \
-								}	
-														
-#define ONLY_NUMB(item1, item2){\
-									( (IS_FLOAT(item1)) || (IS_INT(item1)) ) && \
-									( (IS_FLOAT(item2)) || (IS_INT(item2)) )    \
-								}
+bool isInt(char *item){
+	return ( (!strcmp(item, "vi"))   || (!strcmp(item, "3")) );
+}
 
+bool isString(char *item){
+	return ( (!strcmp(item, "vs"))   || (!strcmp(item, "\"text\"")) );
+}
 
-#define ONE_FLOAT(item1, item2){\
-									(((!strcmp(item1, "vf")) || (!strcmp(item1, "1.68"))) && \
-								 	((!strcmp(item2,  "vf")) || (!strcmp(item2, "1.68"))))  \
-								}
-								
-#define ONE_INT(item1, item2){\
-									(((!strcmp(item1, "vi")) || (!strcmp(item1, "3"))) && \
-								 	((!strcmp(item2,  "vi")) || (!strcmp(item2, "3"))))  \
-								}
+bool isNil(char *item){
+	return ( (!strcmp(item, "vnil")) || (!strcmp(item, "nil")) );
+}
 
-#define ONE_STRING(item1, item2){\
-									(((!strcmp(item1, "vs")) || (!strcmp(item1, "\"text\""))) && \
-								 	((!strcmp(item2,  "vs")) || (!strcmp(item2, "\"text\""))))  \
-								}
-								
-#define ONE_NIL(item1, item2){\
-									(((!strcmp(item1, "vnil")) || (!strcmp(item1, "nil"))) && \
-								 	((!strcmp(item2,  "vnil")) || (!strcmp(item2, "nil"))))  \
-								}																								
-							
-			
-#define STRING_OPER_TEST(item1, op, item2) 	{\
-													 	if(!strcmp(op, "+")){\
-															printf("$ 0 texttext\n\n");\
-														}\
-														else if(!strcmp(op, "<")){\
-															printf("$ 0 0\n\n");\
-														}\
-														else if(!strcmp(op, ">")){\
-															printf("$ 0 0\n\n");\
-														}\
-														else if(!strcmp(op, "<=")){\
-															printf("$ 0 1\n\n");\
-														}\
-														else if(!strcmp(op, ">=")){\
-															printf("$ 0 1\n\n");\
-														}\
-														else if(!strcmp(op, "==")){\
-															printf("$ 0 1\n\n");\
-														}\
-														else if(!strcmp(op, "!=")){\
-															printf("$ 0 0\n\n");\
-														}\
-													}
-													
-#define NUMB_OPER_TEST(item1, op, item2) 	{\
-													 	if(!strcmp(op, "+")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 %a\n\n", 1.68+1.68);\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 0\n\n", 6);\
-															else\
-																printf("$ 0 %a\n\n", 3+1.68);\
-														}\
-													 	if(!strcmp(op, "-")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 %a\n\n", 0);\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 %a\n\n", 1.68-3);\
-															else\
-																printf("$ 0 %a\n\n", 3-1.68);\
-														}\
-														else if(!strcmp(op, "<")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 1\n\n");\
-															else\
-																printf("$ 0 0\n\n");\
-														}\
-														else if(!strcmp(op, ">")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 0\n\n");\
-															else\
-																printf("$ 0 1\n\n");\
-														}\
-														else if(!strcmp(op, "<=")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 1\n\n");\
-															else\
-																printf("$ 0 0\n\n");\
-														}\
-														else if(!strcmp(op, ">=")){\
-												 			if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 0\n\n");\
-															else\
-																printf("$ 0 1\n\n");\
-														}\
-														else if(!strcmp(op, "==")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 1\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 0\n\n");\
-															else\
-																printf("$ 0 0\n\n");\
-														}\
-														else if(!strcmp(op, "!=")){\
-													 		if(ONLY_FLOAT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if(ONLY_INT(item1, item2))\
-																printf("$ 0 0\n\n");\
-															else if( IS_FLOAT(item1) )\
-																printf("$ 0 1\n\n");\
-															else\
-																printf("$ 0 1\n\n");\
-														}\
-												}
+bool onlyFloat(char *item1, char *item2){
+	return ( ( (!strcmp(item1, "vf")) || (!strcmp(item1, "1.68")) ) &&
+	  	   ( (!strcmp(item2,  "vf")) || (!strcmp(item2, "1.68")) ) );
+}
 
-bool sameType(char *item1, char *item2){
-									return ((ONLY_FLOAT(item1, item2))   || (ONLY_INT(item1, item2)) ||
-									(ONLY_STRING(item1, item2)) || (ONLY_NIL(item1, item2)));
-								}
+bool onlyInt(char *item1, char *item2){
+	return ( ( ( !strcmp(item1, "vi") ) || (!strcmp(item1, "3")) ) &&
+		   ( (!strcmp(item2,  "vi") )   || (!strcmp(item2, "3")) ) );
+}
+
+bool onlyString(char *item1, char *item2){
+	return ( ( ( !strcmp(item1, "vs") ) || (!strcmp(item1, "\"text\"")) ) && 
+		   ( (!strcmp(item2,  "vs") )   || (!strcmp(item2, "\"text\"")) ) );
+}
+
+bool onlyNumb(char *item1, char *item2){
+	return ( (isFloat(item1)) || (IS_INT(item1)) ) && 
+		   ( (isFloat(item2)) || (IS_INT(item2)) );
+}
+
+bool onlyNil(char *item1, char *item2){
+	return ( ( (!strcmp(item1, "vnil") ) || (!strcmp(item1, "nil")) ) && 
+		   ( (!strcmp(item2,  "vnil") ) || (!strcmp(item2, "nil")) ) );
+}
+
+bool oneFloat(char *item1, char *item2){
+	return (((!strcmp(item1, "vf")) || (!strcmp(item1, "1.68"))) && 
+		   ((!strcmp(item2,  "vf")) || (!strcmp(item2, "1.68"))));
+}
+
+bool oneInt(char *item1, char *item2){
+	return (((!strcmp(item1, "vi")) || (!strcmp(item1, "3"))) && 
+		   ((!strcmp(item2,  "vi")) || (!strcmp(item2, "3"))));
+}
+
+bool oneString(char *item1, char *item2){
+	return (((!strcmp(item1, "vs")) || (!strcmp(item1, "\"text\""))) &&
+		   ((!strcmp(item2,  "vs")) || (!strcmp(item2, "\"text\""))));
+}
+
+bool oneNil(char *item1, char *item2){
+	return (((!strcmp(item1, "vnil")) || (!strcmp(item1, "nil"))) && 
+		   ((!strcmp(item2,  "vnil")) || (!strcmp(item2, "nil"))));
+}
+
+void stringOperTest(char *op){
+	if(!strcmp(op, "+")){
+		printf("$ 0 texttext\n\n");
+	}
+	else if(!strcmp(op, "<")){
+		printf("$ 0 0\n\n");
+	}
+	else if(!strcmp(op, ">")){
+		printf("$ 0 0\n\n");
+	}
+	else if(!strcmp(op, "<=")){
+		printf("$ 0 1\n\n");
+	}
+	else if(!strcmp(op, ">=")){
+		printf("$ 0 1\n\n");
+	}
+	else if(!strcmp(op, "==")){
+		printf("$ 0 1\n\n");
+	}
+	else if(!strcmp(op, "!=")){
+		printf("$ 0 0\n\n");
+	}
+}
+
+void numbOperTest(){
+	if(!strcmp(op, "+")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 %a\n\n", 1.68+1.68);
+		else if(onlyInt(item1, item2))
+			printf("$ 0 0\n\n", 6);
+		else
+			printf("$ 0 %a\n\n", 3+1.68);
+	}
+	if(!strcmp(op, "-")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 %a\n\n", 0);
+		else if(onlyInt(item1, item2))
+			printf("$ 0 0\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 %a\n\n", 1.68-3);
+		else
+			printf("$ 0 %a\n\n", 3-1.68);
+	}
+	else if(!strcmp(op, "<")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 0\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 0\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 1\n\n");
+		else
+			printf("$ 0 0\n\n");
+	}
+	else if(!strcmp(op, ">")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 0\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 0\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 0\n\n");
+		else
+			printf("$ 0 1\n\n");
+	}
+	else if(!strcmp(op, "<=")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 1\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 1\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 1\n\n");
+		else
+			printf("$ 0 0\n\n");
+	}
+	else if(!strcmp(op, ">=")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 1\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 1\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 0\n\n");
+		else
+			printf("$ 0 1\n\n");
+	}
+	else if(!strcmp(op, "==")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 1\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 1\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 0\n\n");
+		else
+			printf("$ 0 0\n\n");
+	}
+	else if(!strcmp(op, "!=")){
+		if(onlyFloat(item1, item2))
+			printf("$ 0 0\n\n");
+		else if(onlyInt(item1, item2))
+			printf("$ 0 0\n\n");
+		else if( isFloat(item1) )
+			printf("$ 0 1\n\n");
+		else
+			printf("$ 0 1\n\n");
+	}
+}
+bool sameType(){
+	return ((onlyFloat(item1, item2)) || (onlyInt(item1, item2)) ||
+		   (ONLY_STRING(item1, item2)) || (ONLY_NIL(item1, item2)));
+}
+
 
 int convStrToInt(char *str){			
 	int result = 0;
@@ -326,10 +335,9 @@ char item[ITEM_AMOUNT][ITME_LENG] = {
 
 void result(char *item1, char *op, char *item2){	// type: 0 - bool, 1 - int, 2 - float, 3 - string 
 	// not same type
-	if( !sameType(item1, item2) ){
+	if( sameType(item1, item2) ){
 		
-		int x = ONE_STRING(item1, item2);
-		if( x ){
+		if( oneString(item1, item2) ){
 
 			if(!strcmp(op, "==") || !strcmp(op, "!=")){
 					if(!strcmp(op, "=="))
@@ -345,8 +353,8 @@ void result(char *item1, char *op, char *item2){	// type: 0 - bool, 1 - int, 2 -
 			}
 		}
 		
-		x = ONE_NIL(item1, item2 );
-		if( x ){
+	
+		if( oneNil(item1, item2 ) ){
 			if(!strcmp(op, "==") || !strcmp(op, "!=")){
 				if(!strcmp(op, "=="))
 					printf("$ 0 0\n\n");
@@ -363,12 +371,12 @@ void result(char *item1, char *op, char *item2){	// type: 0 - bool, 1 - int, 2 -
 		}
 		
 		
-		else if( ONLY_NUMB(item1, item2) ){
-			if( ONLY_FLOAT(item1, item2) ){
+		else if( onlyNumb(item1, item2) ){
+			if( onlyFloat(item1, item2) ){
 		  	  	printf("$ 0 %a\n\n", 1.68 + 1.68);
 		  	  	return;
 		  	}
-		  	else if( ONLY_INT(item1, item) ){
+		  	else if( onlyInt(item1, item2) ){
 				printf("$ 0 %d\n\n", 6);
 				return;
 		  	}
@@ -378,7 +386,7 @@ void result(char *item1, char *op, char *item2){	// type: 0 - bool, 1 - int, 2 -
 	
 	// same type
 	else{
-		if( ONLY_NIL(item1, item2) ){
+		if( onlyNil(item1, item2) ){
 			if(!strcmp(op, "==") || !strcmp(op, "!=")){
 					if(!strcmp(op, "=="))
 						printf("$ 0 1\n\n");
@@ -394,20 +402,20 @@ void result(char *item1, char *op, char *item2){	// type: 0 - bool, 1 - int, 2 -
 			}
 		}
 		
-		else if(ONLY_STRING(item1, item2)){
+		else if(onlyString(item1, item2)){
 			if(!strcmp(op, "-") || !strcmp(op, "*") || !strcmp(op, "/")){
 				printf("$ 4\n\n");
 				return;
 			}
 			else{
 			
-				STRING_OPER_TEST(item1, op, item2);
+				stringOperTest(item1, op, item2);
 				return;	
 			}
 		}
 			
-	  	else if( ONLY_NUMB(item1, item2) ){
-		  	NUMB_OPER_TEST(item1, op, item2);
+	  	else if( onlyNumb(item1, item2) ){
+		  	numbOperTest(item1, op, item2);
 			return;
 		}
 		
