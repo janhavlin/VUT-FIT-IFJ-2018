@@ -177,7 +177,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-							genIfCond(&globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
+							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile);
 							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
@@ -190,14 +190,14 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process else
 							if (telse(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							genIfElse(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							genIfElse(globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							//process eol
 							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process ST-LIST
 							if (stlist(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
-							genIfEnd(&globalInfo->instructions, ifNumber, globalInfo->inWhile);
+							genIfEnd(globalInfo->instructions, ifNumber, globalInfo->inWhile);
 							//inWhile = false, but only if this if is not nested in another while or if
 							globalInfo->inWhile = !topLevelIf;
 							return PROGRAM_OK;
@@ -399,7 +399,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							} else {
 								var.type = ADRTYPE_VAR;
 								var.val.s = keyW;
-								genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 							}
 						} else { //define variable in new function's LT
 							if (symTabSearch(globalInfo->GT, keyW, &idData)) {
@@ -415,7 +415,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_STRING;
 							var.val.s = (*tokenPP)->data.s;
-							genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -424,7 +424,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_FLOAT;
 							var.val.f = (*tokenPP)->data.f;
-							genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -433,7 +433,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						if (globalInfo->inFunCall) {
 							var.type = ADRTYPE_INT;
 							var.val.i = (*tokenPP)->data.i;
-							genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0);
 						}
@@ -443,7 +443,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							if (globalInfo->inFunCall) {
 								var.type = ADRTYPE_NIL;
 								var.val.s = (*tokenPP)->data.s;
-								genFunCallPar(globalInfo->instructions, globalInfo->paramCounter, var, globalInfo->inWhile);
+								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, globalInfo->inWhile);
 							} else {	//cannot define function with constant
 								return parserError(ERR_SEM_OTHER, __func__, 0);
 							}
@@ -492,7 +492,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 		case TOK_FLOAT:
 		case TOK_INT:
 		case TOK_ID:
-		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY
+		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY 
 						if (symTabSearch(globalInfo->currLT, savedIdOne, funcData)) {	//id name is already taken by local variable
 							return parserError(ERR_SEM_DEFINE, __func__, 0);
 						} else if (symTabSearch(globalInfo->mainLT, savedIdOne, funcData)) {	//id name is taken by global variable
@@ -506,7 +506,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
-						genFunCallBegin(globalInfo->instructions, globalInfo->inWhile);
+						genFunCallBegin(globalInfo->instructions, savedIdOne, globalInfo->inWhile);
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
 						if (pbody(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg; 
@@ -594,20 +594,22 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						returnToken(**tokenPP); //must return the eol though, so stat can read it
 						if (symTabSearch(globalInfo->GT, savedIdTwo, &newFuncData)) {	//ID is function
 							if (newFuncData.params == 0) {	
-								genFunCallBegin(globalInfo->instructions, globalInfo->inWhile);
+								genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 								genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
+								genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
 								//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
 							} else {	//0 is wrong amount of parameters
 								return parserError(ERR_SEM_PARAM, __func__, 0);
 							}
 						} else if (symTabSearch(globalInfo->currLT, savedIdTwo, &newFuncData)) {	//ID is variable
+							genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
 							//genASSIGN(savedIdOne, savedIdTwo);	//to savedIdOne, from savedIdTwo
 						} else {	//function call before definition
 							newFuncData = createDataForNewFunc(false, 0);
 							symTabInsert(&(globalInfo->GT), savedIdTwo, newFuncData);
-							genFunCallBegin(globalInfo->instructions, globalInfo->inWhile);
+							genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 							genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
-							//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
+							genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
 						}
 						return PROGRAM_OK;
 		case TOK_ADD:             // +
@@ -657,7 +659,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
-						genFunCallBegin(globalInfo->instructions, globalInfo->inWhile);
+						genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
 						if (pbody(tokenPP, globalInfo, savedIdTwo) != PROGRAM_OK) return errflg; 
@@ -679,7 +681,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						//function call
 						genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 						globalInfo->inFunCall = false;
-						//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
+						genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
 						return PROGRAM_OK;
 		default:		break;
 	}

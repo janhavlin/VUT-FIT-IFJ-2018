@@ -1,4480 +1,4480 @@
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1 != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = 1.68 != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - "text"
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * "text"
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / "text"
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = "text" != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = nil != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vi != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vf != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - vs
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * vs
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / vs
-$ 0
+$ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vs != vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil + vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil - vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil * vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil / vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil < vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil <= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil > vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= 1
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= 1.68
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= "text"
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= nil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= vi
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= vf
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= vs
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil >= vnil
 $ 4
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil == vnil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != 1
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != 1.68
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != "text"
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != nil
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != vi
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != vf
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != vs
 $ 0
 
 vi = 3
 vf = 9.1
 vs = "text"
-vnil=nil
+vnil=
 c = vnil != vnil
 $ 0
 

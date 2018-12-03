@@ -12,3 +12,7 @@ code-gen: src/code_gen.c src/code_gen.h src/code_gen_list.c src/code_gen_list.h 
 
 ifj: src/main.c src/main.h $(SRC_FILES) 
 	gcc $(CFLAGS) src/main.c src/main.h $(SRC_FILES) -o ifj18 -lm
+
+zip:
+	cd src && zip xvavri10 *.c *.h Makefile dokumentace.pdf rozsireni rozdeleni tests/tests.sh tests/test_scanner tests/test_parser tests/test_type_comp
+	
