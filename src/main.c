@@ -9,7 +9,12 @@
 	
 	description:	Main				
 */
-#include "main.h"
+#include<stdio.h>
+#include "s_table.h"
+#include "ifj_error.h"
+#include "scanner.h"
+#include "parser.h"
+#include "code_gen_list.h"
 
 int main() {
     errflg = PROGRAM_OK;    //extern from ifj_error.h
@@ -27,14 +32,12 @@ int main() {
     symTabInit(&LT);
     ILInit(&instructions);
     tokBuffInit();
-    //TODO: initialize generator LIST
     genPrgBegin(&instructions);
-    //processExpression(f, "eol", GT, LT, &instructions, false);
     int result = parse(f, GT, LT, &instructions);
     if (result == PROGRAM_OK)
-    ILPrintAllInst(instructions);
-        //TODO: generator print IFJcode18 from list
-    //TODO: dispose generator LIST
+        ILPrintAllInst(instructions);
+        
+    ILDisposeList(&instructions);
     symTabDispose(&LT);
     symTabDispose(&GT);
     return result;
