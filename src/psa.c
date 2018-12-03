@@ -228,7 +228,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     TAdr IDKonst;
 	while( !sLEmpty(s) ){  
        if( get.type == TOK_ID ){
-            if( symTabSearch(STG, get.data.s, NULL) && !symTabSearch(STL, get.data.s, NULL)){   // ID does not exist in Local ST, 
+            if( (symTabSearch(STG, get.data.s) != NULL) && (symTabSearch(STL, get.data.s) == NULL) ){   // ID does not exist in Local ST, 
                   		                                                                                              // but exist in Global ST
                 sLDelete(s);
 				if(get.data.s != NULL)
