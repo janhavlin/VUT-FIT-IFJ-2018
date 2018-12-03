@@ -12,18 +12,24 @@ vs = "text"
 vnil=nil
 c = 3 + 1.68
 print c
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 + "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 + nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -38,18 +44,24 @@ vs = "text"
 vnil=nil
 c = 3 + vf
 print c
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 + vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 + vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -64,18 +76,24 @@ vs = "text"
 vnil=nil
 c = 3 - 1.68
 print c
+$ 0 0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 - "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 - nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -90,114 +108,152 @@ vs = "text"
 vnil=nil
 c = 3 - vf
 print c
+$ 0 0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 - vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 - vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * 3
 print(c)
+$ 0 9
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * 1.68
 print c
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * vi
 print(c)
+$ 0 9
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * vf
 print c
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 * vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / 1.68
 print c
+$ 0 0x1.c924924924925p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / vf
 print c
+$ 0 0x1.c924924924925p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 / vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -212,18 +268,24 @@ vs = "text"
 vnil=nil
 c = 3 < 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 < "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 < nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -238,18 +300,24 @@ vs = "text"
 vnil=nil
 c = 3 < vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 < vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 < vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -264,18 +332,24 @@ vs = "text"
 vnil=nil
 c = 3 <= 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 <= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 <= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -290,18 +364,24 @@ vs = "text"
 vnil=nil
 c = 3 <= vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 <= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 <= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -316,18 +396,24 @@ vs = "text"
 vnil=nil
 c = 3 > 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 > "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 > nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -342,18 +428,24 @@ vs = "text"
 vnil=nil
 c = 3 > vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 > vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 > vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -368,18 +460,24 @@ vs = "text"
 vnil=nil
 c = 3 >= 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 >= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 >= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -394,18 +492,24 @@ vs = "text"
 vnil=nil
 c = 3 >= vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 >= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 >= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -420,18 +524,24 @@ vs = "text"
 vnil=nil
 c = 3 == 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 == "text"
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 == nil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -446,18 +556,24 @@ vs = "text"
 vnil=nil
 c = 3 == vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 == vs
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 == vnil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -472,18 +588,24 @@ vs = "text"
 vnil=nil
 c = 3 != 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 != "text"
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 != nil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -498,24 +620,32 @@ vs = "text"
 vnil=nil
 c = 3 != vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 != vs
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 3 != vnil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 + 3
 print(c)
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -530,18 +660,24 @@ vs = "text"
 vnil=nil
 c = 1.68 + "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 + nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 + vi
 print(c)
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -556,18 +692,24 @@ vs = "text"
 vnil=nil
 c = 1.68 + vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 + vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 - 3
 print(c)
+$ 0 -0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -582,18 +724,24 @@ vs = "text"
 vnil=nil
 c = 1.68 - "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 - nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 - vi
 print(c)
+$ 0 -0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -608,114 +756,152 @@ vs = "text"
 vnil=nil
 c = 1.68 - vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 - vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * 3
 print(c)
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * 1.68
 print c
+$ 0 0x1.694467381d7dbp+1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * vi
 print(c)
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * vf
 print c
+$ 0 0x1.694467381d7dbp+1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 * vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / 3
 print(c)
+$ 0 0x1.1eb851eb851ebp-1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / 1.68
 print c
+$ 0 0x1p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / vi
 print(c)
+$ 0 0x1.1eb851eb851ebp-1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / vf
 print c
+$ 0 0x1p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 / vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 < 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -730,18 +916,24 @@ vs = "text"
 vnil=nil
 c = 1.68 < "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 < nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 < vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -756,18 +948,24 @@ vs = "text"
 vnil=nil
 c = 1.68 < vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 < vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 <= 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -782,18 +980,24 @@ vs = "text"
 vnil=nil
 c = 1.68 <= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 <= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 <= vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -808,18 +1012,24 @@ vs = "text"
 vnil=nil
 c = 1.68 <= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 <= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 > 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -834,18 +1044,24 @@ vs = "text"
 vnil=nil
 c = 1.68 > "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 > nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 > vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -860,18 +1076,24 @@ vs = "text"
 vnil=nil
 c = 1.68 > vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 > vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 >= 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -886,18 +1108,24 @@ vs = "text"
 vnil=nil
 c = 1.68 >= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 >= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 >= vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -912,18 +1140,24 @@ vs = "text"
 vnil=nil
 c = 1.68 >= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 >= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 == 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -938,18 +1172,24 @@ vs = "text"
 vnil=nil
 c = 1.68 == "text"
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 == nil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 == vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -964,18 +1204,24 @@ vs = "text"
 vnil=nil
 c = 1.68 == vs
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 == vnil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 != 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -990,18 +1236,24 @@ vs = "text"
 vnil=nil
 c = 1.68 != "text"
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 != nil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 != vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -1016,12 +1268,16 @@ vs = "text"
 vnil=nil
 c = 1.68 != vs
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = 1.68 != vnil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2316,18 +2572,24 @@ vs = "text"
 vnil=nil
 c = vi + 1.68
 print c
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi + "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi + nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2342,18 +2604,24 @@ vs = "text"
 vnil=nil
 c = vi + vf
 print c
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi + vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi + vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2368,18 +2636,24 @@ vs = "text"
 vnil=nil
 c = vi - 1.68
 print c
+$ 0 0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi - "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi - nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2394,114 +2668,152 @@ vs = "text"
 vnil=nil
 c = vi - vf
 print c
+$ 0 0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi - vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi - vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * 3
 print(c)
+$ 0 9
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * 1.68
 print c
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * vi
 print(c)
+$ 0 9
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * vf
 print c
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi * vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / 1.68
 print c
+$ 0 0x1.c924924924925p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / vf
 print c
+$ 0 0x1.c924924924925p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi / vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2516,18 +2828,24 @@ vs = "text"
 vnil=nil
 c = vi < 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi < "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi < nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2542,18 +2860,24 @@ vs = "text"
 vnil=nil
 c = vi < vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi < vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi < vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2568,18 +2892,24 @@ vs = "text"
 vnil=nil
 c = vi <= 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi <= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi <= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2594,18 +2924,24 @@ vs = "text"
 vnil=nil
 c = vi <= vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi <= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi <= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2620,18 +2956,24 @@ vs = "text"
 vnil=nil
 c = vi > 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi > "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi > nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2646,18 +2988,24 @@ vs = "text"
 vnil=nil
 c = vi > vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi > vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi > vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2672,18 +3020,24 @@ vs = "text"
 vnil=nil
 c = vi >= 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi >= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi >= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2698,18 +3052,24 @@ vs = "text"
 vnil=nil
 c = vi >= vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi >= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi >= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2724,18 +3084,24 @@ vs = "text"
 vnil=nil
 c = vi == 1.68
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi == "text"
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi == nil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2750,18 +3116,24 @@ vs = "text"
 vnil=nil
 c = vi == vf
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi == vs
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi == vnil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2776,18 +3148,24 @@ vs = "text"
 vnil=nil
 c = vi != 1.68
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi != "text"
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi != nil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2802,24 +3180,32 @@ vs = "text"
 vnil=nil
 c = vi != vf
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi != vs
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vi != vnil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf + 3
 print(c)
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2834,18 +3220,24 @@ vs = "text"
 vnil=nil
 c = vf + "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf + nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf + vi
 print(c)
+$ 0 0x1.2b851eb851eb8p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2860,18 +3252,24 @@ vs = "text"
 vnil=nil
 c = vf + vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf + vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf - 3
 print(c)
+$ 0 -0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2886,18 +3284,24 @@ vs = "text"
 vnil=nil
 c = vf - "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf - nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf - vi
 print(c)
+$ 0 -0x1.51eb851eb851fp+0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -2912,114 +3316,152 @@ vs = "text"
 vnil=nil
 c = vf - vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf - vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * 3
 print(c)
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * 1.68
 print c
+$ 0 0x1.694467381d7dbp+1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * vi
 print(c)
+$ 0 0x1.428f5c28f5c29p+2
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * vf
 print c
+$ 0 0x1.694467381d7dbp+1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf * vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / 3
 print(c)
+$ 0 0x1.1eb851eb851ebp-1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / 1.68
 print c
+$ 0 0x1p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / vi
 print(c)
+$ 0 0x1.1eb851eb851ebp-1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / vf
 print c
+$ 0 0x1p+0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf / vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf < 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3034,18 +3476,24 @@ vs = "text"
 vnil=nil
 c = vf < "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf < nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf < vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3060,18 +3508,24 @@ vs = "text"
 vnil=nil
 c = vf < vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf < vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf <= 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3086,18 +3540,24 @@ vs = "text"
 vnil=nil
 c = vf <= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf <= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf <= vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3112,18 +3572,24 @@ vs = "text"
 vnil=nil
 c = vf <= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf <= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf > 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3138,18 +3604,24 @@ vs = "text"
 vnil=nil
 c = vf > "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf > nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf > vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3164,18 +3636,24 @@ vs = "text"
 vnil=nil
 c = vf > vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf > vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf >= 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3190,18 +3668,24 @@ vs = "text"
 vnil=nil
 c = vf >= "text"
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf >= nil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf >= vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3216,18 +3700,24 @@ vs = "text"
 vnil=nil
 c = vf >= vs
 print(c)
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf >= vnil
 print c
+$ 4
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf == 3
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3242,18 +3732,24 @@ vs = "text"
 vnil=nil
 c = vf == "text"
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf == nil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf == vi
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3268,18 +3764,24 @@ vs = "text"
 vnil=nil
 c = vf == vs
 print(c)
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf == vnil
 print c
+$ 0 0
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf != 3
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3294,18 +3796,24 @@ vs = "text"
 vnil=nil
 c = vf != "text"
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf != nil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf != vi
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
@@ -3320,12 +3828,16 @@ vs = "text"
 vnil=nil
 c = vf != vs
 print(c)
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
 c = vf != vnil
 print c
+$ 0 1
+
 vi = 3
 vf = 1.68
 vs = "text"
