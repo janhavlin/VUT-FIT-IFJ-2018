@@ -69,13 +69,18 @@ void genFunCallBegin(TInstrList *L, char *fun, bool inWhile, bool inFunDef){
     inst = getInst(OP_CREATEFRAME, undef, undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
 }
 
-void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, bool inWhile, bool inFunDef){
+void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, unsigned funParOrder, bool inWhile, bool inFunDef){
     TInst inst;
     TAdr adr1, adr2, undef;
-    
+    char *funParStr = convIntToStr(funParOrder);
     if (strcmp(fun, "print") == 0){
         switch (var.type){
-            case ADRTYPE_VAR:    inst = getInst(OP_WRITE, ADRVAR(adr2, var.val.s), undef, undef); break;
+            case ADRTYPE_VAR:
+                if (funParOrder > 0)
+                    inst = getInst(OP_WRITE, ADRVAR(adr2, funParStr), undef, undef);
+                else
+                    inst = getInst(OP_WRITE, ADRVAR(adr2, var.val.s), undef, undef);
+                break;
             case ADRTYPE_INT:    inst = getInst(OP_WRITE, ADRINT(adr2, var.val.i), undef, undef); break;
             case ADRTYPE_FLOAT:  inst = getInst(OP_WRITE, ADRFLT(adr2, var.val.f), undef, undef); break;
             case ADRTYPE_STRING: inst = getInst(OP_WRITE, ADRSTR(adr2, var.val.s), undef, undef); break;
@@ -91,9 +96,16 @@ void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, bool inW
     }
     else {
         char *conv = convIntToStr(parNum);
-        inst = getInst(OP_DEFVAR,   ADRVARTMP(adr1, conv), undef, undef); INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
+        inst = getInst(OP_DEFVAR,   ADRVARTMP(adr1, conv), undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
         switch (var.type){
-            case ADRTYPE_VAR:    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRVAR(adr2, var.val.s), undef); break;
+            //TODO funpar...
+            case ADRTYPE_VAR:
+                if (funParOrder > 0)
+                    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRVAR(adr2, funParStr), undef);
+                else
+                    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRVAR(adr2, var.val.s), undef);
+                break;
+
             case ADRTYPE_INT:    inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRINT(adr2, var.val.i), undef); break;
             case ADRTYPE_FLOAT:  inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRFLT(adr2, var.val.f), undef); break;
             case ADRTYPE_STRING: inst = getInst(OP_MOVE, ADRVARTMP(adr1, conv), ADRSTR(adr2, var.val.s), undef); break;
@@ -102,6 +114,7 @@ void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, bool inW
         INSERTLAST(L, inst, inWhile, inFunDef);
         free(conv);
     }
+    free(funParStr);
 }
 
 void genFunCallEnd(TInstrList *L, char *fun, bool inWhile, bool inFunDef){
@@ -264,8 +277,9 @@ void genAssign(TInstrList *L, char *var, unsigned funParOrder, unsigned psa, uns
     char *EStr = convIntToStr(psaResultE);
     char *psaVarStr = getStr(4, "PSA", psaStr, "E", EStr);
     char *funParStr = convIntToStr(funParOrder);
-
+    //printf("genAssign called with parnum %d\n", funParOrder);
     if (funParOrder > 0){
+        //printf("Replacing regular variable name with number %u %s\n", funParOrder, funParStr);
         inst = getInst(OP_MOVE, ADRVAR(adr1, funParStr), ADRVAR(adr2, psaVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
     }
     else {

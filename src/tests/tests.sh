@@ -43,11 +43,9 @@ check_output()
 
 interprete()
 {
-    #echo "interpreting"
-    sed -n -E -e '/.IFJcode18/,$ p' $OUTSRC.tmp > $OUTSRC
+    #sed -n -E -e '/.IFJcode18/,$ p' $OUTSRC.tmp > $OUTSRC
     PRINTED=$($INTERPRETER $OUTSRC)
     INTERPRETERRETVAL=$?
-    #echo "INTERPRETER PRINT $PRINTED""-"
     check_output $1 $INTERPRETERRETVAL $RETVAL $PRINTED $EXPECTEDPRINT
 }
 
@@ -73,15 +71,14 @@ test_file()
             TSTCNT=$((TSTCNT+1))
             RETVAL=$(echo $LINE | cut -c 3-4)
             EXPECTEDPRINT=$(echo $LINE | cut -c 5-)
-            #echo "EXPECTED RET $RETVAL""a"
-            #echo "EXPECTED PRINT $EXPECTEDPRINT""b"
-            #echo "$GREEN$BUFF$NORMAL"
-            echo "$BUFF" | $PRG > $OUTSRC.tmp
+            echo "$BUFF" | $PRG > $OUTSRC
             COMPILERETVAL=$?
             if [ $COMPILERETVAL -eq 0 ]; then
+                #echo "interpreting"
                 interprete $1
             else
-                check_output $1
+                #echo "not interpreting $COMPILERETVAL $RETVAL"
+                check_output $1 $COMPILERETVAL $RETVAL
             fi
             BUFF=""
         else
@@ -96,6 +93,6 @@ test_file()
 
 #test_file test_scanner
 #test_file test_parser
-test_file test_type_comp
+test_file test_type_comp $1
 
 print_stats

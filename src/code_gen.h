@@ -73,7 +73,7 @@ void genFunCallBegin(TInstrList *L, char *fun, bool inWhile, bool inFunDef);
  * @param inWhile Flag whether it's called from inside a while
  * @param inFunDef Flag whether it's called from inside a function definition
  */
-void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, bool inWhile, bool inFunDef);
+void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, unsigned funParOrder, bool inWhile, bool inFunDef);
 
 /**
  * @brief Pushes the temporary frame and calls the function
@@ -176,6 +176,7 @@ void genDefVar(TInstrList *L, char *var, bool inWhile, bool inFunDef);
  * 
  * @param L Pointer to a list of instructions
  * @param var Name of a variable to which will be assigned
+ * @param funParOrder
  * @param psa Index of PSA that evaluated the expression
  * @param E Index of the E variable that holds the value we want to assign
  * @param inWhile Flag whether it's called from inside a while
@@ -184,15 +185,13 @@ void genDefVar(TInstrList *L, char *var, bool inWhile, bool inFunDef);
 void genAssign(TInstrList *L, char *var, unsigned funParOrder, unsigned psa, unsigned psaResultE, bool inWhile, bool inFunDef);
 
 /**
- * @brief Function for evaluating PSA 'E -> E + E' rule
+ * @brief 
  * 
- * @param L Pointer to a list of instructions
- * @param psa Index of current PSA
- * @param psaResultE Index of 'E' to store the result
- * @param var1 Index of the first 'E' operand
- * @param var2 Index of the second 'E' operand
- * @param inWhile Flag whether it's called from inside a while
- * @param inFunDef Flag whether it's called from inside a function definition
+ * @param L 
+ * @param var 
+ * @param funParOrder 
+ * @param inWhile 
+ * @param inFunDef 
  */
 void genAssignRetval(TInstrList *L, char *var, unsigned funParOrder, bool inWhile, bool inFunDef);
 
