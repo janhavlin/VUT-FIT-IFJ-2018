@@ -15,16 +15,21 @@
 void ILInit (TInstrList *L){
     L->First = NULL;
 	L->Last = NULL;
-	L->Act = NULL;
-	L->ActFun = NULL;
+	L->BeforeWhile = NULL;
+	L->LabMain = NULL;
+    L->InFunDefBeforeWhile = NULL;
 }
 
-void ILSetActLast (TInstrList *L) {
-	L->Act = L->Last;
+void ILSetBeforeWhile (TInstrList *L) {
+	L->BeforeWhile = L->Last;
 }
 
-void ILSetActFunFirst (TInstrList *L) {
-	L->ActFun = L->First;
+void ILSetInFunDefBeforeWhile (TInstrList *L) {
+	L->InFunDefBeforeWhile = L->LabMain->lptr;
+}
+
+void ILSetLabMain (TInstrList *L) {
+	L->LabMain = L->First;
 }
 
 void disposeAdr(TAdr *adr){
@@ -94,36 +99,9 @@ void ILDisposeList (TInstrList *L){
 	free(tmp);
 	L->First = NULL;
 	L->Last = NULL;
-	L->Act = NULL;
-}
-
-void ILInsertLast(TInstrList *L, TInst inst, bool inWhile){
-	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));
-	if (new == NULL){
-		errflg = ERR_RUNTIME;
-		return;
-	}
-	
-	new->inst = inst;
-
-	if (L->Last == NULL)
-	{	
-		new->lptr = NULL;
-		new->rptr = NULL;
-		L->First = new;
-		L->Last = new;
-	}
-	else
-	{	
-		new->rptr = NULL;
-		new->lptr = L->Last;
-		L->Last->rptr = new;
-		L->Last = new;	
-	}
-
-    if (!inWhile){
-        ILSetActLast(L);
-    }
+	L->BeforeWhile = NULL;
+    L->InFunDefBeforeWhile = NULL;
+    L->LabMain = NULL;
 }
 
 void ILInsertFirst (TInstrList *L, TInst inst) {
@@ -151,46 +129,100 @@ void ILInsertFirst (TInstrList *L, TInst inst) {
 	}
 }
 
-void ILPostActInsert (TInstrList *L, TInst inst) {
-	if (L->Act == NULL)
+void ILInsertLast(TInstrList *L, TInst inst, bool inWhile){
+	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));
+	if (new == NULL){
+		errflg = ERR_RUNTIME;
 		return;
-	
-	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
-    //TODO: If new == NULL
-	
-	if (L->Last == L->Act)
-		L->Last = new;
+	}
 	
 	new->inst = inst;
-	
-	new->rptr = L->Act->rptr;
-	new->lptr = L->Act;
-	
-	if (L->Act->rptr != NULL)
-		L->Act->rptr->lptr = new;
-	
-	L->Act->rptr = new;	
+
+	if (L->Last == NULL)
+	{	
+		new->lptr = NULL;
+		new->rptr = NULL;
+		L->First = new;
+		L->Last = new;
+	}
+	else
+	{	
+		new->rptr = NULL;
+		new->lptr = L->Last;
+		L->Last->rptr = new;
+		L->Last = new;	
+	}
+
+    if (!inWhile)
+        ILSetBeforeWhile(L);
 }
 
-void ILPreActFunInsert (TInstrList *L, TInst inst) {
-	if (L->ActFun == NULL)
+void ILPreInsertLabMain (TInstrList *L, TInst inst, bool inWhile) {
+	if (L->LabMain == NULL)
 		return;
 	
 	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
     //TODO: If new == NULL
 	
-	if (L->First == L->ActFun)
+	if (L->First == L->LabMain)
 		L->First = new;
 	
 	new->inst = inst;
 	
-	new->lptr = L->ActFun->lptr;
-	new->rptr = L->ActFun;
+	new->lptr = L->LabMain->lptr;
+	new->rptr = L->LabMain;
 
-	if (L->ActFun->lptr != NULL)
-		L->ActFun->lptr->rptr = new;
+	if (L->LabMain->lptr != NULL)
+		L->LabMain->lptr->rptr = new;
 	
-	L->ActFun->lptr = new;
+	L->LabMain->lptr = new;
+
+    if (!inWhile)
+        ILSetInFunDefBeforeWhile(L);
+}
+
+void ILPostInsertBeforeWhile (TInstrList *L, TInst inst) {
+	if (L->BeforeWhile == NULL)
+		return;
+	
+	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
+    //TODO: If new == NULL
+	
+	if (L->Last == L->BeforeWhile)
+		L->Last = new;
+	
+	new->inst = inst;
+	
+	new->rptr = L->BeforeWhile->rptr;
+	new->lptr = L->BeforeWhile;
+	
+	if (L->BeforeWhile->rptr != NULL)
+		L->BeforeWhile->rptr->lptr = new;
+	
+	L->BeforeWhile->rptr = new;
+    
+
+}
+
+void ILPostInsertInFunDefBeforeWhile (TInstrList *L, TInst inst) {
+	if (L->InFunDefBeforeWhile == NULL)
+		return;
+	
+	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
+    //TODO: If new == NULL
+	
+	if (L->Last == L->InFunDefBeforeWhile)
+		L->Last = new;
+	
+	new->inst = inst;
+	
+	new->rptr = L->InFunDefBeforeWhile->rptr;
+	new->lptr = L->InFunDefBeforeWhile;
+	
+	if (L->InFunDefBeforeWhile->rptr != NULL)
+		L->InFunDefBeforeWhile->rptr->lptr = new;
+	
+	L->InFunDefBeforeWhile->rptr = new;	
 }
 
 void printAdr(TAdr adr){
@@ -310,10 +342,10 @@ void ILPrintAllInst(TInstrList L){
     printf(FUN_ORD);
 	while (tmpList.First != NULL){
         printInst(tmpList.First->inst);
-        if ((tmpList.First == tmpList.Act) && (tmpList.Act != NULL))
-            printf("\t# <-- Active\n");
-        else
-            printf("\n");
+        if ((tmpList.First == tmpList.BeforeWhile) && (tmpList.BeforeWhile != NULL)) printf("\t# <-- Outside while in main");
+        if ((tmpList.First == tmpList.InFunDefBeforeWhile) && (tmpList.BeforeWhile != NULL)) printf("\t# <-- Outside while in fun def");
+        if ((tmpList.First == tmpList.LabMain) && (tmpList.LabMain != NULL)) printf("\t# <-- Main label");
+        printf("\n");
 
 		tmpList.First=tmpList.First->rptr;
 	}      
