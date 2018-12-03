@@ -76,6 +76,9 @@ RETURN\n"
 #define ADRLAB(adr, var1, var2) (  (   adr.val.s = getStr(2, var1, var2),             \
                                       (adr.type = ADRTYPE_LABEL, adr)   )  )
 
+#define INSERTLAST(L, inst, inWhile, inFunDef) inFunDef ? ILPreInsertLabMain(L, inst, inWhile) : ILInsertLast(L, inst, inWhile)
+#define INSERTBEFOREWHILE(L, inst, inWhile, inFunDef) inFunDef ? ILPostInsertInFunDefBeforeWhile(L, inst) : ILPostInsertBeforeWhile(L, inst)
+
 typedef enum {      // Adresses
     OP_DEFVAR,      // 1
     OP_MOVE,        // 2
@@ -143,20 +146,24 @@ typedef struct TILElem {
 
 typedef struct {
     TILElemPtr First;
-    TILElemPtr Act;
-    TILElemPtr ActFun;
+    TILElemPtr BeforeWhile;
+    TILElemPtr LabMain;
+    TILElemPtr InFunDefBeforeWhile;
     TILElemPtr Last;
 } TInstrList;
 
 
 void ILInit (TInstrList *L);
-void ILSetActLast (TInstrList *L);
-void ILSetActFunFirst (TInstrList *L);
+void ILSetBeforeWhile (TInstrList *L);
+void ILSetInFunDefBeforeWhile (TInstrList *L);
+void ILSetLabMain (TInstrList *L);
 void ILDisposeList(TInstrList *L);
-void ILInsertLast(TInstrList *L, TInst inst, bool inWhile);
 void ILInsertFirst (TInstrList *L, TInst inst);
-void ILPostActInsert (TInstrList *L, TInst inst);
-void ILPreActFunInsert (TInstrList *L, TInst inst);
+void ILInsertLast(TInstrList *L, TInst inst, bool inWhile);
+void ILPreInsertLabMain (TInstrList *L, TInst inst, bool inWhile);
+void ILPostInsertBeforeWhile (TInstrList *L, TInst inst);
+void ILPostInsertInFunDefBeforeWhile (TInstrList *L, TInst inst);
+//void ILPreActFunInsert (TInstrList *L, TInst inst);
 void ILPrintAllInst(TInstrList L);
 char *getStr(int n, ...);
 char *getIfjCodeStr(char *s);
