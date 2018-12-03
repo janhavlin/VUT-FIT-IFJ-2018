@@ -272,7 +272,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 				newFuncData = symTabInsert(&(globalInfo->GT), functionId, funcData);
 				if (newFuncData == NULL) return errflg;
 			}
-			//genFunDefStart(functionId);
+			genFunDefStart(globalInfo->instructions, functionId, globalInfo->inWhile);
 			**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;
 			//process (
@@ -299,7 +299,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			//process end
 			if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 
-			//genFunDefEnd(functionId);
+			genFunDefEnd(globalInfo->instructions, globalInfo->inWhile);
 			globalInfo->currLT = globalInfo->mainLT;
 			return PROGRAM_OK;
 		} 
@@ -683,7 +683,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						//function call
 						genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile);
 						globalInfo->inFunCall = false;
-						genAssignRetval(globalInfo->instructions, savedIdOne, globalInfo->inWhile);	//to savedIdOne, from funcall
+						genAssignRetval(globalInfo->instructions, savedIdOne, varData.order, globalInfo->inWhile);	//to savedIdOne, from funcall
 						return PROGRAM_OK;
 		default:		break;
 	}
