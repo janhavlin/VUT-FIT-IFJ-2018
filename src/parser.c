@@ -488,7 +488,6 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						} //else Variable already defined, which is OK
 						if (globalInfo->mainLT == NULL && !globalInfo->inFunDef)
 							globalInfo->mainLT = globalInfo->currLT;	//mainLT initialization
-						printf("idOne:%s order:%u\n", savedIdOne, newVarData->order);
 						//process assign
 						if (assign(tokenPP, globalInfo, savedIdOne, newVarData) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
