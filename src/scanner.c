@@ -223,6 +223,11 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     charPut(&buff, c);
                     state = S_FLOAT_DOT;
                 }
+                else if (c == 'e' || c == 'E'){
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
+                    state = S_FLOAT_E;
+                }
                 else {
                     ungetc(c, f);
                     state = S_START;
@@ -255,6 +260,11 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX;
+                }
+                else if (c == 'e' || c == 'E'){
+                    charPut(&buff, c);
+                    CHECKERR(errflg, buff, tok);
+                    state = S_FLOAT_E;
                 }
                 else {
                     ungetc(c, f);
