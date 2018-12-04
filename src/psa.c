@@ -251,7 +251,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     
 	while( !sLEmpty(s) ){  
        if( get.type == TOK_ID ){
-            if( (IDData = symTabSearch(STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
+            if( (IDData = symTabSearch(&STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
                 sLDelete(s);
                 
 				ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);

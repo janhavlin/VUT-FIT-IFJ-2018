@@ -77,7 +77,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
     string buff = stringInit();
     CHECKERR(errflg, buff, tok);
 
-    while(c = getc(f)){
+    while((c = getc(f))){
          /*DEBUG*///printf("CHAR READ: %c\n", c);
         switch(state){
             case S_START:
@@ -130,47 +130,56 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 else if (c == '\n'){
                     tok.type = TOK_EOL;
                     notFirstChar = false;
+                    free(buff);
                     return tok;
                 }
                 else if (c == '+'){
                     tok.type = TOK_ADD;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == '-'){
                     tok.type = TOK_SUB;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == '*'){
                     tok.type = TOK_MUL;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == '/'){
                     tok.type = TOK_DIV;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == '('){
                     tok.type = TOK_LBR;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == ')'){
                     tok.type = TOK_RBR;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == ','){
                     tok.type = TOK_COMMA;
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (c == EOF){
                     tok.type = TOK_EOF;
                      /*DEBUG*///printf("Token read: EOF\n");
                     notFirstChar = true;
+                    free(buff);
                     return tok;
                 }
                 else if (isspace(c)){
@@ -204,7 +213,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                      /*DEBUG*///printf("Token read: %s\n", buff);
                     TsymData *data = NULL;
-                    if (((data = symTabSearch(symTableP, buff)) != NULL) && data->type == TYPE_KWD)
+                    if (((data = symTabSearch(&symTableP, buff)) != NULL) && data->type == TYPE_KWD)
                         tok.type = TOK_KEY;
                     else
                         tok.type = TOK_ID;
@@ -323,7 +332,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_INT_HEX:
-                if (isdigit(c) || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f'){
+                if (isdigit(c) || ((c >= 'A') && (c <= 'F')) || ((c >= 'a') && (c <= 'f'))){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX_NUM;
@@ -333,7 +342,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_INT_HEX_NUM:
-                if (isdigit(c) || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f'){
+                if (isdigit(c) || ((c >= 'A') && (c <= 'F')) || ((c >= 'a') && (c <= 'f'))){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_INT_HEX_NUM;
@@ -446,7 +455,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 if (c == 'x'){
                     state = S_STR_XH;
                 }
-                else if (c == '\"' || c == '\\' || c == 'n' || c == 't' || c == 's'){
+                else if ((c == '\"') || (c == '\\') || (c == 'n') || (c == 't') || (c == 's')){
                     switch (c){
                         case '\"': charPut(&buff, '\"'); break;
                         case '\\': charPut(&buff, '\\'); break;
@@ -463,7 +472,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_STR_XH:
-                if (isdigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')){
+                if (isdigit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'))){
                     if (isdigit(c))
                         conv_esc = c - '0';
                     else
@@ -476,7 +485,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
 
             case S_STR_XHH:
-                if (isdigit(c) || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F'){
+                if (isdigit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'))){
                     conv_esc *= 16;
                     if (isdigit(c))
                         conv_esc += c - '0';
@@ -502,6 +511,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_EOL;
                     notFirstChar = false;
+                    free(buff);
                     return tok;
                 }
                 break;
@@ -510,12 +520,14 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 if (c == '='){
                     state = S_START;
                     tok.type = TOK_LEQ;
+                    free(buff);
                     return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_LT;
+                    free(buff);
                     return tok;
                 }
                 break;
@@ -524,12 +536,14 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 if (c == '='){
                     state = S_START;
                     tok.type = TOK_GEQ;
+                    free(buff);
                     return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_GT;
+                    free(buff);
                     return tok;
                 }
                 break;
@@ -538,12 +552,14 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 if (c == '='){
                     state = S_START;
                     tok.type = TOK_EQ;
+                    free(buff);
                     return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
                     tok.type = TOK_ASSIGN;
+                    free(buff);
                     return tok;
                 }
 
@@ -551,6 +567,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 if (c == '='){
                     state = S_START;
                     tok.type = TOK_NEQ;
+                    free(buff);
                     return tok;
                 }
                 break;
@@ -681,4 +698,5 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
         } //switch
     } //while
+return tok;
 }
