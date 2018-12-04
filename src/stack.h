@@ -1,13 +1,13 @@
 /**
-	file name:		stack.h
-	project:		VUT-FIT-IFJ-2018
-	created:		22.10.2018
-	last modified:	22.10.2018
-	
-	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
-	modifications:	
-	
-	description:	Stack for string
+ * 	file name:		stack.h
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		22.10.2018
+ *	last modified:	22.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *	modifications:	
+ *	
+ *	description:	Stack for string
 */
 
 #ifndef STACK_PR
@@ -26,6 +26,7 @@ typedef struct tStack{
 }tStack;
 
 typedef tStack* tStackPtr;
+
 
 tStackPtr sInit( void );
 bool sDelete( tStackPtr stack );

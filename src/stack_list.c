@@ -1,11 +1,20 @@
+/**
+ *	file name:		stack_list.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		26.10.2018
+ *	last modified:	26.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ 
+ *	modifications:	
+ *	
+ *	description:	Stack reaslied by list
+*/
+
 #include "stack_list.h"
 
-/*
- *	sLInit()
- *		Inicialise all stack + add first item with $.
- *		Return pointer to inicialise stack.
- */
-tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string bottomStakTokType
+
+tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){
 	tStackLPtr stack = (tStackLPtr) malloc(sizeof(tStackL));
 	
 	if(stack != NULL){
@@ -14,7 +23,6 @@ tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string b
 		if(stack->first != NULL){
 			stack->first->pred 	 = NULL;	
 			stack->first->next 	 = NULL;
-			//stack->first->type 	 = (char *) calloc(strlen(bottomStakTokType)+1, sizeof(char));
 			stack->first->type = 0;
 			stack->first->IdName = (char *) calloc(strlen(bottomStakTokName)+1, sizeof(char));
 
@@ -25,17 +33,10 @@ tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string b
 				errflg = ERR_RUNTIME;
 				return NULL; 
 			}
-			
-			/*if(stack->first->type == NULL){
-				free(stack->first);
-				free(stack);
-				ifjErrorPrint("stack_list ERROR in sLInit: Can't allocate string 'type' in stack. ERROR %d\n", ERR_RUNTIME);
-				errflg = ERR_RUNTIME;
-				return NULL;
-			}*/
+
 			
 			stack->first->IdName = strcpy(stack->first->IdName, bottomStakTokName);	
-			stack->first->type   = bottomStakTokType;	//strcpy(stack->first->type, bottomStakTokType);		//EOS End Of Stack
+			stack->first->type   = bottomStakTokType;
 			stack->top 		 	 = stack->first;
 			
 			stack->top->next = NULL;
@@ -57,10 +58,6 @@ tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){	//string b
 }
 
 
-/*
- *	sLDelete()
- *		Delete whole stack.
-*/
 bool sLDelete( tStackLPtr stack ){
 	if(stack != NULL){
 		tStackIPtr help = stack->first;
@@ -98,16 +95,9 @@ bool sLDelete( tStackLPtr stack ){
 }
 
 
-/*
- *	sLEmpty()
- *		Check if stack is empty. If yes, return 1, otherwise return 0.
-*/
 bool sLEmpty( tStackLPtr stack ){	// return 1 if stack is empty
 	if(stack != NULL){
-		/*if( !(strcmp(stack->top->IdName, "$")) || !(strcmp(stack->top->type, "EOS")) ){
-			return 1;
-		}*/
-		
+	
 		if( (stack->top == NULL) || (stack->first == NULL) ){
 			return 1;		
 		}	
@@ -120,10 +110,6 @@ bool sLEmpty( tStackLPtr stack ){	// return 1 if stack is empty
 }
 
 
-/*
- *	sLTop()
- *		Return item at the top of stack. It will not delete it.
-*/
 tStackIPtr sLTop( tStackLPtr stack ){
 	if(stack != NULL)
 		return stack->top;
@@ -132,10 +118,6 @@ tStackIPtr sLTop( tStackLPtr stack ){
 }
 
 
-/*
- *	sLPop()
- *		Return item at the top of stack. Decrement top value.
- */
 tStackIPtr sLPop( tStackLPtr stack ){
 	if( !sLEmpty(stack) ){
 		tStackIPtr res = stack->top;
@@ -147,11 +129,6 @@ tStackIPtr sLPop( tStackLPtr stack ){
 }
 
 
-/*
- *	sGetExprToReduce()
- *		When reduce is asserted, this function find string from top of stack to symbol 's' == '<'
- *		and return this string (without 's').
- */
 string sGetExprToReduce( tStackLPtr stack ){	// for example sE+E
 	if(stack != NULL){
 		unsigned long amount = 0;
@@ -177,7 +154,7 @@ string sGetExprToReduce( tStackLPtr stack ){	// for example sE+E
 		}
 		
 		while ( item != stack->top->next ){
-			strcat(exp, item->IdName);	//, strlen(item->IdName)
+			strcat(exp, item->IdName);
 			item = item->next;
 		}
 
@@ -188,11 +165,6 @@ string sGetExprToReduce( tStackLPtr stack ){	// for example sE+E
 }
 
 
-				
-/*
- *	sPreAdd()
- *		Paste item before given item.
-*/
 void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type ){ //char *type
 	if(stack != NULL){
 		if( (before != NULL) && (name != NULL) ){ // (type != NULL) &&
@@ -208,23 +180,16 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type ){ //cha
 			New->pred = NULL;
 		
 			New->IdName = (char *) calloc(strlen(name) + 1, sizeof(char));
-			/*New->type 	= (char *) calloc(strlen(type) + 1, sizeof(char));*/		
+					
 		
 			if(New->IdName == NULL){
 				ifjErrorPrint("stack_list ERROR in sPreAdd: Can't allocate item 'IdName' in New. ERROR %d\n", ERR_RUNTIME);
 				errflg = ERR_RUNTIME;
 				return;
 			}
-
-			/*if( New->type == NULL){
-				ifjErrorPrint("stack_list ERROR in sPreAdd: Can't allocate item 'type' in New. ERROR %d\n", ERR_RUNTIME);
-				errflg = ERR_RUNTIME;
-				return;
-			}*/
-		
 		
 			New->IdName = strcpy(New->IdName, name);
-			New->type 	= type;//strcpy(New->type, type);
+			New->type 	= type;
 			
 			tStackIPtr help = before->pred;
 			
@@ -237,10 +202,7 @@ void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type ){ //cha
 	}
 }
 				
-/*
- *	sLPush()
- *		Create new stack list, fill it with 'type' and 'name' and then put it into stack.
-*/
+
 void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 	if(stack != NULL){
 		tStackIPtr New 	= (tStackIPtr) malloc(sizeof(tStackI));
@@ -253,8 +215,7 @@ void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 		New->next = NULL;
 		New->pred = NULL;
 		
-		New->IdName = (char *) calloc(strlen(name) + 1, sizeof(char));
-		//New->type 	= (char *) calloc(strlen(type) + 1, sizeof(char));		
+		New->IdName = (char *) calloc(strlen(name) + 1, sizeof(char));		
 		
 		if(New->IdName == NULL){
 			ifjErrorPrint("stack_list ERROR in sLPush: Can't allocate item 'IdName' in New. ERROR %d\n", ERR_RUNTIME);
@@ -262,15 +223,8 @@ void sLPush( tStackLPtr stack, char *name, int type  ){	//char *type
 			return;
 		}
 
-		/*if( New->type == NULL){
-			ifjErrorPrint("stack_list ERROR in sLPush: Can't allocate item 'type' in New. ERROR %d\n", ERR_RUNTIME);
-			errflg = ERR_RUNTIME;
-			return;
-		}*/
-		
-
 		New->IdName = memcpy(New->IdName, name, strlen(name));
-		New->type 	= type;//strcpy(New->type, type);
+		New->type 	= type;
 		
 		tStackIPtr Help;
 

@@ -1,18 +1,33 @@
 /**
-	file name:		psa.c
-	project:		VUT-FIT-IFJ-2018
-	created:		23.11.2018
-	last modified:	23.11.2018
-	
-	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
-	
-	description:	Precedence syntax analysis for expressions
-*/
+ *	file name:		psa.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		23.11.2018
+ *	last modified:	23.11.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *    
+ *	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
+ *	
+ *	description:	Precedence syntax analysis for expressions
+ */
+
 #include "psa.h"
 
 #define NUMBER_OF_TOKENS 14
 #define NO_ID 0
+
+// delete token if token is not key word, End Of Line or End Of File
+#define DELETE_TOKEN(get, delete) { \
+                            if((get.type != TOK_KEY) && (get.type != TOK_EOL) && (get.type != TOK_EOF) )\
+                            free(delete); \
+                          }
+
+// check if we token is key word, identifier or string and if true, than store this token for future freeing
+#define TOK_PREP_FOR_DELETE(get, delete) { \
+                                if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)\
+                                    delete = get.data.s;\
+                          }
+                          
 /**
  * returns symbol representing next action based on 2 tokens
  * @param stackTopTok is token currently at the top of stack
@@ -39,10 +54,11 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
 
     int row = getIndex(stackTopTok);
     int col = getIndex(newTok);
-   // printf("ROW: %d, COL: %d\n\n", row, col);
+    //printf("ROW: %d, COL: %d\n\n", row, col);
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS){
-    	if(stackTopTok.data.s != NULL)
-    		free(stackTopTok.data.s);    
+    	if(stackTopTok.data.s != NULL){
+    		free(stackTopTok.data.s);  
+        }  
 		return precedenceTable[row][col];
 	}
     else {
@@ -207,35 +223,40 @@ TAdr idValGet(TToken get){
  *  symTablePL == local symbol table
  */ 
 unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, TsymItem *STL, TInstrList *instrList, bool inWhile, bool inFunDef){
-
-    unsigned int Ecount  = 0;   // counter of element E in stack when reduce
-    int EFirst = -1;   // number of first E for generator
-    int ESecond = -1;  // number of second E for gennerator
+    
     static unsigned int psaCntr = 0;    // total amount of psa calls
+    unsigned int Ecount  = 0;           // counter of element E in stack when reduce
+    int EFirst = -1;                    // number of first E for generator
+    int ESecond = -1;                   // number of second E for gennerator
+    int ruleGet = 0;                    // number of rule that has to be apply
 
-    tStackLPtr s;
-	
-	if(strcmp(followingToken, "eol"))
-		s = sLInit(TOK_KEY, followingToken);  // followingToken == bottom of stack
-	else
-		s = sLInit(TOK_EOL, followingToken);  // followingToken == bottom of stack
-
-    TToken get      = getToken(f, STG);                // token got from scanner
-    TToken ter      = highestTerminal(s);   // highest terminal in stack
-    char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
+    string delete;      // using for token deleting
     string toReduce;    // string that has to be reduced
-    int ruleGet = 0;    // number
 
     TsymData *IDData = NULL;
-
+    tStackLPtr s;       // stack
     TAdr IDKonst;
+
+	if(!strcmp(followingToken, "eol"))
+		s = sLInit(TOK_EOL, followingToken);  // followingToken == bottom of stack
+	
+    else
+		s = sLInit(TOK_KEY, followingToken);  // followingToken == bottom of stack
+
+    TToken get      = getToken(f, STG);                     // token got from scanner
+    TToken ter      = highestTerminal(s);                   // highest terminal in stack
+    char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
+    
+
+    
 	while( !sLEmpty(s) ){  
        if( get.type == TOK_ID ){
             if( (IDData = symTabSearch(STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
                 sLDelete(s);
-				if(get.data.s != NULL)
-					free(get.data.s);                
+                
 				ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
+                if(get.data.s != NULL)
+					free(get.data.s);
                 errflg = ERR_SEM_DEFINE;
 				return 0;	// 0 means error == 0 E chars was found
             }
@@ -244,7 +265,9 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 		//sPrintStack(s);
         switch(toDo){  
                  
-			// reduce
+			/*
+             *  Reducing rule
+             */ 
             case 'r':
 				toReduce = sGetExprToReduce(s);       
 			 	if( (ruleGet = findRule(toReduce)) != RULE_NOT_FOUND){  // try to find specific rule for reducing
@@ -255,7 +278,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 						sLDelete(s);
 						ifjErrorPrint("psa ERROR in processExpression: Stack is empty. ERROR %d\n", ERR_RUNTIME);
 						errflg = ERR_RUNTIME;
-						return 0;	// 0 means error == 0 E chars was found
+						return 0;
 					}
 
 					while( strcmp(s->top->IdName, "s") ){
@@ -286,13 +309,13 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 2.
                         case PLUSE_RULE:        // +E
-                                //genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
-                                //printf("Generuji '+E' %s s E%d\n", IDKonst.val.s, Ecount);
+                                genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                               // printf("Generuji '+E' %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         // rule 3.
-                        case NEG_RULE:         // -E
-                                //genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                        case NEG_RULE:          // -E
+                                genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
                                 //printf("Generuji '-E' %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
                         
@@ -309,13 +332,13 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
 
                         // rule 6.    
-                        case LT_RULE:          // <
+                        case LT_RULE:           // <
                                 genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
 						        //printf("Generuji '<' s E%d = E%d < E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 7. 
-                        case GT_RULE:          // >
+                        case GT_RULE:           // >
                                 genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
 						        //printf("Generuji '>' s E%d = E%d > E%d \n",Ecount, ESecond, EFirst);
                             break;
@@ -333,7 +356,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
 
                         // rule 10.
-                        case EQ_RULE:          // ==
+                        case EQ_RULE:           // ==
                                 genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
 						        //printf("Generuji '==' s E%d = E%d == E%d \n",Ecount, ESecond, EFirst);
                             break;                  
@@ -341,12 +364,12 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         // rule 11.
                         case NEQ_RULE:          // !=
                                 genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '!=' s E%d = E%d != E%d \n",Ecount, ESecond, EFirst);
+						       //printf("Generuji '!=' s E%d = E%d != E%d \n",Ecount, ESecond, EFirst);
                             break; 
 
                         // rule 12.
                         case ID_RULE:           // ID
-                                genE(instrList, psaCntr, Ecount, IDKonst, IDData->order,inWhile, inFunDef);
+                                genE(instrList, psaCntr, Ecount, IDKonst, IDData->order, inWhile, inFunDef);
                                 //printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
@@ -364,56 +387,78 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 15.
                         case STRING_RULE:       // string
-	                          	//printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
+	                            //printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
 	                    	    genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
                     }
 
-					(s->top)->numberOfE = Ecount++;     // add number of E to corresponding stack item
+					if( (ruleGet == LBR_E_RBR_RULE) ){
+                        (s->top)->numberOfE = Ecount-1;     // add number of E to corresponding stack item
+                    }
+                    else
+                        (s->top)->numberOfE = Ecount++;
 
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 					if(toReduce != NULL)
-						free(toReduce);
-					
+						free(toReduce);					
 				}
+
                 else{
                     sLDelete(s);
-                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_SYNTAX);
+                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_LEXICAL);
 					if(toReduce != NULL)
 						free(toReduce);
 				    errflg = ERR_SYNTAX;
-					return 0;	// 0 means error == 0 E chars was found
+					return 0;	
                 }
                 break;
 
 
 
-            // shift
+            /*
+             *  Shifting rule
+             */
             case 's':
                 sPlaceShiftChar( s );
                 IDKonst = idValGet(get);
                 if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) )
                 	get.type = TOK_STRING;
 				sLPush(s, tokToStr(get), get.type);
+                
+                //TOK_PREP_FOR_DELETE(get, delete);   // check if token can be deleted 
+                
                 get = getToken(f, STG);
-				toDo = lookInPrecedenceTable( highestTerminal(s), get );
+               
+                //DELETE_TOKEN(get, delete);          // if it is possible to delete token, it deletes it
+                
+                toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
 
 
 
-            // equal
+            /*
+             *  Equal rule
+             */
             case 'e':
                 IDKonst = idValGet(get);
                 if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) )
                 	get.type = TOK_STRING;
                 sLPush(s, tokToStr(get), get.type);
+
+                //TOK_PREP_FOR_DELETE(get, delete);
+
                 get = getToken(f, STG);
-				toDo = lookInPrecedenceTable( highestTerminal(s), get );
+
+                //DELETE_TOKEN(get, delete);           
+
+                toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
             
 
 
-            // nothing
+            /*
+             *  Nothing/Empty rule
+             */
             case 'X':
                 if( ((get.type == TOK_KEY) && ( (!strcmp(get.data.s, "do")) || 
                     (!strcmp(get.data.s, "then"))) ) || (get.type == TOK_EOL) ){   // end of expression was found
@@ -426,21 +471,26 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 		                break;             
                 	}
                 }
-                          
+
+                /*if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)
+                    free(get.data.s);*/
+              
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
 			    errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;  // // an error was found                   
-                
 
             default:
+                /*if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) &&get.data.s != NULL)
+                    free(delete);*/
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
                 errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;
         }
        
     }
+
     sLDelete(s);
 	return Ecount-1;
 }
