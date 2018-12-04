@@ -10,8 +10,9 @@
 	description:	Precedence syntax analysis for expressions
 */
 #include "psa.h"
-#define NUMBER_OF_TOKENS 14
 
+#define NUMBER_OF_TOKENS 14
+#define NO_ID 0
 /**
  * returns symbol representing next action based on 2 tokens
  * @param stackTopTok is token currently at the top of stack
@@ -225,10 +226,12 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
     string toReduce;    // string that has to be reduced
     int ruleGet = 0;    // number
 
+    TsymData *IDData = NULL;
+
     TAdr IDKonst;
 	while( !sLEmpty(s) ){  
        if( get.type == TOK_ID ){
-            if(symTabSearch(STL, get.data.s) == NULL){   // ID does not exist in Local ST,  
+            if( (IDData = symTabSearch(STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
                 sLDelete(s);
 				if(get.data.s != NULL)
 					free(get.data.s);                
@@ -343,26 +346,26 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 12.
                         case ID_RULE:           // ID
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                                genE(instrList, psaCntr, Ecount, IDKonst, IDData->order,inWhile, inFunDef);
                                 //printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
                             break;
 
                         // rule 13.                    
                         case INT_RULE:          // int
                                 //printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                                genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
 
                         // rule 14.
                         case FLOAT_RULE:        // float
                                 //printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
-                                genE(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                                genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
 
                         // rule 15.
                         case STRING_RULE:       // string
 	                          	//printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
-	                    	    genE(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+	                    	    genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
                     }
 
