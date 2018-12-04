@@ -1,13 +1,13 @@
 /**
-	file name:		stack.c
-	project:		VUT-FIT-IFJ-2018
-	created:		22.10.2018
-	last modified:	22.10.2018
-	
-	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
-	modifications:	
-	
-	description:	Converting types to different types
+ * 	file name:		stack.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		22.10.2018
+ *	last modified:	22.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *	modifications:	
+ *	
+ *	description:	Converting types to different types
 */
 
 #include "stack.h"

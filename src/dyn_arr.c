@@ -5,19 +5,17 @@
 	last modified:	19.10.2018
 	
 	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+
 	modifications:	
 	
-	description:	File with error numbers and error printing function
+	description:	Api for string, that automatically change his lenght if needed
 */
 
 #include "dyn_arr.h"
 #include "ifj_error.h"
 
 int errflg = 0;
-/*
-* string_init()
-* 	Allocate memory for string and check if allocation is succesful.
-*/
+
 string stringInit(){				
 	string arr = (string) calloc( ALLOC_SIZE + 1,  sizeof(char) );
 
@@ -30,13 +28,6 @@ string stringInit(){
 	return arr;
 }
 
-
-
-/*
- * char_put()
- * 	Check if given string is not NULL and if is not NULL, add char c into string.
- *	If string is full and user wants to add new char, than allocate new memory for him.
- */
 void charPut(string *arr, char c){		
 
 	if((*arr) != NULL){
@@ -70,12 +61,6 @@ void charPut(string *arr, char c){
 }
 
 
-
-/*
- * strDelete()
- *	Free pasted string. If addr of string is NULL, nothing happens and value 1 is returned.
- *  If addr is not NULL, then free string and return 0.
- */
 bool strDelete( string arr ){
 	if( arr == NULL)
 		return 1;

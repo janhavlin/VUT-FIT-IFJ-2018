@@ -1,15 +1,16 @@
 /**
-	file name:		psa.h
-	project:		VUT-FIT-IFJ-2018
-	created:		23.11.2018
-	last modified:	23.11.2018
-	
-	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
-					
-	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	
-	description:	Precedence syntax analysis for expressions
-*/
+ *	file name:		psa.h
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		23.11.2018
+ *	last modified:	23.11.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *					
+ *	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
+ *	
+ *	description:	Precedence syntax analysis for expressions
+ */
+
 #ifndef IFJ18_PSA_H
 #define IFJ18_PSA_H
 #include <stdio.h>
@@ -43,6 +44,7 @@
 #define FLOAT_RULE			15
 #define STRING_RULE			16
 
+char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH];	// all rules used for precedence S.A.
 
 /**
  * handles expressions
@@ -57,14 +59,45 @@
  */
 unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, TsymItem *STL, TInstrList *instrList, bool inWhile, bool inFunDef);
 
+/**
+ * @brief Find corresponding rule to apply (shift, reduce, empty, equal) for precedence S.A.
+ * 
+ * @param stackTopTok Token on the top of stack
+ * @param newTok Token that comes from scanner 
+ * @return Specific rule - Shift == 's', Reduce == 'r', Empty == 'X', Equal == 'e'
+ */
 char lookInPrecedenceTable(TToken stackTopTok, TToken newTok);
+
+/**
+ * @brief Help function, that get index into precedence table
+ * 
+ * @param token Token which index we want to get
+ * @return Index to precedence table
+ */
 int getIndex(TToken token);
 
-char rules[AMOUNT_OF_RULES][MAX_RULE_LENGTH];
-
+/**
+ * @brief Goes from Top to First item of stack until terminal is found
+ * 
+ * @param stack Pointer to stack
+ * @return Highest terminal in stack
+ */
 TToken highestTerminal( tStackLPtr stack );
+
+/**
+ * @brief Goes through all rules untiol the rule is found
+ * 
+ * @param readRule String with tokens to reduce (rule)
+ * @return Number of rule or -1 when rule is not found
+ */
 int findRule( string readRule );
 
+/**
+ * @brief Help function, to store data from scannere structure TToken to structure for generator 
+ * 
+ * @param get Token that we need to store into generator structure
+ * @return Generator structure
+ */
 TAdr idValGet(TToken get);
 
 #endif //IFJ18_PSA_H
