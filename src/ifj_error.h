@@ -1,6 +1,14 @@
-/*
-*	error.h
-*/
+/**
+ *	file name:		ifj_error.h
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		17.10.2018
+ *	last modified:	17.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *	modifications:	
+ *	
+ *	description:	There are names of errors and function to print error
+ */
 
 #include<stdarg.h>
 #include<stdio.h>
@@ -32,7 +40,9 @@ extern int errflg;
 // interni chyba prekladace tj. neovlivnena vstupnim programem (napr. chyba alokace pameti, atd.)
 #define ERR_RUNTIME		    99
 
-// funkce pro vypis chtene chyby
+/**
+ * @brief Behaves as printf(), but used to print error to stderr
+ */
 void ifjErrorPrint( const char *fmt, ... );
 
 #endif // IFJ_ERROR

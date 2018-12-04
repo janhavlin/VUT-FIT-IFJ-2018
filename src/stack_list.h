@@ -1,8 +1,8 @@
 /**
  *	file name:		stack_list.h
  *	project:		VUT-FIT-IFJ-2018
- *	created:		19.10.2018
- *	last modified:	19.10.2018
+ *	created:		26.10.2018
+ *	last modified:	26.10.2018
  *	
  *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
  *	modifications:	
@@ -71,6 +71,16 @@ tStackIPtr sLPop( tStackLPtr stack );
  * @return Expression for precedence syntactic analyse
  */
 string sGetExprToReduce( tStackLPtr stack );
+
+/**
+ * @brief Add item into stack before some item
+ * 
+ * @param stack Pointer to stack
+ * @param before Pointer to item that will be located after added item
+ * @param name Name of token
+ * @param type Type of token
+ */
+void sPreAdd( tStackLPtr stack, tStackIPtr before, char *name, int type );
 
 /**
  * @brief Delete allstack

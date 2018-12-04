@@ -1,27 +1,33 @@
 /**
-	file name:		psa.c
-	project:		VUT-FIT-IFJ-2018
-	created:		23.11.2018
-	last modified:	23.11.2018
-	
-	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
-	
-	description:	Precedence syntax analysis for expressions
-*/
+ *	file name:		psa.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		23.11.2018
+ *	last modified:	23.11.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *    
+ *	modifications:	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
+ *	
+ *	description:	Precedence syntax analysis for expressions
+ */
+
 #include "psa.h"
 
 #define NUMBER_OF_TOKENS 14
 #define NO_ID 0
 
+// delete token if token is not key word, End Of Line or End Of File
 #define DELETE_TOKEN(get, delete) { \
-                           if((get.type != TOK_KEY) && (get.type != TOK_EOL) && (get.type != TOK_EOF) )\
+                            if((get.type != TOK_KEY) && (get.type != TOK_EOL) && (get.type != TOK_EOF) )\
                             free(delete); \
                           }
+
+// check if we token is key word, identifier or string and if true, than store this token for future freeing
 #define TOK_PREP_FOR_DELETE(get, delete) { \
-                            if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)\
-                                delete = get.data.s;\
+                                if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)\
+                                    delete = get.data.s;\
                           }
+                          
 /**
  * returns symbol representing next action based on 2 tokens
  * @param stackTopTok is token currently at the top of stack
