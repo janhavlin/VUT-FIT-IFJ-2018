@@ -1,3 +1,15 @@
+/**
+ *	file name:		type_conv.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		19.10.2018
+ *	last modified:	19.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *	modifications:	
+ *	
+ *	description:	Converting types to different types
+*/
+
 #include "stack_list.h"
 
 /*

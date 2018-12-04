@@ -1,3 +1,15 @@
+/**
+ *	file name:		type_conv.c
+ *	project:		VUT-FIT-IFJ-2018
+ *	created:		19.10.2018
+ *	last modified:	19.10.2018
+ *	
+ *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
+ *	modifications:	
+ *	
+ *	description:	Converting types to different types
+*/
+
 #include <stdbool.h>
 #include <math.h>
 #include <ctype.h>
@@ -6,17 +18,14 @@
 
 
 
-/*
-* convStrToInt()
-* 	Converts string to integer.
-*/
+
 int convStrToInt(string str){			
 	int result = 0;
 	int dec = 1;
 	int shifter = 0;
 	int type = 0;	// 0- decimal
-			// 1- hexadecimal
-			// 2- octal
+					// 1- hexadecimal
+					// 2- octal
 	
 	// decimal
 	if(str[0] != '0' )
@@ -83,10 +92,7 @@ int convStrToInt(string str){
 }
 
 
-/*
-* convIntToStr()
-* 	Converts integer to string.
-*/
+
 char *convIntToStr(int numb){
 	char *res = stringInit();
 	char tmp;
@@ -134,10 +140,6 @@ char *convIntToStr(int numb){
 }
 
 
-/*
-* convStrToDouble()
-* 	Converts string to float/double.
-*/
 double convStrToDouble(string str){
 	int dot = strlen(str)-1;
 	int expon = 0;	
