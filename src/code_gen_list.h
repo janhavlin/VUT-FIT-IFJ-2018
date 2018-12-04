@@ -30,9 +30,14 @@ RETURN\n"
 
 #define FUN_ORD "LABEL $ord\n\
 DEFVAR LF@&1type\n\
+DEFVAR LF@&2type\n\
 DEFVAR LF@&1len\n\
 TYPE LF@&1type LF@&1\n\
-JUMPIFEQ $ordlengthcmp LF@&1type string@string\n\
+TYPE LF@&2type LF@&2\n\
+JUMPIFEQ $firstargstr LF@&1type string@string\n\
+EXIT int@4\n\
+LABEL $firstargstr\n\
+JUMPIFEQ $ordlengthcmp LF@&2type string@int\n\
 EXIT int@4\n\
 LABEL $ordlengthcmp\n\
 STRLEN LF@&1len LF@&1\n\
@@ -43,11 +48,29 @@ JUMPIFEQ $ordoutbounds LF@&2lencheck bool@true\n\
 LT LF@&2lencheck LF@&2 LF@&1len\n\
 JUMPIFEQ $ordoutbounds LF@&2lencheck bool@false\n\
 \
-WRITE string@secondaswell\n\
 STRI2INT LF@&RETVAL LF@&1 LF@&2\n\
 RETURN\n\
 LABEL $ordoutbounds\n\
 MOVE LF@&RETVAL nil@nil\n\
+RETURN\n"
+
+#define FUN_CHR "LABEL $chr\n\
+DEFVAR LF@&1type\n\
+DEFVAR LF@&1lencheck\n\
+TYPE LF@&1type LF@&1\n\
+JUMPIFEQ $argint LF@&1type string@int\n\
+EXIT int@4\n\
+LABEL $argint\n\
+\
+LT LF@&1lencheck LF@&1 int@0\n\
+JUMPIFEQ $chroutbounds LF@&1lencheck bool@true\n\
+GT LF@&1lencheck LF@&1 int@255\n\
+JUMPIFEQ $chroutbounds LF@&1lencheck bool@true\n\
+\
+INT2CHAR LF@&RETVAL LF@&1\n\
+RETURN\n\
+LABEL $chroutbounds\n\
+EXIT int@4\n\
 RETURN\n"
 
 #define ADRCAT(adr, var1, var2) (adr.val.s = getStr(2, var1, var2), adr)

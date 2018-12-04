@@ -1,0 +1,75 @@
+print
+$ 5
+print "a"
+$ 0 a
+print "a", 1
+$ 0 a1
+a="asd"
+b=5
+print a, b
+$ 0 asd5
+
+length
+$ 5
+length "asd" "asd"
+$ 5
+length 1
+$ 4
+length 1.5
+$ 4
+a=1
+length a 
+$ 4
+a=1.5
+length a 
+$ 4
+a="asd"
+b=length a
+print b 
+$ 0 3
+
+a=ord "asd", 1
+print a
+$ 0 115
+a=ord "asd", 3
+print a
+$ 0
+i=0-1
+a=ord "asd", i
+print a
+$ 0
+ord
+$ 5
+ord 1
+$ 5
+ord 1, 1, 1
+$ 5
+ord 1, 1
+$ 4
+ord 1.0, 1
+$ 4
+ord "asd", 1.0
+$ 4
+ord "asd", "asd"
+$ 4
+
+chr
+$ 5
+chr 1, 1, 1
+$ 5
+chr "bla"
+$ 4
+chr 0.1
+$ 4
+a = chr 65
+print a
+$ 0 A 
+chr 0
+$ 0
+i=0-1
+chr i
+$ 4
+chr 255
+$ 0
+chr 256
+$ 4
