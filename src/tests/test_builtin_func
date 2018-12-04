@@ -1,3 +1,45 @@
+s=substr "abcd", 1, 2
+print s
+$ 0 bc
+s=substr "abcd", 2, 20
+print s
+$ 0 cd
+s=substr "abcd", 0, 4
+print s
+$ 0 abcd
+s=substr "abcd", 0, 20
+print s
+$ 0 abcd
+substr 1, 1, 1
+$ 4
+substr 1.2, 1, 1
+$ 4
+substr nil, 1, 1
+$ 4
+substr "abc", 1.1, 1
+$ 4
+substr "abc", "a", 1
+$ 4
+substr "abc", nil, 1
+$ 4
+substr "abc", 1, 1.1
+$ 4
+substr "abc", 1, "ab"
+$ 4
+substr "abc", 1, nil
+$ 4
+a=0-1
+s=substr "abc", a, 2
+print s
+$ 0
+s=substr "abc", 3, 2
+print s
+$ 0
+a=0-1
+s=substr "abc", 1, a
+print s
+$ 0
+
 print
 $ 5
 print "a"

@@ -341,6 +341,7 @@ void ILPrintAllInst(TInstrList L){
     printf(FUN_LENGTH);
     printf(FUN_ORD);
     printf(FUN_CHR);
+    printf(FUN_SUBSTR);
 	while (tmpList.First != NULL){
         printInst(tmpList.First->inst);
         if ((tmpList.First == tmpList.BeforeWhile) && (tmpList.BeforeWhile != NULL)) printf("\t# <-- Outside while in main");

@@ -54,6 +54,57 @@ LABEL $ordoutbounds\n\
 MOVE LF@&RETVAL nil@nil\n\
 RETURN\n"
 
+#define FUN_SUBSTR "LABEL $substr\n\
+DEFVAR LF@&1type    #checking types of params\n\
+TYPE LF@&1type LF@&1\n\
+DEFVAR LF@&2type\n\
+TYPE LF@&2type LF@&2\n\
+DEFVAR LF@&3type\n\
+TYPE LF@&3type LF@&3\n\
+JUMPIFEQ $substrfirstargstr LF@&1type string@string\n\
+EXIT int@4\n\
+LABEL $substrfirstargstr\n\
+JUMPIFEQ $substrsecondargint LF@&2type string@int\n\
+EXIT int@4\n\
+LABEL $substrsecondargint\n\
+JUMPIFEQ $substrthirdargint LF@&3type string@int\n\
+EXIT int@4\n\
+LABEL $substrthirdargint\n\
+\
+DEFVAR LF@&1len\n\
+STRLEN LF@&1len LF@&1   #0 < second par < len\n\
+DEFVAR LF@&2check\n\
+LT LF@&2check LF@&2 int@0\n\
+JUMPIFEQ $substroutbounds LF@&2check bool@true\n\
+LT LF@&2check LF@&2 LF@&1len\n\
+JUMPIFEQ $substroutbounds LF@&2check bool@false\n\
+\
+DEFVAR LF@&3check   #second par can't be < 0\n\
+LT LF@&3check LF@&3 int@0\n\
+JUMPIFEQ $substroutbounds LF@&3check bool@true\n\
+\
+DEFVAR LF@&lastidx\n\
+DEFVAR LF@&charbuff\n\
+MOVE LF@&RETVAL string@\n\
+ADD LF@&lastidx LF@&2 LF@&3\n\
+DEFVAR LF@&lastidxcheck\n\
+LT LF@&lastidxcheck LF@&lastidx LF@&1len\n\
+JUMPIFEQ $substrcyclebegin LF@&lastidxcheck bool@true\n\
+MOVE LF@&lastidx LF@&1len\n\
+\
+LABEL $substrcyclebegin\n\
+JUMPIFEQ $substrcycleend LF@&2 LF@&lastidx\n\
+GETCHAR LF@&charbuff LF@&1 LF@&2\n\
+CONCAT LF@&RETVAL LF@&RETVAL LF@&charbuff\n\
+ADD LF@&2 LF@&2 int@1\n\
+JUMP $substrcyclebegin\n\
+LABEL $substrcycleend\n\
+RETURN\n\
+\
+LABEL $substroutbounds\n\
+MOVE LF@&RETVAL nil@nil\n\
+RETURN\n"
+
 #define FUN_CHR "LABEL $chr\n\
 DEFVAR LF@&1type\n\
 DEFVAR LF@&1lencheck\n\
