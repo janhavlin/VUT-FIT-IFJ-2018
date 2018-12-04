@@ -2,7 +2,7 @@
 	file name:		parser.c
 	project:		VUT-FIT-IFJ-2018
 	created:		19.11.2018
-	last modified:	03.12.2018
+	last modified:	04.12.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	
@@ -22,9 +22,9 @@
  */ 
 typedef struct {
 	FILE *file;
-	TsymItem *mainLT;
-	TsymItem *currLT;
-	TsymItem *GT;
+	TsymItem **mainLT;
+	TsymItem **currLT;
+	TsymItem **GT;
 	TInstrList *instructions;
 	unsigned whileCounter;
 	unsigned ifCounter;
@@ -70,7 +70,7 @@ TsymData createDataForNewVar(unsigned order);
 
 //--------------PARSE-------------------------------------
 
-int parse(FILE *input, TsymItem *GT, TsymItem *LT, TInstrList *instructions) {
+int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 	if (DEBUG) printf("Function: %s\n", __func__);
 	int result = PROGRAM_OK;
 	TWrapper *globalInfo = (TWrapper *) malloc(sizeof(TWrapper));
@@ -89,7 +89,7 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT, TInstrList *instructions) {
 		return parserError(ERR_RUNTIME, "parse", 0);
 	}
 	TToken **tokenPP = &token;
-	**tokenPP = getToken(globalInfo->file, globalInfo->GT);
+	**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
 	if (errflg == ERR_LEXICAL) return errflg;
 	
 	/*START OF PARSING*/
@@ -97,12 +97,12 @@ int parse(FILE *input, TsymItem *GT, TsymItem *LT, TInstrList *instructions) {
 	/*END OF PARSING*/
 
 	//check if all functions were defined
-	if (!symTabCheckIfAllFunctionsWereDefined(globalInfo->GT)) {
+	if (!symTabCheckIfAllFunctionsWereDefined(*(globalInfo->GT))) {
 		errflg = ERR_SEM_OTHER;
 		ifjErrorPrint("ERROR %d SEMANTIC: calling undefined function in program!\n", errflg); 
 		result = errflg;
 	}
-
+	
 	free(globalInfo);
 	free(token);
 	return result;
@@ -143,8 +143,6 @@ int start(TToken **tokenPP, TWrapper *globalInfo) {
 						if (start(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_EOF:	//rule #3 START -> eof
-						//genSTOP();
-						genPrgEnd(globalInfo->instructions);
 						return PROGRAM_OK;
 		default:		break;						
 	}
@@ -162,7 +160,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 	switch (type) {
 		case TOK_ID:	//rule #10 STAT -> id ASS-OR-FUN
 						savedIdOne = (*tokenPP)->data.s;	//save ID for later call of generator
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT);	//get next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));	//get next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 						//process ASS-OR-FUN
 						if (assorfun(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg;
@@ -176,13 +174,13 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							bool topLevelIf = !globalInfo->inWhile;
 							globalInfo->inWhile = true;
 							//process expr
-							unsigned E = processExpression(globalInfo->file, "then", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
+							unsigned E = processExpression(globalInfo->file, "then", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile, globalInfo->inFunDef);
 							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
-							**tokenPP = getToken(globalInfo->file, globalInfo->GT);
+							**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
 							if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 							if (then(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process eol
@@ -212,14 +210,14 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							globalInfo->inWhile = true;
 							genWhileBegin(globalInfo->instructions, whileNumber, globalInfo->inWhile, globalInfo->inFunDef);
 							//process expr
-							unsigned E = processExpression(globalInfo->file, "do", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
+							unsigned E = processExpression(globalInfo->file, "do", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 																						// TODO: Figure out why is E-1 needed!!
 							genWhileCond(globalInfo->instructions, whileNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile, globalInfo->inFunDef);
 							(globalInfo->psaCounter)++;
 							//process do
 							//must load token after calling PSA
-							**tokenPP = getToken(globalInfo->file, globalInfo->GT);
+							**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
 							if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 							if (tdo(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process eol
@@ -256,7 +254,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			TsymData *newFuncData = NULL;
 			globalInfo->inFunDef = true;
 			//process def
-			**tokenPP = getToken(globalInfo->file, globalInfo->GT); //def is present, call next token
+			**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //def is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 			//process id
 			if (id(tokenPP) != PROGRAM_OK) return errflg;
@@ -272,18 +270,18 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 				}
 			} else {	//new uncalled function definition
 				funcData = createDataForNewFunc(true, 0);	//false means undefined
-				newFuncData = symTabInsert(&(globalInfo->GT), functionId, funcData);
+				newFuncData = symTabInsert(globalInfo->GT, functionId, funcData);
 				if (newFuncData == NULL) return errflg;
 			}
 			genFunDefBegin(globalInfo->instructions, functionId, globalInfo->inWhile, globalInfo->inFunDef);
-			**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, call next token
+			**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //id is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;
 			//process (
 			if (lbr(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 			//process P-LIST
 			globalInfo->paramCounter = 0;
 			globalInfo->inFunCall = false;	//in function definition here
-			globalInfo->currLT = newFuncData->LT;	//NULL
+			globalInfo->currLT = &(newFuncData->LT);
 			if (plist(tokenPP, globalInfo, functionId) != PROGRAM_OK) return errflg;
 			if (!newFuncData->defined) {	//fun was called before, it must be defined with same amount of parameters
 				if (newFuncData->params != globalInfo->paramCounter) {
@@ -303,7 +301,6 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 
 			genFunDefEnd(globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
-			newFuncData->LT = globalInfo->currLT;
 			globalInfo->currLT = globalInfo->mainLT;
 			globalInfo->inFunDef = false;
 			return PROGRAM_OK;
@@ -362,18 +359,18 @@ int plist(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						(globalInfo->paramCounter)++;
 						//process term
 						if (term(tokenPP, globalInfo, function) != PROGRAM_OK) return errflg;
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT); //term is present, call next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //term is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						if (plist(tokenPP, globalInfo, function) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
 		case TOK_COMMA: //rule #8 P-LIST -> , TERM P-LIST
 						//process comma
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT); //comma is present, call next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //comma is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						(globalInfo->paramCounter)++;
 						//process term
 						if (term(tokenPP, globalInfo, function) != PROGRAM_OK) return errflg;
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT); //term is present, call next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //term is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						//process plist
 						if (plist(tokenPP, globalInfo, function) != PROGRAM_OK) return errflg;
@@ -414,7 +411,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							} else {
 								idData = createDataForNewVar(globalInfo->paramCounter);
-								symTabInsert(&(globalInfo->currLT), keyW, idData);
+								symTabInsert(globalInfo->currLT, keyW, idData);
 							}
 						}
 						return PROGRAM_OK;
@@ -475,21 +472,19 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 	TsymData *funcData = NULL;
 	switch (type) {
 		case TOK_ASSIGN: //rule #14 ASS-OR-FUN -> = ASSIGN
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT);	//= is present, call next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));	//= is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 						//process Lvalue Var ID
 						if ((newVarData = symTabSearch(globalInfo->currLT, savedIdOne)) == NULL) {	//ID not present in current LT
 							if (symTabSearch(globalInfo->GT, savedIdOne) == NULL) {	//ID not defined as function
 								genDefVar(globalInfo->instructions, savedIdOne, globalInfo->inWhile, globalInfo->inFunDef);
 								varData = createDataForNewVar(0);	//0 means not parameter, just variable
-								symTabInsert(&(globalInfo->currLT), savedIdOne, varData);
+								symTabInsert(globalInfo->currLT, savedIdOne, varData);
 								newVarData = &varData;
 							} else {
 								return parserError(ERR_SEM_DEFINE, __func__, 0);
 							}
 						} //else Variable already defined, which is OK
-						if (globalInfo->mainLT == NULL && !globalInfo->inFunDef)
-							globalInfo->mainLT = globalInfo->currLT;	//mainLT initialization
 						//process assign
 						if (assign(tokenPP, globalInfo, savedIdOne, newVarData) != PROGRAM_OK) return errflg;
 						return PROGRAM_OK;
@@ -513,7 +508,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						} else {
 							//new function
 							newFuncData = createDataForNewFunc(false, 0);	//false means undefined
-							funcData = symTabInsert(&(globalInfo->GT), savedIdOne, newFuncData);
+							funcData = symTabInsert(globalInfo->GT, savedIdOne, newFuncData);
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
@@ -569,13 +564,13 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, TsymData *
 		case TOK_SUB:	//rule #17 ASSIGN -> expr 
 						//case 1 - found after examining 1 token, therefore return 1 token to scanner
 						returnToken(**tokenPP);
-						//**tokenPP = getToken(globalInfo->file, globalInfo->GT); //expr is present, call next token //DONT CALL NEXT TOKEN
-						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
+						//**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //expr is present, call next token //DONT CALL NEXT TOKEN
+						unsigned E = processExpression(globalInfo->file, "eol", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						genAssign(globalInfo->instructions, savedIdOne, varData->order, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);	//assign to savedIdOne
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 						return PROGRAM_OK;
 		case TOK_ID:	savedIdTwo = (*tokenPP)->data.s;
@@ -596,7 +591,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, TsymData *
 int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, string savedIdTwo, TsymData *varData) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TToken bufferToken = **tokenPP;
-	**tokenPP = getToken(globalInfo->file, globalInfo->GT); //id is present, but I need another token to decide
+	**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //id is present, but I need another token to decide
 	if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 	TsymData newFuncData;
 	TsymData *funcData = NULL;
@@ -618,7 +613,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 							// id = id // continue to rule #17
 						} else {	//function call before definition
 							newFuncData = createDataForNewFunc(false, 0);
-							symTabInsert(&(globalInfo->GT), savedIdTwo, newFuncData);
+							symTabInsert(globalInfo->GT, savedIdTwo, newFuncData);
 							genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
 							genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
 							genAssignRetval(globalInfo->instructions, savedIdOne, varData->order, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne, from funcall
@@ -639,12 +634,12 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						//case 2 - found after examining 2 tokens, therefore return 2 tokens to scanner
 						returnToken(**tokenPP);
 						returnToken(bufferToken);
-						unsigned E = processExpression(globalInfo->file, "eol", globalInfo->GT, globalInfo->currLT, globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
+						unsigned E = processExpression(globalInfo->file, "eol", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						genAssign(globalInfo->instructions, savedIdOne, varData->order, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT);
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
 						if (errflg != PROGRAM_OK) return errflg;	//check for lexical error from scanner
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp((*tokenPP)->data.s, "nil")==0) {
@@ -668,7 +663,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						} else {
 							//new function
 							newFuncData = createDataForNewFunc(false, 0);	//false means undefined
-							funcData = symTabInsert(&(globalInfo->GT), savedIdTwo, newFuncData);
+							funcData = symTabInsert(globalInfo->GT, savedIdTwo, newFuncData);
 							if (funcData == NULL) return errflg;
 						}
 						globalInfo->paramCounter = 0;
@@ -712,7 +707,7 @@ int pbody(TToken **tokenPP, TWrapper *globalInfo, string function) {
 	switch (type) {
 		case TOK_LBR:	//rule #18 P-BODY -> ( P-LIST )
 						//process (
-						**tokenPP = getToken(globalInfo->file, globalInfo->GT); //( is present, call next token
+						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //( is present, call next token
 						if (errflg != PROGRAM_OK) return errflg;
 						//process P-LIST
 						if (plist(tokenPP, globalInfo, function) != PROGRAM_OK) return errflg;
@@ -746,7 +741,7 @@ int eol(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_EOL) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //eol is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //eol is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
@@ -762,7 +757,7 @@ int then(TToken **tokenPP, TWrapper *globalInfo) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "then") == 0)) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //then is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //then is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 		return PROGRAM_OK;
 	} else {
@@ -778,7 +773,7 @@ int telse(TToken **tokenPP, TWrapper *globalInfo) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "else") == 0)) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //else is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //else is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
@@ -794,7 +789,7 @@ int tdo(TToken **tokenPP, TWrapper *globalInfo) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "do") == 0)) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //do is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //do is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 		return PROGRAM_OK;
 	} else {
@@ -810,7 +805,7 @@ int end(TToken **tokenPP, TWrapper *globalInfo) {
 	TTokenType type = (*tokenPP)->type;
 	string keyW = (*tokenPP)->data.s;
 	if (type == TOK_KEY && (strcmp(keyW, "end") == 0)) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //end is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //end is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
@@ -840,7 +835,7 @@ int lbr(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_LBR) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //lbr is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //lbr is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
@@ -855,7 +850,7 @@ int rbr(TToken **tokenPP, TWrapper *globalInfo) {
 	if (DEBUG) printf("Function:%s Token:%d\n", __func__, (*tokenPP)->type);
 	TTokenType type = (*tokenPP)->type;
 	if (type == TOK_RBR) {
-		**tokenPP = getToken(globalInfo->file, globalInfo->GT); //rbr is present, call next token
+		**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //rbr is present, call next token
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
@@ -913,7 +908,7 @@ void initTWrapper(TWrapper *info) {
 TsymData createDataForNewFunc(bool defined, int params) {
 	TsymData data;
 	data.type = TYPE_FUN;
-	//data.order = 0;				//never used
+	data.order = 0;				//never used
 	data.defined = defined;
 	data.called = false;
 	data.params = params;
@@ -928,10 +923,10 @@ TsymData createDataForNewVar(unsigned order) {
 	TsymData data;
 	data.type = TYPE_VAR;
 	data.order = order;		
-	/* data.defined = false;	//never used
+	data.defined = false;	//never used
 	data.called = false;	//never used
 	data.params = 0;		//never used
-	data.LT = NULL;			//never used */
+	data.LT = NULL;			//never used (in dispose there is check if NULL)
 	return data;
 }
 

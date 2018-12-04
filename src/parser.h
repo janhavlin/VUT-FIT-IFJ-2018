@@ -23,7 +23,7 @@
 #include "code_gen.h"
 #include "code_gen_list.h"
 
-int parse(FILE *, TsymItem *GT, TsymItem *LT, TInstrList *instructions);
+int parse(FILE *, TsymItem **GT, TsymItem **LT, TInstrList *instructions);
 
 #endif //IFJ18_PARSER_H
 /* end of parser.h */

@@ -21,16 +21,16 @@ void symTabInit (TsymItem **rootPP) {
  * 
  * @param data will return pointer to found data
  */ 
-TsymData *symTabSearch (TsymItem *rootPtr, string key)	{
+TsymData *symTabSearch (TsymItem **rootPP, string key)	{
 	if (DEBUG) printf("Function:%s key:%s\n", __func__, key);
-	if (rootPtr == NULL)
+	if (*rootPP == NULL)
 		return NULL;	
-	else if (strcmp(rootPtr->key, key) == 0) {
-		return &(rootPtr->data);
-	} else if (strcmp(rootPtr->key, key) > 0) {
-		return symTabSearch(rootPtr->lPtr, key);
+	else if (strcmp((*rootPP)->key, key) == 0) {
+		return &((*rootPP)->data);
+	} else if (strcmp((*rootPP)->key, key) > 0) {
+		return symTabSearch(&((*rootPP)->lPtr), key);
 	} else {
-		return symTabSearch(rootPtr->rPtr, key);
+		return symTabSearch(&((*rootPP)->rPtr), key);
 	}
 } 
 
@@ -72,24 +72,6 @@ TsymData *symTabInsert (TsymItem **rootPP, string key, TsymData data)	{
 }
 
 /**
- * Helper Function for symDelete
- */ 
-void replaceByRightmost (TsymItem *ptrReplaced, TsymItem **rootPP) {
-	if (DEBUG) printf("Function: %s\n", __func__);
-	if ((*rootPP)->rPtr != NULL)
-		//if the root of the subtree has a right child, then go deeper
-		replaceByRightmost(ptrReplaced, &((*rootPP)->rPtr));
-	else {
-		TsymItem *rightMost = *rootPP;
-		*rootPP = (rightMost)->lPtr;	//parent node will show directly to left child (can be also NULL)
-		strcpy(ptrReplaced->key, rightMost->key);	//shift of the key
-		ptrReplaced->data = rightMost->data;	//shift of the content
-		free(rightMost);
-		rightMost = NULL;
-	}
-}
-
-/**
  * Destroys whole symbol table tree
  * tree will return to its state after initialization
  */ 
@@ -100,7 +82,7 @@ void symTabDispose (TsymItem **rootPP) {
 		symTabDispose(&((*rootPP)->rPtr));
 		free((*rootPP)->key);
 		if ((*rootPP)->data.LT != NULL)
-			symTabDispose(&((*rootPP)->data.LT)); //dispose LT inside data node
+			symTabDispose(&((*rootPP)->data.LT)); //dispose LT inside data node 
 		free(*rootPP);
 		*rootPP = NULL;
 	}
