@@ -311,7 +311,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         case PLUSE_RULE:        // +E
                                 genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
                                // printf("Generuji '+E' %s s E%d\n", IDKonst.val.s, Ecount);
-                            break;
+                            break; 
 
                         // rule 3.
                         case NEG_RULE:          // -E
@@ -484,7 +484,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 /*if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) &&get.data.s != NULL)
                     free(delete);*/
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
                 errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;
         }

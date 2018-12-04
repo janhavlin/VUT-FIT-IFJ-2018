@@ -23,7 +23,7 @@ tStackLPtr sLInit( int bottomStakTokType, string bottomStakTokName ){
 		if(stack->first != NULL){
 			stack->first->pred 	 = NULL;	
 			stack->first->next 	 = NULL;
-			stack->first->type = 0;
+			stack->first->type   = 0;
 			stack->first->IdName = (char *) calloc(strlen(bottomStakTokName)+1, sizeof(char));
 
 			if(stack->first->IdName == NULL){
