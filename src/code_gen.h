@@ -2,12 +2,12 @@
  * file name:       code_gen.h
  * project:         VUT-FIT-IFJ-2018
  * created:         23.11.2018
- * last modified:   30.11.2018
+ * last modified:   4.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
  * modification:
  * 
- * description: Functions for converting specific block of code into three address code. 
+ * description: Functions for transforming pieces of IFJ18 code into instruction structures and adding them to a doubly linked list of instructions. 
  */
 
 #ifndef CODE_GEN_H
@@ -26,13 +26,6 @@
  * @param L Pointer to a list of instructions 
  */
 void genPrgBegin(TInstrList *L);
-
-/**
- * @brief Useless function
- * 
- * @param L Pointer to a list of instructions
- */
-void genPrgEnd(TInstrList *L);
 
 /**
  * @brief Creates a label for a new function definition
@@ -69,11 +62,12 @@ void genFunCallBegin(TInstrList *L, char *fun, bool inWhile, bool inFunDef);
  * @param L Pointer to a list of instructions
  * @param fun Name of the function
  * @param parNum Number of the parameter passed in this function call
- * @param var Structure that holds data (either name of a variable or a constant)
+ * @param srcVar Structure that holds data (either name of a variable or a constant)
+ * @param srcVarParOrder
  * @param inWhile Flag whether it's called from inside a while
  * @param inFunDef Flag whether it's called from inside a function definition
  */
-void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr var, unsigned funParOrder, bool inWhile, bool inFunDef);
+void genFunCallPar(TInstrList *L, char *fun, unsigned parNum, TAdr srcVar, unsigned srcVarParOrder, bool inWhile, bool inFunDef);
 
 /**
  * @brief Pushes the temporary frame and calls the function
@@ -155,11 +149,12 @@ void genIfEnd(TInstrList *L, unsigned ifCnt, bool inWhile, bool inFunDef);
  * @param L Pointer to a list of instructions
  * @param psa Index of current PSA
  * @param resultE Index of 'E' to store the result
- * @param var Structure that holds data (either name of a variable or a constant)
+ * @param srcVar Structure that holds data (either name of a variable or a constant)
+ * @param srcVarParOrder
  * @param inWhile Flag whether it's called from inside a while
  * @param inFunDef Flag whether it's called from inside a function definition
  */
-void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr var, bool inWhile, bool inFunDef);
+void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned srcVarParOrder, bool inWhile, bool inFunDef);
 
 /**
  * @brief Defines a new variable and assigns nil to it
@@ -176,24 +171,24 @@ void genDefVar(TInstrList *L, char *var, bool inWhile, bool inFunDef);
  * 
  * @param L Pointer to a list of instructions
  * @param var Name of a variable to which will be assigned
- * @param funParOrder
+ * @param dstVarParOrder
  * @param psa Index of PSA that evaluated the expression
  * @param E Index of the E variable that holds the value we want to assign
  * @param inWhile Flag whether it's called from inside a while
  * @param inFunDef Flag whether it's called from inside a function definition
  */
-void genAssign(TInstrList *L, char *var, unsigned funParOrder, unsigned psa, unsigned psaResultE, bool inWhile, bool inFunDef);
+void genAssign(TInstrList *L, char *var, unsigned dstVarParOrder, unsigned psa, unsigned psaResultE, bool inWhile, bool inFunDef);
 
 /**
  * @brief 
  * 
  * @param L 
  * @param var 
- * @param funParOrder 
+ * @param dstVarParOrder 
  * @param inWhile 
  * @param inFunDef 
  */
-void genAssignRetval(TInstrList *L, char *var, unsigned funParOrder, bool inWhile, bool inFunDef);
+void genAssignRetval(TInstrList *L, char *var, unsigned dstVarParOrder, bool inWhile, bool inFunDef);
 
 /**
  * @brief Compares types of two operands and adds them if they are compatible
