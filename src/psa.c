@@ -56,8 +56,9 @@ char lookInPrecedenceTable(TToken stackTopTok, TToken newTok) {
     int col = getIndex(newTok);
     //printf("ROW: %d, COL: %d\n\n", row, col);
     if(row >= 0 && row < NUMBER_OF_TOKENS && col >= 0 && col < NUMBER_OF_TOKENS){
-    	if(stackTopTok.data.s != NULL)
-    		free(stackTopTok.data.s);    
+    	if(stackTopTok.data.s != NULL){
+    		free(stackTopTok.data.s);  
+        }  
 		return precedenceTable[row][col];
 	}
     else {
@@ -424,11 +425,11 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 	get.type = TOK_STRING;
 				sLPush(s, tokToStr(get), get.type);
                 
-                TOK_PREP_FOR_DELETE(get, delete);   // check if token can be deleted 
+                //TOK_PREP_FOR_DELETE(get, delete);   // check if token can be deleted 
                 
                 get = getToken(f, STG);
                
-                DELETE_TOKEN(get, delete);          // if it is possible to delete token, it deletes it
+                //DELETE_TOKEN(get, delete);          // if it is possible to delete token, it deletes it
                 
                 toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
@@ -444,11 +445,11 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 	get.type = TOK_STRING;
                 sLPush(s, tokToStr(get), get.type);
 
-                TOK_PREP_FOR_DELETE(get, delete);
+                //TOK_PREP_FOR_DELETE(get, delete);
 
                 get = getToken(f, STG);
 
-                DELETE_TOKEN(get, delete);           
+                //DELETE_TOKEN(get, delete);           
 
                 toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;            
@@ -471,8 +472,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 	}
                 }
 
-                if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)
-                    free(get.data.s);
+                /*if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) && get.data.s != NULL)
+                    free(get.data.s);*/
               
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
@@ -480,8 +481,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 return NO_E_NONTERM;  // // an error was found                   
 
             default:
-                if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) &&get.data.s != NULL)
-                    free(delete);
+                /*if(((get.type == TOK_KEY) || (get.type == TOK_ID) || (get.type == TOK_STRING)) &&get.data.s != NULL)
+                    free(delete);*/
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
                 errflg = ERR_SYNTAX;
