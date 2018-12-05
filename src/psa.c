@@ -388,7 +388,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
                     }
 
-					if( (ruleGet == LBR_E_RBR_RULE) ){
+					if( (ruleGet == LBR_E_RBR_RULE) && (ruleGet == PLUSE_RULE) && ruleGet == NEG_RULE ){
                         (s->top)->numberOfE = Ecount-1;     // add number of E to corresponding stack item
                     }
                     else
