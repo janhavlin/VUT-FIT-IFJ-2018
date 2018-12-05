@@ -162,7 +162,10 @@ void ILPreInsertLabMain (TInstrList *L, TInst inst, bool inWhile) {
 		return;
 	
 	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
-    //TODO: If new == NULL
+    if (new == NULL){
+        errflg = ERR_RUNTIME;
+        return;
+    }
 	
 	if (L->First == L->LabMain)
 		L->First = new;
@@ -186,7 +189,10 @@ void ILPostInsertBeforeWhile (TInstrList *L, TInst inst) {
 		return;
 	
 	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
-    //TODO: If new == NULL
+    if (new == NULL){
+        errflg = ERR_RUNTIME;
+        return;
+    }
 	
 	if (L->Last == L->BeforeWhile)
 		L->Last = new;
@@ -209,7 +215,10 @@ void ILPostInsertInFunDefBeforeWhile (TInstrList *L, TInst inst) {
 		return;
 	
 	TILElemPtr new = (TILElemPtr)malloc(sizeof(struct TILElem));	
-    //TODO: If new == NULL
+    if (new == NULL){
+        errflg = ERR_RUNTIME;
+        return;
+    }
 	
 	if (L->Last == L->InFunDefBeforeWhile)
 		L->Last = new;

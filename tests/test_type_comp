@@ -966,7 +966,7 @@ if(3>=1.68) then
 else
    print 0
 end
-$ 0 0
+$ 0 1
 
 vi = 3
 vf = 1.68
@@ -1036,7 +1036,7 @@ if(3>=1.68) then
 else
    print 0
 end
-$ 0 0
+$ 0 1
 
 vi = 3
 vf = 1.68
@@ -6398,7 +6398,7 @@ if(3>=1.68) then
 else
    print 0
 end
-$ 0 0
+$ 0 1
 
 vi = 3
 vf = 1.68
@@ -6468,7 +6468,7 @@ if(3>=1.68) then
 else
    print 0
 end
-$ 0 0
+$ 0 1
 
 vi = 3
 vf = 1.68

@@ -108,7 +108,8 @@ int getIndex(TToken token) {
         case TOK_EOL:   //$ symbol
                         return 13;
         default:        ifjErrorPrint("ERROR %d in psa.c in func. getIndex: unexpected token n. %d!\n", ERR_SYNTAX, token.type);
-						errflg = ERR_SYNTAX;
+                        if (errflg == PROGRAM_OK)
+						    errflg = ERR_SYNTAX;
                         break;
     }
     return -1;
@@ -265,7 +266,8 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 				ifjErrorPrint("psa ERROR in processExpression: Variable '%s' was not defined. ERROR %d\n", get.data.s, ERR_SEM_DEFINE);
                 if(get.data.s != NULL)
 					free(get.data.s);
-                errflg = ERR_SEM_DEFINE;
+                if (errflg == PROGRAM_OK)
+                    errflg = ERR_SEM_DEFINE;
 				return 0;	// 0 means error == 0 E chars was found
             }
         }
@@ -407,7 +409,9 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                     ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_LEXICAL);
 					if(toReduce != NULL)
 						free(toReduce);
-				    errflg = ERR_SYNTAX;
+                    
+                    if (errflg == PROGRAM_OK)
+				        errflg = ERR_SYNTAX;
 					return 0;	
                 }
                 break;
@@ -471,14 +475,16 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                 sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
-			    errflg = ERR_SYNTAX;
+                if (errflg == PROGRAM_OK)
+			        errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;  // // an error was found                   
 
             default:
 				DELETE_CHECK_NULL(delete);
 				sLDelete(s);
                 ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
-                errflg = ERR_SYNTAX;
+                if (errflg == PROGRAM_OK)
+                    errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;
         }
        

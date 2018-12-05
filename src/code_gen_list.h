@@ -177,8 +177,15 @@ RETURN\n"
 #define ADRLAB(adr, var1, var2) (  (   adr.val.s = getStr(2, var1, var2),             \
                                       (adr.type = ADRTYPE_LABEL, adr)   )  )
 
-#define INSERTLAST(L, inst, inWhile, inFunDef) inFunDef ? ILPreInsertLabMain(L, inst, inWhile) : ILInsertLast(L, inst, inWhile)
-#define INSERTBEFOREWHILE(L, inst, inWhile, inFunDef) inFunDef ? ILPostInsertInFunDefBeforeWhile(L, inst) : ILPostInsertBeforeWhile(L, inst)
+#define INSERTLAST(L, inst, inWhile, inFunDef) do{\
+                        inFunDef ? ILPreInsertLabMain(L, inst, inWhile) : ILInsertLast(L, inst, inWhile);\
+                        if (errflg != PROGRAM_OK)\
+                            return;} while(0)
+
+#define INSERTBEFOREWHILE(L, inst, inWhile, inFunDef) do{\
+                        inFunDef ? ILPostInsertInFunDefBeforeWhile(L, inst) : ILPostInsertBeforeWhile(L, inst);\
+                        if (errflg != PROGRAM_OK)\
+                            return;} while(0)
 
 typedef enum {      // Adresses
     OP_DEFVAR,      // 1
