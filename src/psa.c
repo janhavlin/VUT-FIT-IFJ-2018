@@ -269,7 +269,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             }
         }
           
-		sPrintStack(s);
+		//sPrintStack(s);
         switch(toDo){  
                  
 			/*
@@ -385,7 +385,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 13.                    
                         case INT_RULE:          // int
-                                printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
+                                //printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
                                 genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
 
