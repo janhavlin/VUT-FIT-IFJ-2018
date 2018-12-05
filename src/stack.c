@@ -94,4 +94,3 @@ void sPush( tStackPtr *stack, char item ){
 	}
 	
 }
-

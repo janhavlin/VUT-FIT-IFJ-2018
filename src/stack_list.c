@@ -317,7 +317,3 @@ void sPrintStack( tStackLPtr s){
 		printf("[Name: %s, Type: %d]-/\n", item->IdName, item->type);
 	}
 }
-
-
-
-

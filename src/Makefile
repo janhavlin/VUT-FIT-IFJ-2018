@@ -25,6 +25,3 @@ test:
 	
 clean:
 	rm -f main
-
-
-	
