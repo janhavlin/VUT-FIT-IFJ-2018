@@ -199,6 +199,7 @@ TAdr idValGet(TToken get){
 	if( get.type == TOK_ID ){
 		result.val.s = get.data.s;
 		result.type = ADRTYPE_VAR;
+
 	}
 
 	else if( get.type == TOK_INT ){
@@ -253,11 +254,11 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
     TToken get      = getToken(f, STG);                     // token got from scanner
     TToken ter      = highestTerminal(s);                   // highest terminal in stack
-    char toDo       = lookInPrecedenceTable( ter, get );    //  get info what to do (reduce, shift,...)
+    char toDo       = lookInPrecedenceTable( ter, get );    // get info what to do (reduce, shift,...)
 
     
 	while( !sLEmpty(s) ){  
-       if( get.type == TOK_ID ){
+       /*if( get.type == TOK_ID ){
             if( (IDData = symTabSearch(&STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
                 sLDelete(s);
                 
@@ -267,7 +268,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 errflg = ERR_SEM_DEFINE;
 				return 0;	// 0 means error == 0 E chars was found
             }
-        }
+        }*/
           
 		//sPrintStack(s);
         switch(toDo){  
@@ -308,96 +309,81 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         // rule 0.
                         case ADD_RULE:          // +
                                 genAdd(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-					    	    //printf("Generuji '+' s E%d = E%d + E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 1.
                         case SUB_RULE:          // -
                                 genSub(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '-' s E%d = E%d - E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 2.
                         case PLUSE_RULE:        // +E
-                                //genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
-                                //printf("Generuji '+E' %s s E%d\n", IDKonst.val.s, Ecount);
+                                genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
                             break;
 
                         // rule 3.
                         case NEG_RULE:          // -E
-                                //genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
-                                //printf("Generuji '-E' %s s E%d\n", IDKonst.val.s, Ecount);
+                                genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
                             break;
                         
                         // rule 4.
                         case MUL_RULE:          // *
                                 genMul(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '*' s E%d = E%d * E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 5.    
                         case DIV_RULE:          // :
                                 genDiv(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji ':' s E%d = E%d / E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 6.    
                         case LT_RULE:           // <
                                 genLT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '<' s E%d = E%d < E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 7. 
                         case GT_RULE:           // >
                                 genGT(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '>' s E%d = E%d > E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 8.
                         case LEQ_RULE:          // <=
                                 genLEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						       // printf("Generuji '<=' s E%d = E%d <= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 9.
                         case GEQ_RULE:          // >=
                                 genGEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '>=' s E%d = E%d >= E%d \n",Ecount, ESecond, EFirst);
                             break;
 
                         // rule 10.
                         case EQ_RULE:           // ==
                                 genEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						        //printf("Generuji '==' s E%d = E%d == E%d \n",Ecount, ESecond, EFirst);
                             break;                  
 
                         // rule 11.
                         case NEQ_RULE:          // !=
                                 genNEQ(instrList, psaCntr, Ecount, ESecond, EFirst, inWhile, inFunDef);
-						       //printf("Generuji '!=' s E%d = E%d != E%d \n",Ecount, ESecond, EFirst);
                             break; 
 
                         // rule 12.
                         case ID_RULE:           // ID
-                                genE(instrList, psaCntr, Ecount, IDKonst, IDData->order, inWhile, inFunDef);
-                                //printf("Generuji ID %s s E%d\n", IDKonst.val.s, Ecount);
+								genE(instrList, psaCntr, Ecount, IDKonst, IDData->order, inWhile, inFunDef);
+								DELETE_TOKEN(get, delete);                                
                             break;
 
                         // rule 13.                    
                         case INT_RULE:          // int
-                                //printf("Generuji INT ID %d s E%d\n", IDKonst.val.i, Ecount);
                                 genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
 
                         // rule 14.
                         case FLOAT_RULE:        // float
-                                //printf("Generuji FLOAT ID %f s E%d\n", IDKonst.val.f, Ecount);
                                 genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
 
                         // rule 15.
                         case STRING_RULE:       // string
-	                            //printf("Generuji STRING ID %s s E%d\n", IDKonst.val.s, Ecount);
 	                    	    genE(instrList, psaCntr, Ecount, IDKonst, NO_ID, inWhile, inFunDef);
                             break;
                     }
@@ -434,7 +420,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             case 's':
                 sPlaceShiftChar( s );
                 IDKonst = idValGet(get);
-                
+
 				if( (get.type == TOK_KEY) && (!strcmp(get.data.s, "nil")) )
                 	get.type = TOK_STRING;
 				
@@ -442,7 +428,6 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 
 				TOK_PREP_FOR_DELETE(get, delete);
                 get = getToken(f, STG);
-				DELETE_TOKEN(get, delete);
 
                 toDo = lookInPrecedenceTable( highestTerminal(s), get );
                 break;
