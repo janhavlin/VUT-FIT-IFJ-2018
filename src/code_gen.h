@@ -2,7 +2,7 @@
  * file name:       code_gen.h
  * project:         VUT-FIT-IFJ-2018
  * created:         23.11.2018
- * last modified:   4.12.2018
+ * last modified:   5.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
  * modification:
@@ -63,7 +63,7 @@ void genFunCallBegin(TInstrList *L, char *fun, bool inWhile, bool inFunDef);
  * @param fun Name of the function
  * @param parNum Number of the parameter passed in this function call
  * @param srcVar Structure that holds data (either name of a variable or a constant)
- * @param srcVarParOrder
+ * @param srcVarParOrder Source variable's function parameter order (0 = not a parameter)
  * @param inWhile Flag whether it's called from inside a while
  * @param inFunDef Flag whether it's called from inside a function definition
  */
@@ -156,7 +156,26 @@ void genIfEnd(TInstrList *L, unsigned ifCnt, bool inWhile, bool inFunDef);
  */
 void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned srcVarParOrder, bool inWhile, bool inFunDef);
 
+/**
+ * @brief Function for evaluating PSA 'E -> +E' rule
+ * 
+ * @param L Pointer to a list of instructions
+ * @param psa Index of current PSA
+ * @param resultE Index of 'E' to store the result
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
+ */
 void genPlusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef);
+
+/**
+ * @brief Function for evaluating PSA 'E -> -E' rule
+ * 
+ * @param L Pointer to a list of instructions
+ * @param psa Index of current PSA
+ * @param resultE Index of 'E' to store the result
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
+ */
 void genMinusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef);
 
 /**
@@ -170,11 +189,11 @@ void genMinusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool
 void genDefVar(TInstrList *L, char *var, bool inWhile, bool inFunDef);
 
 /**
- * @brief 
+ * @brief Assigns a result of a PSA to a variable
  * 
  * @param L Pointer to a list of instructions
- * @param var Name of a variable to which will be assigned
- * @param dstVarParOrder
+ * @param var Name of the destination variable
+ * @param dstVarParOrder Destination variable's function parameter order (0 = not a parameter)
  * @param psa Index of PSA that evaluated the expression
  * @param E Index of the E variable that holds the value we want to assign
  * @param inWhile Flag whether it's called from inside a while
@@ -183,13 +202,13 @@ void genDefVar(TInstrList *L, char *var, bool inWhile, bool inFunDef);
 void genAssign(TInstrList *L, char *var, unsigned dstVarParOrder, unsigned psa, unsigned psaResultE, bool inWhile, bool inFunDef);
 
 /**
- * @brief 
+ * @brief Assigns a return value of a function to a variable
  * 
- * @param L 
- * @param var 
- * @param dstVarParOrder 
- * @param inWhile 
- * @param inFunDef 
+ * @param L Pointer to a list of instructions
+ * @param var Name of the destination variable
+ * @param dstVarParOrder Source variable's function parameter order (0 = not a parameter)
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
  */
 void genAssignRetval(TInstrList *L, char *var, unsigned dstVarParOrder, bool inWhile, bool inFunDef);
 
@@ -205,6 +224,20 @@ void genAssignRetval(TInstrList *L, char *var, unsigned dstVarParOrder, bool inW
  * @param inFunDef Flag whether it's called from inside a function definition
  */
 void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
+
+/**
+ * @brief Internal function of generator to create instructions for subtraction or multiplication
+ * 
+ * @param op Operator (SUB, MUL)
+ * @param L Pointer to a list of instructions
+ * @param psa Index of current PSA
+ * @param res Index of E that will store a result of the operation
+ * @param var1 Index of E that stores first operand
+ * @param var2 Index of E that stores second operand
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
+ */
+static void genSubOrMul(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
 
 /**
  * @brief Compares types of two operands and subtracts them if they are compatible
@@ -244,6 +277,20 @@ void genMul(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
  * @param inFunDef Flag whether it's called from inside a function definition
  */
 void genDiv(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
+
+/**
+ * @brief Internal function of generator to create instructions for LT, LEQ, GT, GEQ
+ * 
+ * @param op Operation (LT, LEQ, GT, GEQ)
+ * @param L Pointer to a list of instructions
+ * @param psa Index of current PSA
+ * @param res Index of E that will store a result of the operation
+ * @param var1 Index of E that stores first operand
+ * @param var2 Index of E that stores second operand
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
+ */
+static void genCmp(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
 
 /**
  * @brief Compares types of two operands and evaluates less than operation
@@ -297,6 +344,19 @@ void genLEQ(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
  */
 void genGEQ(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
 
+/**
+ * @brief Internal function of generator to create instructions for either EQ or NEQ
+ * 
+ * @param op Operator (EQ, NEQ)
+ * @param L Pointer to a list of instructions
+ * @param psa Index of current PSA
+ * @param res Index of E that will store a result of the operation
+ * @param var1 Index of E that stores first operand
+ * @param var2 Index of E that stores second operand
+ * @param inWhile Flag whether it's called from inside a while
+ * @param inFunDef Flag whether it's called from inside a function definition
+ */
+static void genEQorNEQ(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef);
 /**
  * @brief Compares types of two operands and evaluates equal operation
  * 

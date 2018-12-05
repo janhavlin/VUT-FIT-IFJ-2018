@@ -2,7 +2,7 @@
  * file name:       code_gen_list.h
  * project:         VUT-FIT-IFJ-2018
  * created:         1.12.2018
- * last modified:   1.12.2018
+ * last modified:   5.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
  * modification:
@@ -253,21 +253,130 @@ typedef struct {
     TILElemPtr Last;
 } TInstrList;
 
-
+/**
+ * @brief Initialises an empty list
+ * 
+ * @param L Pointer to a list
+ */
 void ILInit (TInstrList *L);
+
+/**
+ * @brief Sets BeforeWhile pointer to point to the last element in the main body of the program
+ * 
+ * @param L Pointer to a list
+ */
 void ILSetBeforeWhile (TInstrList *L);
+
+/**
+ * @brief Sets InFunDefBeforeWhile pointer to point to an element located left from the main label
+ * 
+ * @param L Pointer to a list
+ */
 void ILSetInFunDefBeforeWhile (TInstrList *L);
+
+/**
+ * @brief Sets LabMain pointer to point to the first element
+ * 
+ * @param L Pointer to a list
+ */
 void ILSetLabMain (TInstrList *L);
+
+/**
+ * @brief Disposes a list
+ * 
+ * @param L Pointer to a list
+ */
 void ILDisposeList(TInstrList *L);
+
+/**
+ * @brief Inserts an element to the first position
+ * 
+ * @param L Pointer to a list
+ * @param inst Instruction to be added to a new element
+ */
 void ILInsertFirst (TInstrList *L, TInst inst);
+
+/**
+ * @brief Inserts an element to the last position
+ * 
+ * @param L Pointer to a list
+ * @param inst Instruction to be added to a new element 
+ * @param inWhile Flag whether parser is currently inside a while cycle
+ */
 void ILInsertLast(TInstrList *L, TInst inst, bool inWhile);
+
+/**
+ * @brief Inserts an element left from the main label
+ * 
+ * @param L Pointer to a list
+ * @param inst Instruction to be added to a new element 
+ * @param inWhile Flag whether parser is currently inside a while cycle
+ */
 void ILPreInsertLabMain (TInstrList *L, TInst inst, bool inWhile);
+
+/**
+ * @brief Inserts an element to the right of the BeforeWhile pointer
+ * 
+ * @param L Pointer to a list
+ * @param inst Instruction to be added to a new element 
+ */
 void ILPostInsertBeforeWhile (TInstrList *L, TInst inst);
+
+/**
+ * @brief Inserts an element to the right of the InFunDefBeforeWhile pointer
+ * 
+ * @param L Pointer to a list
+ * @param inst Instruction to be added to a new element 
+ */
 void ILPostInsertInFunDefBeforeWhile (TInstrList *L, TInst inst);
-//void ILPreActFunInsert (TInstrList *L, TInst inst);
+
+/**
+ * @brief Internal function to print a value stored in an adress 
+ * 
+ * @param adr Adress
+ */
+static void printAdr(TAdr adr);
+
+/**
+ * @brief Internal function to print a value stored in an instruction
+ * 
+ * @param inst Instruction
+ */
+static void printInst(TInst inst);
+
+/**
+ * @brief Prints all instructions, adds built in functions and header to the beginning
+ * 
+ * @param L Pointer to a list
+ */
 void ILPrintAllInst(TInstrList L);
+
+/**
+ * @brief Dynamically allocates space to concatenate C-strings
+ * 
+ * @param n Number of strings to concatenate
+ * @param ... Strings
+ * @return char* 
+ */
 char *getStr(int n, ...);
+
+/**
+ * @brief Dynamically alocates space and converts C-string to IFJcode18 string
+ * 
+ * @param s C-string
+ * @return char* 
+ */
 char *getIfjCodeStr(char *s);
+
+/**
+ * @brief Fills TInst structure with adresses and returns it
+ * 
+ * @param op Operation
+ * @param adr1 Adress 1
+ * @param adr2 Adress 2
+ * @param adr3 Adress 3
+ * @return TInst 
+ */
 TInst getInst(TOperation op, TAdr adr1, TAdr adr2, TAdr adr3);
 
 #endif
