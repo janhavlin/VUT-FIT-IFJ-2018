@@ -43,7 +43,7 @@
         SKIPLINE(c, f);                     \
         errflg = ERR_LEXICAL;               \
         tok.type = TOK_ERR;                 \
-        ifjErrorPrint("ERROR %d in scanner.c on line: Invalid token\n", ERR_LEXICAL); \
+        ifjErrorPrint("ERROR %d in scanner.c: Invalid token\n", ERR_LEXICAL); \
         free(buff);                         \
         return tok;                         \
     } while (0)
