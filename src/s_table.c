@@ -2,7 +2,7 @@
 	file name:		s_table.c
 	project:		VUT-FIT-IFJ-2018
 	created:		24.11.2018
-	last modified:	01.12.2018
+	last modified:	04.12.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	modifications:	

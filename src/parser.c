@@ -85,9 +85,15 @@ TsymData createDataForNewVar(unsigned order);
 int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 	if (DEBUG) printf("Function: %s\n", __func__);
 	int result = PROGRAM_OK;
+
 	TWrapper *globalInfo = (TWrapper *) malloc(sizeof(TWrapper));
 	if (globalInfo == NULL) {
 		return parserError(ERR_RUNTIME, __func__, 0, KIND_OTHER, "");
+	}
+	TToken *token = (TToken *) malloc(sizeof(TToken));
+	if (token == NULL) {
+		free(globalInfo);
+		return parserError(ERR_RUNTIME, "parse", 0, KIND_OTHER, "");
 	}
 	initTWrapper(globalInfo);
 	globalInfo->file = input;
@@ -96,13 +102,14 @@ int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 	globalInfo->GT = GT;
 	globalInfo->instructions = instructions;
 
-	TToken *token = (TToken *) malloc(sizeof(TToken));
-	if (token == NULL) {
-		return parserError(ERR_RUNTIME, "parse", 0, KIND_OTHER, "");
-	}
+
 	TToken **tokenPP = &token;
 	**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
-	if (errflg == ERR_LEXICAL) return errflg;
+	if (errflg != PROGRAM_OK) {
+		free(globalInfo);
+		free(token);
+		return errflg;
+	}
 	
 	/*START OF PARSING*/
 	result = start(tokenPP, globalInfo);
@@ -182,6 +189,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							unsigned E = processExpression(globalInfo->file, "then", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
@@ -195,6 +203,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process else
 							if (telse(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							genIfElse(globalInfo->instructions, ifNumber, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							//process eol
 							if (eol(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							//process ST-LIST
@@ -202,6 +211,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process end
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							genIfEnd(globalInfo->instructions, ifNumber, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							//inWhile = false, but only if this if is not nested in another while or if
 							globalInfo->inWhile = !topLevelIf;
 							return PROGRAM_OK;
@@ -214,10 +224,12 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							bool topLevelWhile = !globalInfo->inWhile;
 							globalInfo->inWhile = true;
 							genWhileBegin(globalInfo->instructions, whileNumber, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "do", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 							genWhileCond(globalInfo->instructions, whileNumber, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							(globalInfo->psaCounter)++;
 							//process do
 							//must load token after calling PSA
@@ -232,6 +244,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 							
 							genWhileEnd(globalInfo->instructions, whileNumber, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							//inWhile = false, but only if this while is not nested in another while
 							globalInfo->inWhile = !topLevelWhile;
 							return PROGRAM_OK;
@@ -278,6 +291,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 				if (newFuncData == NULL) return errflg;
 			}
 			genFunDefBegin(globalInfo->instructions, functionId, globalInfo->inWhile, globalInfo->inFunDef);
+			if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 			**tokenPP = getToken(globalInfo->file, *(globalInfo->GT)); //id is present, call next token
 			if (errflg != PROGRAM_OK) return errflg;
 			//process (
@@ -305,6 +319,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			if (end(tokenPP, globalInfo) != PROGRAM_OK) return errflg;
 
 			genFunDefEnd(globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
+			if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 			globalInfo->currLT = globalInfo->mainLT;
 			globalInfo->inFunDef = false;
 			return PROGRAM_OK;
@@ -408,6 +423,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 								var.type = ADRTYPE_VAR;
 								var.val.s = keyW;
 								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, varPtr->order, globalInfo->inWhile, globalInfo->inFunDef);
+								if (errflg != PROGRAM_OK) return errflg;	//checko for errors in generator
 							}
 						} else { //define variable in new function's LT
 							if (symTabSearch(globalInfo->GT, keyW) != NULL) {
@@ -424,6 +440,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.type = ADRTYPE_STRING;
 							var.val.s = (*tokenPP)->data.s;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
@@ -433,6 +450,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.type = ADRTYPE_FLOAT;
 							var.val.f = (*tokenPP)->data.f;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
@@ -442,6 +460,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.type = ADRTYPE_INT;
 							var.val.i = (*tokenPP)->data.i;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
+							if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						} else {	//cannot define function with constant
 							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
@@ -452,6 +471,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 								var.type = ADRTYPE_NIL;
 								var.val.s = (*tokenPP)->data.s;
 								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
+								if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 							} else {	//cannot define function with constant
 								return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 							}
@@ -482,6 +502,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						if ((newVarData = symTabSearch(globalInfo->currLT, savedIdOne)) == NULL) {	//ID not present in current LT
 							if (symTabSearch(globalInfo->GT, savedIdOne) == NULL) {	//ID not defined as function
 								genDefVar(globalInfo->instructions, savedIdOne, globalInfo->inWhile, globalInfo->inFunDef);
+								if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 								varData = createDataForNewVar(0);	//0 means not parameter, just variable
 								symTabInsert(globalInfo->currLT, savedIdOne, varData);
 								newVarData = &varData;
@@ -515,6 +536,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						}
 						globalInfo->paramCounter = 0;
 						genFunCallBegin(globalInfo->instructions, savedIdOne, globalInfo->inWhile, globalInfo->inFunDef);
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
 						if (pbody(tokenPP, globalInfo, savedIdOne) != PROGRAM_OK) return errflg; 
@@ -535,6 +557,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						}
 						//function call
 						genFunCallEnd(globalInfo->instructions, savedIdOne, globalInfo->inWhile, globalInfo->inFunDef);
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						globalInfo->inFunCall = false;
 						return PROGRAM_OK;
 		default:		break;
@@ -570,6 +593,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, TsymData *
 						unsigned E = processExpression(globalInfo->file, "eol", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						genAssign(globalInfo->instructions, savedIdOne, varData->order, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);	//assign to savedIdOne
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
@@ -604,8 +628,11 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 							if (newFuncData.params == 0) {	
 								// id = fun () // rule #16
 								genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
+								if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 								genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
+								if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 								genAssignRetval(globalInfo->instructions, savedIdOne, varData->order, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne, from funcall
+								if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 								//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
 								return PROGRAM_OK;
 							} else {	//0 is wrong amount of parameters
@@ -634,6 +661,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						unsigned E = processExpression(globalInfo->file, "eol", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 						if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
 						genAssign(globalInfo->instructions, savedIdOne, varData->order, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						(globalInfo->psaCounter)++;
 						//must load token after calling PSA
 						**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
@@ -663,6 +691,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						}
 						globalInfo->paramCounter = 0;
 						genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						globalInfo->inFunCall = true;
 						//call pbody, store params and count them
 						if (pbody(tokenPP, globalInfo, savedIdTwo) != PROGRAM_OK) return errflg; 
@@ -683,8 +712,10 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						}
 						//function call
 						genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						globalInfo->inFunCall = false;
 						genAssignRetval(globalInfo->instructions, savedIdOne, varData->order, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne, from funcall
+						if (errflg != PROGRAM_OK) return errflg;	//check for errors in generator
 						return PROGRAM_OK;
 		default:		break;
 	}
