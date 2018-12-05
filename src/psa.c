@@ -318,12 +318,12 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 2.
                         case PLUSE_RULE:        // +E
-                                genPlusE(instrList, psaCntr, Ecount, inWhile, inFunDef);
+                                genPlusE(instrList, psaCntr, Ecount-1, inWhile, inFunDef);
                             break;
 
                         // rule 3.
                         case NEG_RULE:          // -E
-                                genMinusE(instrList, psaCntr, Ecount, inWhile, inFunDef);
+                                genMinusE(instrList, psaCntr, Ecount-1, inWhile, inFunDef);
                             break;
                         
                         // rule 4.
@@ -388,11 +388,11 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                             break;
                     }
 
-					if( (ruleGet == LBR_E_RBR_RULE) && (ruleGet == PLUSE_RULE) && ruleGet == NEG_RULE ){
+					if( (ruleGet == LBR_E_RBR_RULE) || (ruleGet == PLUSE_RULE) || (ruleGet == NEG_RULE) ){
                         (s->top)->numberOfE = Ecount-1;     // add number of E to corresponding stack item
                     }
                     else
-                        (s->top)->numberOfE = Ecount++;
+                        (s->top)->numberOfE = Ecount;
 
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 
