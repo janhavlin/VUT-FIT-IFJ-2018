@@ -392,7 +392,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                         (s->top)->numberOfE = Ecount-1;     // add number of E to corresponding stack item
                     }
                     else
-                        (s->top)->numberOfE = Ecount;
+                        (s->top)->numberOfE = Ecount++;
 
 					toDo = lookInPrecedenceTable( highestTerminal(s), get );
 
