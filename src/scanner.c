@@ -613,7 +613,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EBEGIN:      // Read: "=begin"
-                 /*DEBUG*/printf("%d %c\n", state, c);
+                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n')
                     state = S_COMMENT_BLOCK_EOL;
                 else if (isspace(c))

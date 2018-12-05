@@ -176,7 +176,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "then", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile, globalInfo->inFunDef);
+							genIfCond(globalInfo->instructions, ifNumber, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);
 							(globalInfo->psaCounter)++;
 							//process then
 							//must load token after calling PSA
@@ -212,8 +212,7 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							//process expr
 							unsigned E = processExpression(globalInfo->file, "do", *(globalInfo->GT), *(globalInfo->currLT), globalInfo->instructions, globalInfo->inWhile, globalInfo->inFunDef);
 							if (errflg != PROGRAM_OK) return errflg;	//check for errors in PSA
-																						// TODO: Figure out why is E-1 needed!!
-							genWhileCond(globalInfo->instructions, whileNumber, globalInfo->psaCounter, E-1, globalInfo->inWhile, globalInfo->inFunDef);
+							genWhileCond(globalInfo->instructions, whileNumber, globalInfo->psaCounter, E, globalInfo->inWhile, globalInfo->inFunDef);
 							(globalInfo->psaCounter)++;
 							//process do
 							//must load token after calling PSA

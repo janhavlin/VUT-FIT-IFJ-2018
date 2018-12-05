@@ -150,14 +150,22 @@ void genWhileCond(TInstrList *L, unsigned whileCnt, unsigned psa, unsigned psaRe
     char *condStr = getStr(3, "while", whileStr, "condtype");
 
     // Result of the PSA must be bool so we'll check that first
-    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
+    /*inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
     inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_EXIT,     ADRINT(adr1, 4),            undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
-    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);*/
+
+    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "end"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "nil"));  INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMP, ADRLAB(adr1, lab, "body"), undef, undef);  INSERTLAST(L, inst, inWhile, inFunDef);
 
     // Condition
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "end"),   ADRVAR(adr2, EStr),     ADRBOOL(adr3, "false"));INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "body"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
 
     free(whileStr);
     free(psaStr);
@@ -189,14 +197,22 @@ void genIfCond(TInstrList *L, unsigned ifCnt, unsigned psa, unsigned psaResultE,
     char *condStr = getStr(3, "if", ifStr, "condtype");
 
     // Result of the PSA must be bool so we'll check that first
-    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
+    /*inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
     inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_EXIT,     ADRINT(adr1, 4),            undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
-    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "cond"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);*/
+
+    inst = getInst(OP_DEFVAR,   ADRVAR(adr1, condStr),      undef,                  undef);                 INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_TYPE,     ADRVAR(adr1, condStr),      ADRVAR(adr2, EStr),     undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "cond"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "bool"));  INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "else"),  ADRVAR(adr2, condStr),  ADRSTR(adr3, "nil"));  INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_JUMP, ADRLAB(adr1, lab, "true"), undef, undef);  INSERTLAST(L, inst, inWhile, inFunDef);
 
     // Condition
+    inst = getInst(OP_LABEL, ADRLAB(adr1, lab, "cond"),  undef, undef);  INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMPIFEQ, ADRLAB(adr1, lab, "else"),   ADRVAR(adr2, EStr),     ADRBOOL(adr3, "false"));INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_LABEL,    ADRLAB(adr1, lab, "true"),  undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
 
     free(ifStr);
     free(psaStr);
@@ -235,13 +251,14 @@ void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned s
     char *resVarStr = getStr(4, "PSA", psaStr, "E", resEStr);
     char *funParStr = convIntToStr(srcVarParOrder);
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, resVarStr), undef, undef); INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
-
     switch (srcVar.type){
         case ADRTYPE_VAR:
-            if (srcVarParOrder > 0)
+            if (srcVarParOrder > 0){
                 inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, funParStr), undef);
-            else
+    fprintf(stderr, "E var par: %s\n", srcVar.val.s);}
+            else{
                 inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, srcVar.val.s), undef);
+    fprintf(stderr, "E variable: %s\n", srcVar.val.s);}
             break;
         case ADRTYPE_INT:    inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRINT(adr2, srcVar.val.i), undef); break;
         case ADRTYPE_FLOAT:  inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRFLT(adr2, srcVar.val.f), undef); break;
@@ -250,6 +267,47 @@ void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned s
     }
     INSERTLAST(L, inst, inWhile, inFunDef);
     free(funParStr);
+    free(psaStr);
+    free(resEStr);
+    free(resVarStr);
+}
+
+void genPlusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef){
+    TInst inst;
+    TAdr adr1, adr2, undef;
+    char *psaStr = convIntToStr(psa);
+    char *resEStr = convIntToStr(resultE);
+    char *resVarStr = getStr(4, "PSA", psaStr, "E", resEStr);
+
+    inst = getInst(OP_CREATEFRAME,  undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_DEFVAR,       ADRVARTMP(adr1, "1"),  undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_MOVE,         ADRVARTMP(adr1, "1"),     ADRVAR(adr2, resVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_PUSHFRAME,    undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_CALL,         ADRLAB(adr1, "$genminusE", ""),      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_POPFRAME,     undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+
+    free(psaStr);
+    free(resEStr);
+    free(resVarStr);
+}
+
+void genMinusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef){
+    TInst inst;
+    TAdr adr1, adr2, undef;
+    fprintf(stderr, "received idx: %u\n", resultE);
+    char *psaStr = convIntToStr(psa);
+    char *resEStr = convIntToStr(resultE);
+    char *resVarStr = getStr(4, "PSA", psaStr, "E", resEStr);
+
+    inst = getInst(OP_CREATEFRAME,  undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    //inst = getInst(OP_DEFVAR,       ADRVARTMP(adr1, "RETVAL"),  undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_DEFVAR,       ADRVARTMP(adr1, "1"),  undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_MOVE,         ADRVARTMP(adr1, "1"),     ADRVAR(adr2, resVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_PUSHFRAME,    undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_CALL,         ADRLAB(adr1, "$genminusE", ""),      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_POPFRAME,     undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_MOVE,         ADRVAR(adr1, resVarStr),    ADRVARTMP(adr2, "RETVAL"), undef); INSERTLAST(L, inst, inWhile, inFunDef);
+
     free(psaStr);
     free(resEStr);
     free(resVarStr);
@@ -270,7 +328,7 @@ void genAssign(TInstrList *L, char *dstVar, unsigned dstVarParOrder, unsigned ps
     char *psaVarStr = getStr(4, "PSA", psaStr, "E", EStr);
     char *psaVarStrType = getStr(2, psaVarStr, "type");
     char *funParStr = convIntToStr(dstVarParOrder);
-    //printf("genAssign called with parnum %d\n", dstVarParOrder);
+
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, psaVarStrType), undef, undef); INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
     inst = getInst(OP_TYPE, ADRVAR(adr1, psaVarStrType), ADRVAR(adr2, psaVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMPIFNEQ, ADRLAB(adr1, psaVarStr,"notbool"), ADRVAR(adr2, psaVarStrType), ADRSTR(adr3, "bool")); INSERTLAST(L, inst, inWhile, inFunDef);
@@ -278,7 +336,7 @@ void genAssign(TInstrList *L, char *dstVar, unsigned dstVarParOrder, unsigned ps
     inst = getInst(OP_LABEL, ADRLAB(adr1, psaVarStr,"notbool"), undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
 
     if (dstVarParOrder > 0){
-        //printf("Replacing regular variable name with number %u %s\n", dstVarParOrder, funParStr);
+
         inst = getInst(OP_MOVE, ADRVAR(adr1, funParStr), ADRVAR(adr2, psaVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
     }
     else {

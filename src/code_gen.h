@@ -156,6 +156,9 @@ void genIfEnd(TInstrList *L, unsigned ifCnt, bool inWhile, bool inFunDef);
  */
 void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned srcVarParOrder, bool inWhile, bool inFunDef);
 
+void genPlusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef);
+void genMinusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef);
+
 /**
  * @brief Defines a new variable and assigns nil to it
  * 

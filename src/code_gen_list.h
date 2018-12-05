@@ -124,6 +124,33 @@ LABEL $chroutbounds\n\
 EXIT int@4\n\
 RETURN\n"
 
+#define FUN_GENPLUSE "LABEL $$genplusE\n\
+DEFVAR LF@&1type\n\
+TYPE LF@&1type LF@&1\n\
+JUMPIFEQ $$genplusEok LF@&1type string@int\n\
+JUMPIFEQ $$genplusEok LF@&1type string@int\n\
+EXIT int@4\n\
+LABEL $$genplusEok\n\
+RETURN\n"
+
+#define FUN_GENMINUSE "LABEL $$genminusE\n\
+DEFVAR LF@&RETVAL\n\
+DEFVAR LF@&1type\n\
+TYPE LF@&1type LF@&1\n\
+JUMPIFEQ $$genminusEint LF@&1type string@int\n\
+JUMPIFEQ $$genminusEfloat LF@&1type string@int\n\
+EXIT int@4\n\
+LABEL $$genminusEint\n\
+SUB LF@&1 int@0 LF@&1\n\
+MOVE LF@&RETVAL LF@&1\n\
+RETURN\n\
+LABEL $$genminusEfloat\n\
+SUB LF@&1 int@0 LF@&1\n\
+MOVE LF@&RETVAL LF@&1\n\
+RETURN\n"
+
+
+
 #define ADRCAT(adr, var1, var2) (adr.val.s = getStr(2, var1, var2), adr)
 
 #define ADRNIL(adr)      (adr.type = ADRTYPE_NIL, adr)
