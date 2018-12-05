@@ -35,6 +35,17 @@ typedef struct {
 	bool inFunDef;
 } TWrapper;
 
+/**
+ * error kinds for better explained error message
+ */ 
+typedef enum {
+	KIND_UNDEF_VAR,
+	KIND_UNDEF_FUN,
+	KIND_REDEF,
+	KIND_UNEXP_KWD,
+	KIND_OTHER
+} ERR_KIND;
+
 //--------------FUNCTION PROTOTYPES----------------------
 
 /* NON-TERMINALS */
@@ -63,7 +74,7 @@ int rbr(TToken **, TWrapper *);
 
 /* OTHER */
 
-int parserError(int errNbr, const char *whichFunction, int tokenType);
+int parserError(int errNbr, const char *whichFunction, int tokenType, int errKind, string data);
 void initTWrapper(TWrapper *);
 TsymData createDataForNewFunc(bool defined, int params);
 TsymData createDataForNewVar(unsigned order);
@@ -75,7 +86,7 @@ int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 	int result = PROGRAM_OK;
 	TWrapper *globalInfo = (TWrapper *) malloc(sizeof(TWrapper));
 	if (globalInfo == NULL) {
-		return parserError(ERR_RUNTIME, "parse", 0);
+		return parserError(ERR_RUNTIME, __func__, 0, KIND_OTHER, "");
 	}
 	initTWrapper(globalInfo);
 	globalInfo->file = input;
@@ -86,7 +97,7 @@ int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 
 	TToken *token = (TToken *) malloc(sizeof(TToken));
 	if (token == NULL) {
-		return parserError(ERR_RUNTIME, "parse", 0);
+		return parserError(ERR_RUNTIME, "parse", 0, KIND_OTHER, "");
 	}
 	TToken **tokenPP = &token;
 	**tokenPP = getToken(globalInfo->file, *(globalInfo->GT));
@@ -96,13 +107,6 @@ int parse(FILE *input, TsymItem **GT, TsymItem **LT, TInstrList *instructions) {
 	result = start(tokenPP, globalInfo);
 	/*END OF PARSING*/
 
-	//check if all functions were defined
-	if (!symTabCheckIfAllFunctionsWereDefined(*(globalInfo->GT))) {
-		errflg = ERR_SEM_OTHER;
-		ifjErrorPrint("ERROR %d SEMANTIC: calling undefined function in program!\n", errflg); 
-		result = errflg;
-	}
-	
 	free(globalInfo);
 	free(token);
 	return result;
@@ -146,7 +150,7 @@ int start(TToken **tokenPP, TWrapper *globalInfo) {
 						return PROGRAM_OK;
 		default:		break;						
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -231,12 +235,12 @@ int stat(TToken **tokenPP, TWrapper *globalInfo) {
 							globalInfo->inWhile = !topLevelWhile;
 							return PROGRAM_OK;
 						}
-						break;
+						return parserError(ERR_SYNTAX, __func__, type, KIND_UNEXP_KWD, keyW);
 		case TOK_EOL:	//rule #13 STAT -> eps
 						return PROGRAM_OK;
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -260,12 +264,12 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			string functionId = (*tokenPP)->data.s;		//save name of ID
 			
 			if ((newFuncData = symTabSearch(globalInfo->currLT, functionId)) != NULL) {	//id taken by global variable
-				return parserError(ERR_SEM_DEFINE, __func__, 0);
+				return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, functionId);
 			} else if ((newFuncData = symTabSearch(globalInfo->GT, functionId)) != NULL) {	//func already is in GT
 				if (!newFuncData->defined) {	
 					//func was not defined, just called, it is OK
 				} else { //redefinition
-					return parserError(ERR_SEM_DEFINE, __func__, 0);
+					return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, functionId);
 				}
 			} else {	//new uncalled function definition
 				funcData = createDataForNewFunc(true, 0);	//false means undefined
@@ -284,7 +288,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 			if (plist(tokenPP, globalInfo, functionId) != PROGRAM_OK) return errflg;
 			if (!newFuncData->defined) {	//fun was called before, it must be defined with same amount of parameters
 				if (newFuncData->params != globalInfo->paramCounter) {
-					return parserError(ERR_SEM_PARAM, __func__, 0);
+					return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, functionId);
 				} else {
 					newFuncData->defined = true;
 				}
@@ -307,7 +311,7 @@ int fundef(TToken **tokenPP, TWrapper *globalInfo) {
 	} else {
 		//syntax error
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -336,7 +340,7 @@ int stlist(TToken **tokenPP, TWrapper *globalInfo) {
 						return PROGRAM_OK;
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -379,7 +383,7 @@ int plist(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						return PROGRAM_OK;
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, type);						
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");						
 }
 
 /**
@@ -398,7 +402,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 		case TOK_ID:	//rule #20 TERM -> id 
 						if (globalInfo->inFunCall) {	//passing parameter to function
 							if ((varPtr = symTabSearch(globalInfo->currLT, keyW)) == NULL) {	//try to pass undefined variable to funcall
-								return parserError(ERR_SEM_DEFINE, __func__, 0);
+								return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_UNDEF_VAR, keyW);
 							} else {
 								var.type = ADRTYPE_VAR;
 								var.val.s = keyW;
@@ -407,7 +411,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						} else { //define variable in new function's LT
 							if (symTabSearch(globalInfo->GT, keyW) != NULL) {
 								//keyword is already used for function
-								return parserError(ERR_SEM_DEFINE, __func__, 0);
+								return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, keyW);
 							} else {
 								idData = createDataForNewVar(globalInfo->paramCounter);
 								symTabInsert(globalInfo->currLT, keyW, idData);
@@ -420,7 +424,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.val.s = (*tokenPP)->data.s;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
-							return parserError(ERR_SEM_OTHER, __func__, 0);
+							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
 						return PROGRAM_OK;
 		case TOK_FLOAT: //rule #21 TERM -> const
@@ -429,7 +433,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.val.f = (*tokenPP)->data.f;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
-							return parserError(ERR_SEM_OTHER, __func__, 0);
+							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
 						return PROGRAM_OK;
 		case TOK_INT:	//rule #21 TERM -> const
@@ -438,7 +442,7 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 							var.val.i = (*tokenPP)->data.i;
 							genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 						} else {	//cannot define function with constant
-							return parserError(ERR_SEM_OTHER, __func__, 0);
+							return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 						}
 						return PROGRAM_OK;
 		case TOK_KEY:	if (strcmp(keyW, "nil") == 0) {
@@ -448,13 +452,13 @@ int term(TToken **tokenPP, TWrapper *globalInfo, string function) {
 								var.val.s = (*tokenPP)->data.s;
 								genFunCallPar(globalInfo->instructions, function, globalInfo->paramCounter, var, order_blank, globalInfo->inWhile, globalInfo->inFunDef);
 							} else {	//cannot define function with constant
-								return parserError(ERR_SEM_OTHER, __func__, 0);
+								return parserError(ERR_SEM_OTHER, __func__, 0, KIND_OTHER, function);
 							}
 							return PROGRAM_OK;
 						}
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -481,7 +485,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 								symTabInsert(globalInfo->currLT, savedIdOne, varData);
 								newVarData = &varData;
 							} else {
-								return parserError(ERR_SEM_DEFINE, __func__, 0);
+								return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, savedIdOne);
 							}
 						} //else Variable already defined, which is OK
 						//process assign
@@ -499,16 +503,14 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 		case TOK_ID:
 		case TOK_EOL:	//rule #15 ASS-OR-FUN -> P-BODY 
 						if ((funcData = symTabSearch(globalInfo->currLT, savedIdOne)) != NULL) {	//id name is already taken by local variable
-							return parserError(ERR_SEM_DEFINE, __func__, 0);
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, savedIdOne);
 						} else if ((funcData = symTabSearch(globalInfo->mainLT, savedIdOne)) != NULL) {	//id name is taken by global variable
-							return parserError(ERR_SEM_DEFINE, __func__, 0);
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, savedIdOne);
 						} else if ((funcData = symTabSearch(globalInfo->GT, savedIdOne)) != NULL) {
 							//function is defined
 						} else {
-							//new function
-							newFuncData = createDataForNewFunc(false, 0);	//false means undefined
-							funcData = symTabInsert(globalInfo->GT, savedIdOne, newFuncData);
-							if (funcData == NULL) return errflg;
+							//function call before definition
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_UNDEF_FUN, savedIdOne);
 						}
 						globalInfo->paramCounter = 0;
 						genFunCallBegin(globalInfo->instructions, savedIdOne, globalInfo->inWhile, globalInfo->inFunDef);
@@ -520,11 +522,11 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 							if (funcData->params == UNLIMITED_P && globalInfo->paramCounter != 0) {
 								//it is ok, function has variable amount of parameters
 							} else if (globalInfo->paramCounter != funcData->params) {
-								return parserError(ERR_SEM_PARAM, __func__, 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, savedIdOne);
 							} 
 						} else if (funcData->called) {	//function was called before, amounts must match 
 							if (funcData->params != globalInfo->paramCounter) {
-								return parserError(ERR_SEM_PARAM, __func__, 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, savedIdOne);
 							}
 						} else {	//first call of undefined function, store amount of parameters counted
 							funcData->params = globalInfo->paramCounter;
@@ -536,7 +538,7 @@ int assorfun(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne) {
 						return PROGRAM_OK;
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -577,7 +579,7 @@ int assign(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, TsymData *
 						return PROGRAM_OK;
 		default:		break;						
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 /**
@@ -606,17 +608,12 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 								//genASSIGN(savedIdOne, funcall);	//to savedIdOne, from funcall
 								return PROGRAM_OK;
 							} else {	//0 is wrong amount of parameters
-								return parserError(ERR_SEM_PARAM, __func__, 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, savedIdTwo);
 							}
 						} else if (symTabSearch(globalInfo->currLT, savedIdTwo) != NULL) {	//ID is variable
 							// id = id // continue to rule #17
 						} else {	//function call before definition
-							newFuncData = createDataForNewFunc(false, 0);
-							symTabInsert(globalInfo->GT, savedIdTwo, newFuncData);
-							genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
-							genFunCallEnd(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
-							genAssignRetval(globalInfo->instructions, savedIdOne, varData->order, globalInfo->inWhile, globalInfo->inFunDef);	//to savedIdOne, from funcall
-							return PROGRAM_OK;
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_UNDEF_FUN, savedIdTwo);
 						}
 						return PROGRAM_OK;
 		case TOK_ADD:             // +
@@ -653,17 +650,15 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						//actually no need of returning any tokens to scanner
 						if ((funcData = symTabSearch(globalInfo->currLT, savedIdTwo)) != NULL) { 
 							//id name is already taken by local variable
-							return parserError(ERR_SEM_DEFINE, __func__, 0);
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, savedIdTwo);
 						} else if ((funcData = symTabSearch(globalInfo->mainLT, savedIdTwo)) != NULL) { 
 							//id name is already taken by global variable
-							return parserError(ERR_SEM_DEFINE, __func__, 0);
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_REDEF, savedIdTwo);
 						} else if ((funcData = symTabSearch(globalInfo->GT, savedIdTwo)) != NULL) {
 							//function is defined
 						} else {
-							//new function
-							newFuncData = createDataForNewFunc(false, 0);	//false means undefined
-							funcData = symTabInsert(globalInfo->GT, savedIdTwo, newFuncData);
-							if (funcData == NULL) return errflg;
+							//function call before definition
+							return parserError(ERR_SEM_DEFINE, __func__, 0, KIND_UNDEF_FUN, savedIdTwo);
 						}
 						globalInfo->paramCounter = 0;
 						genFunCallBegin(globalInfo->instructions, savedIdTwo, globalInfo->inWhile, globalInfo->inFunDef);
@@ -675,11 +670,11 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 							if (funcData->params == UNLIMITED_P && globalInfo->paramCounter != 0) {
 								//it is ok, function has variable amount of parameters
 							} else if (globalInfo->paramCounter != funcData->params) {
-								return parserError(ERR_SEM_PARAM, __func__, 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, savedIdTwo);
 							} 
 						} else if (funcData->called) {	//function was called before, amounts must match 
 							if (funcData->params != globalInfo->paramCounter) {
-								return parserError(ERR_SEM_PARAM, __func__, 0);
+								return parserError(ERR_SEM_PARAM, __func__, 0, KIND_OTHER, savedIdTwo);
 							}
 						} else {	//first call of undefined function
 							funcData->params = globalInfo->paramCounter;
@@ -692,7 +687,7 @@ int decideExprOrFunc(TToken **tokenPP, TWrapper *globalInfo, string savedIdOne, 
 						return PROGRAM_OK;
 		default:		break;
 	}
-	return parserError(ERR_SYNTAX, __func__, (*tokenPP)->type);
+	return parserError(ERR_SYNTAX, __func__, (*tokenPP)->type, KIND_OTHER, "");
 }
 
 /**
@@ -728,7 +723,7 @@ int pbody(TToken **tokenPP, TWrapper *globalInfo, string function) {
 						return PROGRAM_OK;
 		default:		break;						
 	}
-	return parserError(ERR_SYNTAX, __func__, type);
+	return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 }
 
 //--------------RECURSIVE DESCENT - TERMINALS--------------
@@ -744,7 +739,7 @@ int eol(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 	}
 }
 
@@ -760,7 +755,7 @@ int then(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_UNEXP_KWD, keyW);
 	}
 }
 
@@ -776,7 +771,7 @@ int telse(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_UNEXP_KWD, keyW);
 	}
 }
 
@@ -792,7 +787,7 @@ int tdo(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;	//check for lexical error in scanner
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_UNEXP_KWD, keyW);
 	}
 }
 
@@ -808,7 +803,7 @@ int end(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_UNEXP_KWD, keyW);
 	}
 }
 
@@ -823,7 +818,7 @@ int id(TToken **tokenPP) {
 		//no token read here, need to save id name first and then call next token
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 	}
 }
 
@@ -838,7 +833,7 @@ int lbr(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 	}
 }
 
@@ -853,7 +848,7 @@ int rbr(TToken **tokenPP, TWrapper *globalInfo) {
 		if (errflg != PROGRAM_OK) return errflg;
 		return PROGRAM_OK;
 	} else {
-		return parserError(ERR_SYNTAX, __func__, type);
+		return parserError(ERR_SYNTAX, __func__, type, KIND_OTHER, "");
 	}
 }
 
@@ -865,26 +860,40 @@ int rbr(TToken **tokenPP, TWrapper *globalInfo) {
  * @param where is name of parser.c function where the error occured
  * @tokenType is number of token that came (only used for syntax error)
  */ 
-int parserError(int errNbr, const char *where, int tokenType) {
+int parserError(int errNbr, const char *where, int tokenType, int errKind, string data) {
+	if (DEBUG) printf("error in func. %s", where);
 	errflg = errNbr;
 	switch(errNbr) {
-		case ERR_SEM_DEFINE:	ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: Undefined variable or redefinition!\n", errflg, where); 
-								break;
-		case ERR_SEM_PARAM:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: wrong amount of parameters!\n", errflg, where);
-								break;
-		case ERR_SEM_OTHER:		ifjErrorPrint("SEMANTIC ERROR %d in parser.c in func. %s: can't define function with constant parameter!\n", errflg, where); 
-								break;
-		case ERR_SYNTAX:		if (tokenType != TOK_KEY)
-									ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. %s: unexpected token type n.%d!\n", errflg, where, tokenType);
-								else
-									ifjErrorPrint("SYNTAX ERROR %d in parser.c in func. %s: unexpected token type n.%d or unexpected keyword!\n", errflg, where, tokenType);
-								break;
-		case ERR_RUNTIME: 		ifjErrorPrint("RUNTIME ERROR %d in parser.c in func. %s: allocation failed!\n", errflg, where);
+		case ERR_SEM_DEFINE:	
+			if (errKind == KIND_UNDEF_VAR)
+				ifjErrorPrint("SEMANTIC ERROR %d: Undefined variable %s!\n", errflg, data);
+			else if (errKind == KIND_UNDEF_FUN)
+				ifjErrorPrint("SEMANTIC ERROR %d: Undefined function %s()!\n", errflg, data);
+			else if (errKind == KIND_REDEF)
+				ifjErrorPrint("SEMANTIC ERROR %d: Redefinition of %s!\n", errflg, data);
+			break;
+		case ERR_SEM_PARAM:
+			ifjErrorPrint("SEMANTIC ERROR %d: Wrong amount of parameters for %s()!\n", errflg, data);
+			break;
+		case ERR_SEM_OTHER:		
+			ifjErrorPrint("SEMANTIC ERROR %d: Try to define function with a constant in %s()!\n", errflg, data); 
+			break;
+		case ERR_SYNTAX:
+			if (tokenType == TOK_KEY && errKind == KIND_UNEXP_KWD)
+				ifjErrorPrint("SYNTAX ERROR %d: Unexpected keyword %s!\n", errflg, data);
+			else
+				ifjErrorPrint("SYNTAX ERROR %d: Unexpected token type n.%d!\n", errflg, tokenType);
+			break;
+		case ERR_RUNTIME: 		
+			ifjErrorPrint("RUNTIME ERROR %d: Allocation failed!\n", errflg);
 		default: break;
 	}
 	return errflg;
 }
  
+ /**
+  * initializes TWrapper structure
+  */ 
 void initTWrapper(TWrapper *info) {
 	info->file = NULL;
 	info->mainLT = NULL;

@@ -59,7 +59,6 @@ void symTabDispose(TsymItem **rootPP);
 void symTabFillKwds(TsymItem **tablePP);
 void symTabFillFuns(TsymItem **tablePP);
 void symTabToString(TsymItem *rootPtr, int depth);
-bool symTabCheckIfAllFunctionsWereDefined(TsymItem *rootPtr);
 
 #endif //IFJ18_S_TABLE_H
 /** end of s_table.h */
