@@ -258,7 +258,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
     
 	while( !sLEmpty(s) ){  
-       /*if( get.type == TOK_ID ){
+       if( get.type == TOK_ID ){
             if( (IDData = symTabSearch(&STL, get.data.s)) == NULL){   // ID does not exist in Local ST,  
                 sLDelete(s);
                 
@@ -268,7 +268,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 errflg = ERR_SEM_DEFINE;
 				return 0;	// 0 means error == 0 E chars was found
             }
-        }*/
+        }
           
 		//sPrintStack(s);
         switch(toDo){  
@@ -318,12 +318,12 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                         // rule 2.
                         case PLUSE_RULE:        // +E
-                                genPos(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                                genPlusE(instrList, psaCntr, Ecount, inWhile, inFunDef);
                             break;
 
                         // rule 3.
                         case NEG_RULE:          // -E
-                                genNeg(instrList, psaCntr, Ecount, IDKonst, inWhile, inFunDef);
+                                genMinusE(instrList, psaCntr, Ecount, inWhile, inFunDef);
                             break;
                         
                         // rule 4.
