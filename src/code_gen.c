@@ -2,7 +2,7 @@
  * file name:       code_gen.c
  * project:         VUT-FIT-IFJ-2018
  * created:         23.11.2018
- * last modified:   4.12.2018
+ * last modified:   5.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz
  * modification:    
@@ -12,8 +12,6 @@
 
 #include "code_gen.h"
 
-//static TInstrList L;
-static int funPara;
 int errflg;
 
 void genPrgBegin(TInstrList *L){
@@ -24,7 +22,6 @@ void genPrgBegin(TInstrList *L){
     inst = getInst(OP_PUSHFRAME, undef, undef, undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, "RETVAL"), undef, undef); ILInsertLast(L, inst, false);
     inst = getInst(OP_MOVE, ADRVAR(adr1, "RETVAL"), ADRNIL(adr2), undef); ILInsertLast(L, inst, false);
-    //ILSetBeforeWhile(L);
     ILSetLabMain(L);
 }
 
@@ -50,7 +47,6 @@ void genFunCallBegin(TInstrList *L, char *fun, bool inWhile, bool inFunDef){
 
     TInst inst;
     TAdr undef;
-    funPara = 0;
     inst = getInst(OP_CREATEFRAME, undef, undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
 }
 
@@ -253,12 +249,10 @@ void genE(TInstrList *L, unsigned psa, unsigned resultE, TAdr srcVar, unsigned s
     inst = getInst(OP_DEFVAR, ADRVAR(adr1, resVarStr), undef, undef); INSERTBEFOREWHILE(L, inst, inWhile, inFunDef);
     switch (srcVar.type){
         case ADRTYPE_VAR:
-            if (srcVarParOrder > 0){
+            if (srcVarParOrder > 0)
                 inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, funParStr), undef);
-    fprintf(stderr, "E var par: %s\n", srcVar.val.s);}
-            else{
+            else
                 inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRVAR(adr2, srcVar.val.s), undef);
-    fprintf(stderr, "E variable: %s\n", srcVar.val.s);}
             break;
         case ADRTYPE_INT:    inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRINT(adr2, srcVar.val.i), undef); break;
         case ADRTYPE_FLOAT:  inst = getInst(OP_MOVE, ADRVAR(adr1, resVarStr), ADRFLT(adr2, srcVar.val.f), undef); break;
@@ -294,13 +288,12 @@ void genPlusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool 
 void genMinusE(TInstrList *L, unsigned psa, unsigned resultE, bool inWhile, bool inFunDef){
     TInst inst;
     TAdr adr1, adr2, undef;
-    fprintf(stderr, "received idx: %u\n", resultE);
+
     char *psaStr = convIntToStr(psa);
     char *resEStr = convIntToStr(resultE);
     char *resVarStr = getStr(4, "PSA", psaStr, "E", resEStr);
 
     inst = getInst(OP_CREATEFRAME,  undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
-    //inst = getInst(OP_DEFVAR,       ADRVARTMP(adr1, "RETVAL"),  undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_DEFVAR,       ADRVARTMP(adr1, "1"),  undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_MOVE,         ADRVARTMP(adr1, "1"),     ADRVAR(adr2, resVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_PUSHFRAME,    undef,                      undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
@@ -336,7 +329,6 @@ void genAssign(TInstrList *L, char *dstVar, unsigned dstVarParOrder, unsigned ps
     inst = getInst(OP_LABEL, ADRLAB(adr1, psaVarStr,"notbool"), undef, undef); INSERTLAST(L, inst, inWhile, inFunDef);
 
     if (dstVarParOrder > 0){
-
         inst = getInst(OP_MOVE, ADRVAR(adr1, funParStr), ADRVAR(adr2, psaVarStr), undef); INSERTLAST(L, inst, inWhile, inFunDef);
     }
     else {
@@ -436,7 +428,7 @@ void genAdd(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
     free(lab);
 }
 
-void genSubOrMul(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
+static void genSubOrMul(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
     TInst inst;
     TAdr adr1, adr2, adr3, undef;
     
@@ -598,7 +590,7 @@ void genDiv(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
     free(lab);
 }
 
-void genCmp(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
+static void genCmp(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
     TInst inst;
     TAdr adr1, adr2, adr3, undef;
     
@@ -696,7 +688,7 @@ void genGEQ(TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned v
     genCmp(OP_GEQ, L, psa, res, var1, var2, inWhile, inFunDef);
 }
 
-void genEQorNEQ(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
+static void genEQorNEQ(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsigned var1, unsigned var2, bool inWhile, bool inFunDef){
     TInst inst;
     TAdr adr1, adr2, adr3, undef;
     
@@ -727,8 +719,7 @@ void genEQorNEQ(TOperation op, TInstrList *L, unsigned psa, unsigned res, unsign
 
     // Different types => always false
     inst = getInst(OP_LABEL,        ADRLAB(adr1, lab, "false"),          undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
-    //inst = getInst(OP_EXIT,         ADRINT(adr1, 4),                    undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
-    inst = getInst(OP_MOVE,         ADRVAR(adr1, E3),                   ADRBOOL(adr2, "true"),  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
+    inst = getInst(OP_MOVE,         ADRVAR(adr1, E3),                   ADRBOOL(adr2, "false"),  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
     inst = getInst(OP_JUMP,         ADRLAB(adr1, lab, "end"),           undef,                  undef);                 INSERTLAST(L, inst, inWhile, inFunDef);
 
     // First operand is float, if second is integer, convert it to float and skip to addition, else false

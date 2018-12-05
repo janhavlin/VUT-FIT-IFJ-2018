@@ -1,36 +1,213 @@
-def factorial (n)
-	if (n + n) then
-		result = n
-	else
-		decremented_n = (1 + 2)
-		temp_result = factorial decremented_n
-		result = (1 + 2)
-	end
-result
-end
+id = fun (a, a a, a)
+$ 6
+id = fun a, a a, a
+$ 6
+id = fun (a, a, a, a,)
+$ 6
+id = fun a, a, a, a,
+$ 6
+id = fun (a, a, a, a) +
+$ 6
+id = fun (a, a, a, a) -
+$ 6
+id = fun (a, a, a, a) *
+$ 6
+id = fun (a, a, a, a) /
+$ 6
+id = fun (a, a, a, a) =
+$ 6
+id = fun (a, a, a, a) id
+$ 6
+id = fun (a, a, a, a) 5
+$ 6
+id = fun (a, a, a, a) 0.0
+$ 6
+id = fun (a, a, a, a) "Hello"
+$ 6
+id = fun (a,
+a, a, a)
+$ 6
+id = fun a,
+a, a, a
+$ 6
+if then
+$ 2
 
-print
-a = inputi
-if (1 + 2) then
-    print "\nFaktorial nelze spocitat\n"
+if a then a = 5
+$ 2
+
+if a then
+a = 5 else a = 3 
+$ 2
+
+if a then
+a = 5
+else a = 3 
+$ 2
+
+if a then
+a = 5
+end 
+$ 2
+
+if a then
+a = 5
 else
-    vysl = factorial a
-print("\nVysledek je:", vysl, "\n")
-end
+a = 2
+$ 2
 
-
-
-# Program 1: Vypocet faktorialu (iterativne)
-print "Zadejte cislo pro vypocet faktorialu: "
-a = inputi
-if (1 + 2) then
-    print("\nFaktorial nelze spocitat\n")
+if a then
+a = 5
 else
-    vysl = (1 + 2)
-    while (1 + 2) do
-        vysl = (1 + 2)
-        a = (1 + 2)
-    end
-print "\nVysledek je:", vysl, "\n"
-end
+a = 2 end
+$ 2
 
+if a then
+a = 5
+else
+a = 2
+end
+end
+$ 2
+
+while a + a
+do
+$ 2
+
+while a + a do
+a + a end
+$ 2
+
+def
+id
+$ 2
+def +
+$ 2
+def -
+$ 2
+def if
+$ 2
+def nil
+$ 2
+def "asd"
+$ 2
+
+def i
+a = 2
+$ 2
+
+def i a
+$ 2
+
+def i (a) a = 2
+$ 2
+
+def i ()
+a = 2
+$ 2
+
+def i ()
+a = 2 end
+$ 2
+
+def i ()
+a = 2
+end a = 2
+$ 2
+
+a = if
+$ 2
+a = then
+$ 2
+a = e+
+$ 2
+a = e-
+$ 2
+a = +
+$ 2
+a = -
+$ 2
+a = e*
+$ 2
+a = e/
+$ 2
+a = e<
+$ 2
+a = e>
+$ 2
+a = e<=
+$ 2
+a = e>=
+$ 2
+a = e==
+$ 2
+a = e!=
+$ 2
+a = (e
+$ 2
+a = *e
+$ 2
+a = /e
+$ 2
+a = <e
+$ 2
+a = >e
+$ 2
+a = <=e
+$ 2
+a = >=e
+$ 2
+a = ==e
+$ 2
+a = !=e
+$ 2
+a = e)
+$ 2
+
+
+
+
+x = 5 == 5
+#bez rozsireni nelze priradit BOOL do promenne
+$ 0
+
+while k < 1000 do
+k = k + 1
+while k < 1000 do
+k = k + 1
+end
+#neukonecny while
+a=a+5
+$ 2
+
+while k < 1000 do
+k = k + 1
+
+def abc(promenna)
+promenna=5
+end
+end
+$ 2
+
+if a >= b then print "lul"
+else
+end
+$ 2
+
+print def
+$ 2
+
+print (()
+$ 2
+
+a= b+(c+d)+(c
+$ 2
+
+a= b+(c+d))
+$ 2
+
+a= b+(((c+d))
+$ 2
+
+a= b+(((c+d)
+$ 2

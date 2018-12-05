@@ -2,7 +2,7 @@
  * file name:       code_gen_list.c
  * project:         VUT-FIT-IFJ-2018
  * created:         1.12.2018
- * last modified:   1.12.2018
+ * last modified:   5.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
  * modification:
@@ -225,7 +225,7 @@ void ILPostInsertInFunDefBeforeWhile (TInstrList *L, TInst inst) {
 	L->InFunDefBeforeWhile->rptr = new;	
 }
 
-void printAdr(TAdr adr){
+static void printAdr(TAdr adr){
     switch (adr.type){
         case ADRTYPE_VAR:
             printf("LF@&%s", adr.val.s);
@@ -254,7 +254,7 @@ void printAdr(TAdr adr){
     }
 }
 
-void printInst(TInst inst){
+static void printInst(TInst inst){
     switch (inst.op){
         case OP_DEFVAR: printf("DEFVAR "); break;
         case OP_MOVE: printf("MOVE "); break;

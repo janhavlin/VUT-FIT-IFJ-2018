@@ -1,0 +1,46 @@
+=begin
+this should work normally right
+=end
+#recursive factorial
+a1 = 2
+b_X = a1 + a1
+c = a1 * b_X
+def recur_fact(num)
+  if num == 0 || num == 1 then
+    1
+  else
+    num * recur_fact(num - 1)
+  end
+end
+
+recur_fact(c) # 720
+
+$ 0
+
+#insider functions
+string = "This is perfect"
+sub = substr(0, 5)
+width = length(sub)
+if width < 5 then
+  print("Yay I'm slim\n")
+else
+  print("I'm fat :( \n")
+end
+#should print Yay I'm slim
+
+$ 0
+
+#ordinal and char
+i = chr(73)
+n = chr(110)
+t = chr(116)
+e = chr(101)
+g = chr(103)
+r = chr(114)
+a = chr(97)
+l = chr(108)
+print("This is ",i, n, t, e, g, r, a, l)
+string = "This is a string"
+print("This should be s(115): ",ord(string, 3))
+
+$ 0
