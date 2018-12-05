@@ -5,7 +5,7 @@
  *	last modified:	19.10.2018
  *	
  *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
- *	modifications:	
+ *	modifications:	Jan Havlín  xhavli47@stud.fit.vutbr.cz 
  *	
  *	description:	Converting types to different types
 */

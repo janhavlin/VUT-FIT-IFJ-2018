@@ -2,10 +2,11 @@
 	file name:		scanner.c
 	project:		VUT-FIT-IFJ-2018
 	created:		24.10.2018
-	last modified:	1.12.2018
+	last modified:	5.12.2018
 	
-	created by: 	Jan Havlín xhavli47@stud.fit.vutbr.cz
-	modifications:	
+	created by: 	Jan Havlín     xhavli47@stud.fit.vutbr.cz
+	modifications:	Petr Bobčík    xbobci02@stud.fit.vutbr.cz
+                    Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
 	
 	description:	Reads tokens from input stream
 */
@@ -42,7 +43,7 @@
         SKIPLINE(c, f);                     \
         errflg = ERR_LEXICAL;               \
         tok.type = TOK_ERR;                 \
-        ifjErrorPrint("ERROR %d in scanner.c: Invalid token\n", ERR_LEXICAL); \
+        ifjErrorPrint("ERROR %d in scanner.c on line: Invalid token\n", ERR_LEXICAL); \
         free(buff);                         \
         return tok;                         \
     } while (0)
@@ -78,7 +79,9 @@ TToken getToken(FILE *f, TsymItem *symTableP){
     CHECKERR(errflg, buff, tok);
 
     while((c = getc(f))){
-         /*DEBUG*///printf("CHAR READ: %c\n", c);
+        if(!notFirstChar)
+            linecnt++;
+
         switch(state){
             case S_START:
                 if ((c >= 'a' && c <= 'z') || c == '_'){
@@ -131,6 +134,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     tok.type = TOK_EOL;
                     notFirstChar = false;
                     free(buff);
+                    //linecnt++;
                     return tok;
                 }
                 else if (c == '+'){
@@ -177,7 +181,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 }
                 else if (c == EOF){
                     tok.type = TOK_EOF;
-                     /*DEBUG*///printf("Token read: EOF\n");
                     notFirstChar = true;
                     free(buff);
                     return tok;
@@ -202,16 +205,13 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     charPut(&buff, c);
                     CHECKERR(errflg, buff, tok);
                     state = S_START;
-                     /*DEBUG*///printf("Token read: %s\n", buff);
                     tok.type = TOK_ID;
                     tok.data.s = buff;
-                    //free(buff);
                     return tok;
                 }
                 else {
                     ungetc(c, f);
                     state = S_START;
-                     /*DEBUG*///printf("Token read: %s\n", buff);
                     TsymData *data = NULL;
                     if (((data = symTabSearch(&symTableP, buff)) != NULL) && data->type == TYPE_KWD)
                         tok.type = TOK_KEY;
@@ -242,8 +242,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -280,8 +278,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = 0;
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -307,8 +303,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }                
@@ -324,8 +318,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -352,8 +344,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_INT;
                     tok.data.i = convStrToInt(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %d\n", tok.data.i);
                     free(buff);
                     return tok;
                 }
@@ -384,8 +374,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_FLOAT;
                     tok.data.f = convStrToDouble(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %lf\n", tok.data.f);
                     free(buff);
                     return tok;
                 }             
@@ -424,14 +412,12 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;
                     tok.type = TOK_FLOAT;
                     tok.data.f = convStrToDouble(buff);
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %lf\n", tok.data.f);
                     free(buff);
                     return tok;
                 }               
                 break;
 
-            case S_STR:
+            case S_STR:             // Read: "
                 if (c == '\\'){
                     state = S_STR_ESC;
                 }
@@ -439,8 +425,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     state = S_START;                 
                     tok.type = TOK_STRING;
                     tok.data.s = buff;
-                     /*DEBUG*///printf("Token read: %s\n", buff);
-                     /*DEBUG*///printf("Value: %s\n", tok.data.s);
                     return tok;
                 }
                 else if (c >= 32 && c <= 127){
@@ -451,7 +435,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     TOKERR(c, f, errflg, buff, tok);
                 break;
 
-            case S_STR_ESC:
+            case S_STR_ESC:          /*Read:  "\    */
                 if (c == 'x'){
                     state = S_STR_XH;
                 }
@@ -466,12 +450,12 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     CHECKERR(errflg, buff, tok);
                     state = S_STR;
                 }
-                else {   // TODO: Should unknown escape sequence be error?
+                else {
                     TOKERR(c, f, errflg, buff, tok);
                 }
                 break;
 
-            case S_STR_XH:
+            case S_STR_XH:          // Read: "\x
                 if (isdigit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'))){
                     if (isdigit(c))
                         conv_esc = c - '0';
@@ -484,7 +468,7 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 }
                 break;
 
-            case S_STR_XHH:
+            case S_STR_XHH:         // Read: "\xH
                 if (isdigit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'))){
                     conv_esc *= 16;
                     if (isdigit(c))
@@ -506,12 +490,13 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                     TOKERR(c, f, errflg, buff, tok);
                 break;
             
-            case S_COMMENT:
+            case S_COMMENT:     // Read: #
                 if (c == '\n'){
                     state = S_START;
                     tok.type = TOK_EOL;
                     notFirstChar = false;
                     free(buff);
+                    //linecnt++;
                     return tok;
                 }
                 break;
@@ -573,7 +558,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_E:           // Read: "="
-                 /*DEBUG*///printf("YOOO WERE HERE BITCH%d %c\n", state, c);
                 if (c == 'b')
                     state = S_COMMENT_EB;
                 else
@@ -581,7 +565,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EB:          // Read: "=b"
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == 'e')
                     state = S_COMMENT_EBE;
                 else
@@ -589,7 +572,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EBE:         // Read: "=be"
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == 'g')
                     state = S_COMMENT_EBEG;
                 else
@@ -597,7 +579,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EBEG:        // Read: "=beg"
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == 'i')
                     state = S_COMMENT_EBEGI;
                 else
@@ -605,7 +586,6 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EBEGI:       // Read: "=begi"
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == 'n')
                     state = S_COMMENT_EBEGIN;
                 else
@@ -613,9 +593,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_EBEGIN:      // Read: "=begin"
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else if (isspace(c))
                     state = S_COMMENT_BLOCK;
                 else
@@ -623,18 +604,20 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_BLOCK:       // Skipping every char but '\n'
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else {
                     state = S_COMMENT_BLOCK;
                 }
                 break;
             
             case S_COMMENT_BLOCK_EOL:   // Read: "\n"
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else if (c == '=')
                     state = S_COMMENT_BLOCK_E;
                 else {
@@ -643,9 +626,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_BLOCK_E:     // Read: "\n="
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else if (c == 'e')
                     state = S_COMMENT_BLOCK_EE;
                 else {
@@ -654,9 +638,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_BLOCK_EE:    // Read: "\n=e"
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else if (c == 'n')
                     state = S_COMMENT_BLOCK_EEN;
                 else {
@@ -665,9 +650,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_BLOCK_EEN:   // Read: "\n=en"
-                 /*DEBUG*///printf("%d %c\n", state, c);
-                if (c == '\n')
+                if (c == '\n'){
+                    //linecnt++;
                     state = S_COMMENT_BLOCK_EOL;
+                }
                 else if (c == 'd')
                     state = S_COMMENT_BLOCK_EEND;
                 else {
@@ -676,10 +662,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_BLOCK_EEND:  // Read: "\n=end"
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n'){
                     state = S_START;
                     notFirstChar = false;
+                    //linecnt++;
                 }
                 else if (isspace(c))
                     state = S_COMMENT_END_SPACE;
@@ -688,10 +674,10 @@ TToken getToken(FILE *f, TsymItem *symTableP){
                 break;
             
             case S_COMMENT_END_SPACE:   // Read: "\n=end "
-                 /*DEBUG*///printf("%d %c\n", state, c);
                 if (c == '\n'){
                     state = S_START;
                     notFirstChar = false;
+                    //linecnt++;
                 }
                 else
                     state = S_COMMENT_END_SPACE;

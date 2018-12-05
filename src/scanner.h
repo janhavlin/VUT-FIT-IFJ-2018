@@ -96,8 +96,25 @@ typedef enum {
     S_COMMENT_END_SPACE
 } state_type;
 
-// TODO: Entire parser just needs to know token type, in the future we will need to edit this function to return more parameters
+/**
+ * @brief Initialises buffer that can store 2 tokens
+ * 
+ */
 void tokBuffInit();
+
+/**
+ * @brief Returns a token to the token buffer
+ * 
+ * @param tok Token
+ */
 void returnToken(TToken tok);
+
+/**
+ * @brief Reads from an input stream and returns a token structure
+ * 
+ * @param f Input stream
+ * @param symTable Pointer to a global symbol table to identify keywords
+ * @return TToken 
+ */
 TToken getToken(FILE *f, TsymItem *symTable);
 #endif //IFJ18_SCANNER_H

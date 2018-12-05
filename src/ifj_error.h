@@ -5,7 +5,7 @@
  *	last modified:	17.10.2018
  *	
  *	created by: 	Petr Bobčík xbobci02@stud.fit.vutbr.cz
- *	modifications:	
+ *  modifications:  Jan Havlín  xhavli47@stud.fit.vutbr.cz
  *	
  *	description:	There are names of errors and function to print error
  */
@@ -21,6 +21,7 @@
 #define DEBUG 0
 
 extern int errflg;
+extern int linecnt;
 
 #define PROGRAM_OK          0
 // chyba v programu v ramci lexikalniho analyzatoru (chybna struktura aktualniho lexemu)

@@ -5282,7 +5282,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=3
+c = nil !=3
 print c
 $ 4
 
@@ -5290,7 +5290,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=3) then 
+if(nil !=3) then 
    print 1
 else
    print 0
@@ -5301,7 +5301,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=1.68
+c = nil !=1.68
 print c
 $ 4
 
@@ -5309,7 +5309,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=1.68) then 
+if(nil !=1.68) then 
    print 1
 else
    print 0
@@ -5320,7 +5320,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!="text"
+c = nil !="text"
 print c
 $ 4
 
@@ -5328,7 +5328,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!="text") then 
+if(nil !="text") then 
    print 1
 else
    print 0
@@ -5339,7 +5339,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=nil
+c = nil !=nil
 print c
 $ 4
 
@@ -5347,7 +5347,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=nil) then 
+if(nil !=nil) then 
    print 1
 else
    print 0
@@ -5358,7 +5358,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=vi
+c = nil !=vi
 print c
 $ 4
 
@@ -5366,7 +5366,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=vi) then 
+if(nil !=vi) then 
    print 1
 else
    print 0
@@ -5377,7 +5377,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=vf
+c = nil !=vf
 print c
 $ 4
 
@@ -5385,7 +5385,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=vf) then 
+if(nil !=vf) then 
    print 1
 else
    print 0
@@ -5396,7 +5396,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=vs
+c = nil !=vs
 print c
 $ 4
 
@@ -5404,7 +5404,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=vs) then 
+if(nil !=vs) then 
    print 1
 else
    print 0
@@ -5415,7 +5415,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-c = nil!=vnil
+c = nil !=vnil
 print c
 $ 4
 
@@ -5423,7 +5423,7 @@ vi = 3
 vf = 1.68
 vs = "text"
 vnil=nil
-if(nil!=vnil) then 
+if(nil !=vnil) then 
    print 1
 else
    print 0

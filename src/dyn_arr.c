@@ -14,7 +14,7 @@
 #include "dyn_arr.h"
 #include "ifj_error.h"
 
-int errflg = 0;
+//int errflg = 0;
 
 string stringInit(){				
 	string arr = (string) calloc( ALLOC_SIZE + 1,  sizeof(char) );

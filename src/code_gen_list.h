@@ -1,11 +1,11 @@
 /*
  * file name:       code_gen_list.h
  * project:         VUT-FIT-IFJ-2018
- * created:         1.12.2018
- * last modified:   5.12.2018
+ * created:         01.12.2018
+ * last modified:   05.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
- * modification:
+ * modifications:
  * 
  * description: Functions and datatypes for working with a doubly linked list of instructions. 
  */

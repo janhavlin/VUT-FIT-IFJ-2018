@@ -5,7 +5,9 @@
 	last modified:	04.12.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
+	modifications:	Petr Bobčík    xbobci02@stud.fit.vutbr.cz
+                    Jan Havlín     xhavli47@stud.fit.vutbr.cz
+
 	
 	description:	Main				
 */
@@ -16,8 +18,12 @@
 #include "parser.h"
 #include "code_gen_list.h"
 
+int errflg;
+int linecnt;
+
 int main() {
     errflg = PROGRAM_OK;    //extern from ifj_error.h
+    linecnt = 1;
     FILE *f = stdin;
     TsymItem *GT = NULL;    //global symbol table
     TsymItem *LT = NULL;    //local symbol table

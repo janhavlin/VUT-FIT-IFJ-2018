@@ -2,10 +2,10 @@
  * file name:       code_gen.h
  * project:         VUT-FIT-IFJ-2018
  * created:         23.11.2018
- * last modified:   5.12.2018
+ * last modified:   05.12.2018
  * 
  * created by:      Jan Havlín xhavli47@stud.fit.vutbr.cz 
- * modification:
+ * modifications:
  * 
  * description: Functions for transforming pieces of IFJ18 code into instruction structures and adding them to a doubly linked list of instructions. 
  */

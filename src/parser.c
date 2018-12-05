@@ -2,10 +2,11 @@
 	file name:		parser.c
 	project:		VUT-FIT-IFJ-2018
 	created:		19.11.2018
-	last modified:	04.12.2018
+	last modified:	05.12.2018
 	
 	created by: 	Jakub Karpíšek xkarpi06@stud.fit.vutbr.cz
-	modifications:	
+	modifications:	Petr Bobčík    xbobci02@stud.fit.vutbr.cz
+                    Jan Havlín     xhavli47@stud.fit.vutbr.cz
 	
 	description:	Recursive Descent parser
 */
@@ -863,6 +864,8 @@ int rbr(TToken **tokenPP, TWrapper *globalInfo) {
 int parserError(int errNbr, const char *where, int tokenType, int errKind, string data) {
 	if (DEBUG) printf("error in func. %s", where);
 	errflg = errNbr;
+	if (tokenType == TOK_EOL)
+		linecnt--;
 	switch(errNbr) {
 		case ERR_SEM_DEFINE:	
 			if (errKind == KIND_UNDEF_VAR)
