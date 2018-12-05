@@ -11,7 +11,7 @@ ifjcomp: $(c_files)
 	$(CC) $(CFLAGS) -o ifjcomp $(c_files) -lm
 	
 test: 
-	cd tests && $(TEST) $(test_script)
+	cd ../tests && $(TEST) $(test_script)
 	
 clean:
 	rm -f main

@@ -8,7 +8,7 @@ TSTCNT=0
 TSTPASS=0
 TSTFAIL=0
 BUFF=
-PRG=../ifjcomp
+PRG=../src/ifjcomp
 INTERPRETER=./ic18int
 TSTOUTFILE=tests.out
 OUTSRC=ifjcode18.src
@@ -96,6 +96,6 @@ test_file()
 test_file test_builtin_func
 #test_file test_programs.txt
 #test_file test_operator_priority
-#test_file test_type_comp
+test_file test_type_comp
 
 print_stats

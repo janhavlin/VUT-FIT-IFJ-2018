@@ -1,16 +1,47 @@
-identifier 0 42 0.0 3.1415926 256.567e-10 "Ahoj\n\"\tSve'te\s\\\x22\xfa\xf\x1a\xa1\x11\x2\x41\x48\x4F\x4a"
-=begin
-blabla
-=
-=e
-=en
-=endabcd
-=end
-
-=begin s
-=end
-
-0ba123 blabla
-+ - * / < > <= >= == != = ( ) ,
-165+0.0e0*i_d!!====iD1?<=="hey">!=/*(-)+
-#INT + FLOAT * ID != == = ID <= = STR > != / * ( - ) +
+ID
+$ 1
+0ba
+$ 1
+0.
+$ 1
+0.a
+$ 1
+0.0e-a
+$ 1
+0.0e+a
+$ 1
+0xx
+$ 1
+0x/
+$ 1
+0b2
+$ 1
+"abc
+$ 1
+"abc\"
+$ 1
+"abc\x"
+$ 1
+"abc\xg"
+$ 1
+"a\d"
+$ 1
+"\\"
+$ 1
+"ahoj \n světe \g"
+$ 1
+"ahoj 
+"
+$ 1
+"hexa 00\xs"
+$ 1
+=b
+$ 1
+=be
+$ 1
+=beg
+$ 1
+=begi
+$ 1
+=begx
+$ 1
