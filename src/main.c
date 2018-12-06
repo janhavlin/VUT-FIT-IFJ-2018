@@ -23,7 +23,7 @@ int linecnt;
 
 int main() {
     errflg = PROGRAM_OK;    //extern from ifj_error.h
-    linecnt = 1;
+    linecnt = 0;
     FILE *f = stdin;
     TsymItem *GT = NULL;    //global symbol table
     TsymItem *LT = NULL;    //local symbol table

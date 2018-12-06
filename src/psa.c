@@ -406,7 +406,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
 
                 else{
                     sLDelete(s);
-                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_LEXICAL);
+                    ifjErrorPrint("psa ERROR in processExpression: Can't find corresponding rule for '%s'. ERROR %d\n",toReduce, ERR_SYNTAX);
 					if(toReduce != NULL)
 						free(toReduce);
                     
@@ -474,7 +474,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
                 }
 
                 sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
                 if (errflg == PROGRAM_OK)
 			        errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;  // // an error was found                   
@@ -482,7 +482,7 @@ unsigned int processExpression(FILE *f, string followingToken, TsymItem *STG, Ts
             default:
 				DELETE_CHECK_NULL(delete);
 				sLDelete(s);
-                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_LEXICAL);
+                ifjErrorPrint("psa ERROR in processExpression: Error has occurred. ERROR %d\n", ERR_SYNTAX);
                 if (errflg == PROGRAM_OK)
                     errflg = ERR_SYNTAX;
                 return NO_E_NONTERM;
