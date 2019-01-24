@@ -6,13 +6,6 @@ unit-tests: $(TST_FILES) $(SRC_FILES)
 	gcc $(TST_FILES) $(SRC_FILES) -o tst -lm
 	./tst
 
-code-gen: src/code_gen.c src/code_gen.h src/code_gen_list.c src/code_gen_list.h src/type_conv.c src/type_conv.h src/dyn_arr.c src/dyn_arr.h src/ifj_error.c src/ifj_error.h
-	gcc src/code_gen.c src/code_gen.h src/code_gen_list.c src/code_gen_list.h src/type_conv.c src/type_conv.h src/dyn_arr.c src/dyn_arr.h src/ifj_error.c src/ifj_error.h -o gen -lm
-	./gen
-
-ifj: src/main.c src/main.h $(SRC_FILES) 
-	gcc $(CFLAGS) src/main.c src/main.h $(SRC_FILES) -o ifj18 -lm
-
 zip:
 	cd src && zip xvavri10 *.c *.h Makefile dokumentace.pdf rozsireni rozdeleni
 	
