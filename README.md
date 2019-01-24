@@ -15,6 +15,6 @@ Hodnocení
 - Běhové chyby (detekce): 53% (33/62)
 - Interpretace přeloženého kódu: 55% (525/951)
 - Celkem bez rozšíření: 63% (990/1551)
-- Bodové hodnocení: 11,61 bodů z 15
+- Programová část: 11,61 bodů z 15
 - Dokumentace: 5 bodů z 5
 - Obhajoba: 5 bodů z 5
